@@ -5,9 +5,9 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDC3S9kNlAcm5LE1DmfEEWl3QCT8MMSFW8",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "react-http-91c04.firebaseapp.com",
-  databaseURL: "https://react-http-91c04-default-rtdb.firebaseio.com",
+  databaseURL: process.env.REACT_APP_FIREBASE_DB_URL,
   projectId: "react-http-91c04",
   storageBucket: "react-http-91c04.firebasestorage.app",
   messagingSenderId: "184253049319",

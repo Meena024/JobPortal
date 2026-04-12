@@ -1,24 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+
+import JobsPage from "./pages/Jobs/JobsPage";
+import RecruiterDashboard from "./pages/Dashboard/RecruiterDashboard";
+import AdminDashboard from "./pages/Dashboard/AdminDashboard";
+
+import PrivateRoute from "./routes/PrivateRoute";
+import Layout from "./components/Layout/Layout";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Layout>
+          <Routes>
+            {/* PUBLIC ROUTES */}
+
+            <Route path="/login" element={<Login />} />
+
+            <Route path="/signup" element={<SignUp />} />
+
+            {/* JOB SEEKER ROUTES */}
+
+            <Route
+              path="/jobs"
+              element={
+                <PrivateRoute allowedRoles={["job_seeker"]}>
+                  <JobsPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* RECRUITER ROUTES */}
+
+            <Route
+              path="/recruiter/dashboard"
+              element={
+                <PrivateRoute allowedRoles={["recruiter"]}>
+                  <RecruiterDashboard />
+                </PrivateRoute>
+              }
+            />
+
+            {/* ADMIN ROUTES */}
+
+            <Route
+              path="/admin/dashboard"
+              element={
+                <PrivateRoute allowedRoles={["admin"]}>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+
+            {/* DEFAULT ROUTE */}
+
+            <Route path="*" element={<Login />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </>
   );
 }
 
