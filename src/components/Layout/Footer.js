@@ -1,4 +1,4 @@
-import classes from "../../Styling/Footer.module.css";
+import classes from "../../Styling/Layout/Footer.module.css";
 
 const Footer = () => {
   return (
