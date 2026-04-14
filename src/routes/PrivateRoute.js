@@ -7,11 +7,11 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   const location = useLocation();
 
   if (!token) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    return <Navigate to="/" replace state={{ from: location }} />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;

@@ -8,7 +8,7 @@ const Header = () => {
 
   const logoutHandler = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -20,7 +20,7 @@ const Header = () => {
         {!token && (
           <>
             <NavLink
-              to="/login"
+              to="/"
               className={({ isActive }) =>
                 isActive
                   ? `${classes.navLink} ${classes.active}`

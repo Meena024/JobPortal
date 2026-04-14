@@ -45,7 +45,7 @@ const SignUp = () => {
           createdAt: new Date().toISOString(),
         },
       );
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       console.error(err);
 
@@ -101,7 +101,7 @@ const SignUp = () => {
           {loading ? "Creating account..." : "Sign Up"}
         </button>
 
-        <Link to="/login" className={classes.signupBtn}>
+        <Link to="/" className={classes.signupBtn}>
           Already have account?
         </Link>
       </form>
