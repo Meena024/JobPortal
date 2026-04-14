@@ -8,6 +8,7 @@ const recruiterSlice = createSlice({
     loading: false,
     error: null,
     activeView: "jobs",
+    editingJob: null,
   },
 
   reducers: {
@@ -19,10 +20,28 @@ const recruiterSlice = createSlice({
       state.recruiterJobs.push(action.payload);
     },
 
+    updateRecruiterJob(state, action) {
+      const index = state.recruiterJobs.findIndex(
+        (job) => job.id === action.payload.id,
+      );
+
+      if (index !== -1) {
+        state.recruiterJobs[index] = action.payload;
+      }
+    },
+
     removeRecruiterJob(state, action) {
       state.recruiterJobs = state.recruiterJobs.filter(
         (job) => job.id !== action.payload,
       );
+    },
+
+    setActiveView(state, action) {
+      state.activeView = action.payload;
+    },
+
+    setEditingJob(state, action) {
+      state.editingJob = action.payload;
     },
 
     setLoading(state, action) {
@@ -31,10 +50,6 @@ const recruiterSlice = createSlice({
 
     setError(state, action) {
       state.error = action.payload;
-    },
-
-    setActiveView(state, action) {
-      state.activeView = action.payload;
     },
   },
 });

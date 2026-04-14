@@ -4,7 +4,7 @@ import classes from "../../../Styling/Pages/CreateJob.module.css";
 
 import { dbApi } from "../../../services/dbApi";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { recruiterActions } from "../../../store/recruiterSlice";
 
@@ -13,14 +13,18 @@ const CreateJob = () => {
 
   const recruiterId = localStorage.getItem("userId");
 
-  const [form, setForm] = useState({
-    title: "",
-    companyName: "",
-    salary: "",
-    location: "",
-    skillsRequired: "",
-    description: "",
-  });
+  const editingJob = useSelector((state) => state.recruiter.editingJob);
+
+  const [form, setForm] = useState(
+    editingJob || {
+      title: "",
+      companyName: "",
+      salary: "",
+      location: "",
+      skillsRequired: "",
+      description: "",
+    },
+  );
 
   const changeHandler = (e) => {
     setForm({
@@ -33,26 +37,48 @@ const CreateJob = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    const jobData = {
+      ...form,
+
+      recruiterId,
+
+      status: editingJob?.status || "pending",
+
+      createdAt: editingJob?.createdAt || new Date().toISOString(),
+    };
+
     try {
-      const job = {
-        ...form,
+      if (editingJob) {
+        await dbApi.put(
+          `jobs/${editingJob.id}`,
 
-        recruiterId,
+          jobData,
+        );
 
-        status: "pending",
+        dispatch(
+          recruiterActions.updateRecruiterJob({
+            id: editingJob.id,
 
-        createdAt: new Date().toISOString(),
-      };
+            ...jobData,
+          }),
+        );
+      } else {
+        const response = await dbApi.post(
+          "jobs",
 
-      const response = await dbApi.post("jobs", job);
+          jobData,
+        );
 
-      dispatch(
-        recruiterActions.addRecruiterJob({
-          id: response.name,
+        dispatch(
+          recruiterActions.addRecruiterJob({
+            id: response.name,
 
-          ...job,
-        }),
-      );
+            ...jobData,
+          }),
+        );
+      }
+
+      dispatch(recruiterActions.setEditingJob(null));
 
       dispatch(recruiterActions.setActiveView("jobs"));
     } catch (err) {
@@ -106,7 +132,7 @@ const CreateJob = () => {
         onChange={changeHandler}
       />
 
-      <button>Post Job</button>
+      <button>{editingJob ? "Update Job" : "Post Job"}</button>
     </form>
   );
 };
