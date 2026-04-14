@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+
 import classes from "./../Styling/Auth/Login.module.css";
+
 import { loginUser } from "../services/authApi";
 import { dbApi } from "../services/dbApi";
 
+import { authActions } from "../store/authSlice";
+
 const Login = () => {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +27,7 @@ const Login = () => {
     if (loading) return;
 
     setError(null);
+
     setLoading(true);
 
     try {
@@ -28,9 +37,27 @@ const Login = () => {
 
       const profile = await dbApi.get(`users/${userId}/profile`);
 
+      /* SAVE TO LOCAL STORAGE */
+
       localStorage.setItem("token", data.idToken);
+
       localStorage.setItem("userId", userId);
+
       localStorage.setItem("role", profile.role);
+
+      /* SAVE TO REDUX STORE */
+
+      dispatch(
+        authActions.login({
+          token: data.idToken,
+
+          userId,
+
+          role: profile.role,
+        }),
+      );
+
+      /* REDIRECT BASED ON ROLE */
 
       if (profile.role === "recruiter") {
         navigate("/recruiter/dashboard");
@@ -59,7 +86,6 @@ const Login = () => {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
         />
 
         <input
@@ -68,7 +94,6 @@ const Login = () => {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete="new-password"
         />
 
         {error && <p className={classes.error}>{error}</p>}
@@ -76,6 +101,7 @@ const Login = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
+
         <Link to="/signup" className={classes.signupBtn}>
           Create Account
         </Link>

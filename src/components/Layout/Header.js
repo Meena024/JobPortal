@@ -1,14 +1,21 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import classes from "../../Styling/Layout/Header.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../store/authSlice";
 
 const Header = () => {
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
+  const token = useSelector((state) => state.auth.token);
+
+  const dispatch = useDispatch();
 
   const logoutHandler = () => {
     localStorage.clear();
-    navigate("/");
+
+    dispatch(authActions.logout());
+
+    navigate("/login");
   };
 
   return (
