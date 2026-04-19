@@ -1,0 +1,123 @@
+/* PAGE TITLE */
+
+.title {
+  font-size: 26px;
+
+  font-weight: 600;
+
+  margin-bottom: 25px;
+
+  color: #222;
+}
+
+/* GRID LAYOUT */
+
+.userGrid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+
+  gap: 25px;
+}
+
+/* USER CARD */
+
+.userCard {
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 22px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+
+  transition: transform 0.2s ease;
+}
+
+.userCard:hover {
+  transform: translateY(-4px);
+}
+
+/* EMAIL */
+
+.email {
+  font-size: 15px;
+
+  font-weight: 500;
+
+  margin-bottom: 10px;
+}
+
+/* ROLE BADGE */
+
+.role {
+  display: inline-block;
+
+  padding: 4px 12px;
+
+  font-size: 12px;
+
+  border-radius: 20px;
+
+  margin-bottom: 15px;
+}
+
+/* ROLE COLORS */
+
+.job_seeker {
+  background: #e3f2fd;
+
+  color: #1565c0;
+}
+
+.recruiter {
+  background: #e8f5e9;
+
+  color: #2e7d32;
+}
+
+.admin {
+  background: #fbe9e7;
+
+  color: #d84315;
+}
+
+/* BUTTON AREA */
+
+.cardBtns {
+  margin-top: 10px;
+}
+
+/* DELETE BUTTON */
+
+.deleteBtn {
+  width: 100%;
+
+  border: none;
+
+  padding: 9px;
+
+  border-radius: 6px;
+
+  background: #ff4d4f;
+
+  color: white;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background: #d9363e;
+}
+
+/* EMPTY STATE */
+
+.empty {
+  color: #777;
+
+  font-size: 15px;
+}

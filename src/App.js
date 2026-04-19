@@ -5,7 +5,7 @@ import SignUp from "./pages/SignUp";
 
 import JobsPage from "./pages/Jobs/JobsPage";
 import RecruiterDashboard from "./pages/Dashboard/RecruiterDashboard/RecruiterDashboard";
-import AdminDashboard from "./pages/Dashboard/AdminDashboard";
+import AdminDashboard from "./pages/Dashboard/AdminDashboard/AdminDashboard";
 
 import PrivateRoute from "./routes/PrivateRoute";
 import Layout from "./components/Layout/Layout";
