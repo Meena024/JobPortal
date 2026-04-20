@@ -1,0 +1,249 @@
+.container {
+  padding: 40px;
+
+  background: #f7f8fc;
+
+  min-height: calc(100vh - 110px);
+}
+
+/* PAGE TITLE */
+
+.title {
+  font-size: 30px;
+
+  font-weight: 600;
+
+  margin-bottom: 30px;
+}
+
+/* GRID */
+
+.jobGrid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+
+  gap: 30px;
+}
+
+/* CARD */
+
+.jobCard {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 14px;
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+
+  transition: 0.2s ease;
+}
+
+.jobCard:hover {
+  transform: translateY(-4px);
+}
+
+/* HEADER */
+
+.headerRow {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 15px;
+}
+
+.headerRow h2 {
+  font-size: 18px;
+}
+
+/* COMPANY BADGE */
+
+.badge {
+  background: #e3f2fd;
+
+  color: #1565c0;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+}
+
+/* META INFO */
+
+.metaRow {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  margin-bottom: 15px;
+}
+
+.metaRow span {
+  font-size: 12px;
+
+  color: #888;
+}
+
+.metaRow p {
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+/* SKILLS */
+
+.skills {
+  background: #f5f7fb;
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  margin-bottom: 12px;
+}
+
+/* DESCRIPTION */
+
+.description {
+  font-size: 14px;
+
+  color: #555;
+
+  margin-bottom: 15px;
+}
+
+/* APPLY BUTTON */
+
+.applyBtn {
+  width: 100%;
+
+  padding: 10px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #4a6cf7;
+
+  color: white;
+
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.applyBtn:hover {
+  background: #3c57d5;
+}
+
+/* INFO TEXT */
+
+.info {
+  color: #777;
+}
+
+/* ERROR TEXT */
+
+.error {
+  color: red;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+/* APPLY BUTTON */
+
+.applyBtn {
+  width: 100%;
+
+  padding: 10px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #4a6cf7;
+
+  color: white;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.applyBtn:hover {
+  background: #3c57d5;
+}
+
+/* INPUT BOX */
+
+.inputBox {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+/* INPUT FIELD */
+
+.inputBox input {
+  padding: 8px;
+
+  border-radius: 6px;
+
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+}
+
+/* SUBMIT BUTTON */
+
+.inputBox button {
+  padding: 9px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #4caf50;
+
+  color: white;
+
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.inputBox button:hover {
+  background: #3e9142;
+}
+
+/* APPLIED STATE */
+
+.appliedBtn {
+  width: 100%;
+
+  padding: 10px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #9aa7ff;
+
+  color: white;
+
+  font-weight: 500;
+}
