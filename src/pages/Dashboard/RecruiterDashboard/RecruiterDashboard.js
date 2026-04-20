@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import classes from "../../../Styling/Pages/RecruitersDashboard.module.css";
+import classes from "../../../Styling/Pages/RecruiterDashboard/RecruitersDashboard.module.css";
 
 import { dbApi } from "../../../services/dbApi";
 
@@ -10,6 +10,7 @@ import { recruiterActions } from "../../../store/recruiterSlice";
 
 import CreateJob from "./CreateJob";
 import MyJobs from "./MyJobs";
+import RecruiterApplications from "./RecruiterApplications";
 
 const RecruiterDashboard = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,14 @@ const RecruiterDashboard = () => {
         >
           My Jobs
         </button>
+
+        <button
+          onClick={() =>
+            dispatch(recruiterActions.setActiveView("applications"))
+          }
+        >
+          Applications
+        </button>
       </aside>
 
       {/* MAIN CONTENT */}
@@ -75,6 +84,8 @@ const RecruiterDashboard = () => {
         {activeView === "create" && <CreateJob />}
 
         {activeView === "jobs" && <MyJobs />}
+
+        {activeView === "applications" && <RecruiterApplications />}
       </main>
     </div>
   );

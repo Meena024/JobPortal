@@ -5,6 +5,7 @@ const recruiterSlice = createSlice({
 
   initialState: {
     recruiterJobs: [],
+    recruiterApplications: [],
     loading: false,
     error: null,
     activeView: "jobs",
@@ -33,6 +34,16 @@ const recruiterSlice = createSlice({
     removeRecruiterJob(state, action) {
       state.recruiterJobs = state.recruiterJobs.filter(
         (job) => job.id !== action.payload,
+      );
+    },
+
+    setRecruiterApplications(state, action) {
+      state.recruiterApplications = action.payload;
+    },
+
+    removeRecruiterApplication(state, action) {
+      state.recruiterApplications = state.recruiterApplications.filter(
+        (app) => app.id !== action.payload,
       );
     },
 

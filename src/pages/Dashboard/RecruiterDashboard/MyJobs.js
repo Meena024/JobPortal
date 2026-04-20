@@ -1,7 +1,7 @@
 import { dbApi } from "../../../services/dbApi";
 import { useDispatch, useSelector } from "react-redux";
 import { recruiterActions } from "../../../store/recruiterSlice";
-import classes from "../../../Styling/Pages/MyJobs.module.css";
+import classes from "../../../Styling/Pages/RecruiterDashboard/MyJobs.module.css";
 
 const MyJobs = () => {
   const jobs = useSelector((state) => state.recruiter.recruiterJobs);

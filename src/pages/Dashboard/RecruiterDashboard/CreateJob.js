@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import classes from "../../../Styling/Pages/CreateJob.module.css";
+import classes from "../../../Styling/Pages/RecruiterDashboard/CreateJob.module.css";
 
 import { dbApi } from "../../../services/dbApi";
 
