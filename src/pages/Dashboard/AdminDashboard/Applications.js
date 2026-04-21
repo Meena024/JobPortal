@@ -9,19 +9,32 @@ const Applications = () => {
 
   useEffect(() => {
     const fetchApplications = async () => {
-      const data = await dbApi.get("applications");
+      try {
+        const applicationsData = await dbApi.get("applications");
 
-      if (!data) return;
+        const jobsData = await dbApi.get("jobs");
 
-      const arr = Object.entries(data)
+        const usersData = await dbApi.get("users");
 
-        .map(([id, value]) => ({
-          id,
+        if (!applicationsData) return;
 
-          ...value,
-        }));
+        const enrichedApplications = Object.entries(applicationsData)
 
-      setApplications(arr);
+          .map(([id, app]) => ({
+            id,
+
+            ...app,
+
+            jobTitle: jobsData?.[app.jobId]?.title || "Unknown Job",
+
+            applicantEmail:
+              usersData?.[app.userId]?.profile?.email || "Unknown User",
+          }));
+
+        setApplications(enrichedApplications);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchApplications();
@@ -38,13 +51,28 @@ const Applications = () => {
       <div className={classes.applicationGrid}>
         {applications.map((app) => (
           <div key={app.id} className={classes.applicationCard}>
-            <div className={classes.label}>Applicant ID</div>
+            <div className={classes.label}>Applicant</div>
 
-            <div className={classes.value}>{app.userId}</div>
+            <div className={classes.value}>{app.applicantEmail}</div>
 
-            <div className={classes.label}>Job ID</div>
+            <div className={classes.label}>Job Title</div>
 
-            <div className={classes.value}>{app.jobId}</div>
+            <div className={classes.value}>{app.jobTitle}</div>
+
+            <div className={classes.label}>Applied On</div>
+
+            <div className={classes.value}>
+              {new Date(app.appliedAt).toLocaleDateString()}
+            </div>
+
+            <a
+              href={app.resumeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className={classes.resumeBtn}
+            >
+              View Resume
+            </a>
 
             {app.status && (
               <span className={`${classes.status} ${classes[app.status]}`}>

@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
-
 import classes from "../../../Styling/Pages/RecruiterDashboard/RecruiterApplications.module.css";
 
 import { recruiterActions } from "../../../store/recruiterSlice";
@@ -19,30 +17,41 @@ const RecruiterApplications = () => {
 
   useEffect(() => {
     const fetchApplications = async () => {
-      const jobsData = await dbApi.get("jobs");
+      try {
+        const jobsData = await dbApi.get("jobs");
+        const usersData = await dbApi.get("users");
+        const applicationsData = await dbApi.get("applications");
 
-      if (!jobsData) return;
+        if (!jobsData || !applicationsData) return;
 
-      const recruiterJobIds = Object.entries(jobsData)
+        // recruiter jobs only
+        const recruiterJobs = Object.entries(jobsData)
+          .filter(([_, job]) => job.recruiterId === userId)
+          .reduce((acc, [id, value]) => {
+            acc[id] = value;
+            return acc;
+          }, {});
 
-        .filter(([_, job]) => job.recruiterId === userId)
+        const enrichedApplications = Object.entries(applicationsData)
+          .map(([id, app]) => {
+            if (!recruiterJobs[app.jobId]) return null;
 
-        .map(([id]) => id);
+            return {
+              id,
+              ...app,
+              jobTitle: recruiterJobs[app.jobId]?.title || "Unknown Job",
+              applicantEmail:
+                usersData?.[app.userId]?.profile?.email || "Unknown User",
+            };
+          })
+          .filter(Boolean);
 
-      const applicationsData = await dbApi.get("applications");
-
-      if (!applicationsData) return;
-
-      const filteredApplications = Object.entries(applicationsData)
-
-        .map(([id, value]) => ({
-          id,
-          ...value,
-        }))
-
-        .filter((app) => recruiterJobIds.includes(app.jobId));
-
-      dispatch(recruiterActions.setRecruiterApplications(filteredApplications));
+        dispatch(
+          recruiterActions.setRecruiterApplications(enrichedApplications),
+        );
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchApplications();
@@ -57,13 +66,16 @@ const RecruiterApplications = () => {
       <div className={classes.grid}>
         {applications.map((app) => (
           <div key={app.id} className={classes.card}>
-            <div className={classes.label}>Applicant ID</div>
+            <div className={classes.label}>Applicant</div>
+            <div className={classes.value}>{app.applicantEmail}</div>
 
-            <div className={classes.value}>{app.userId}</div>
+            <div className={classes.label}>Job Title</div>
+            <div className={classes.value}>{app.jobTitle}</div>
 
-            <div className={classes.label}>Job ID</div>
-
-            <div className={classes.value}>{app.jobId}</div>
+            <div className={classes.label}>Applied On</div>
+            <div className={classes.value}>
+              {new Date(app.appliedAt).toLocaleDateString()}
+            </div>
 
             <a
               href={app.resumeUrl}
