@@ -1,0 +1,123 @@
+.addSection {
+  display: flex;
+
+  gap: 12px;
+
+  margin-bottom: 25px;
+}
+
+/* INPUT FIELD */
+
+.addSection input {
+  flex: 1;
+
+  padding: 10px;
+
+  border-radius: 6px;
+
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+}
+
+/* ADD BUTTON */
+
+.addSection button {
+  padding: 10px 18px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #4a6cf7;
+
+  color: white;
+
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.addSection button:hover {
+  background: #3b58d0;
+}
+
+/* GRID */
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+
+  gap: 20px;
+}
+
+/* CARD */
+
+.card {
+  background: white;
+
+  padding: 18px;
+
+  border-radius: 12px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+/* RESUME LINK */
+
+.card a {
+  color: #4a6cf7;
+
+  font-weight: 500;
+
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
+
+/* DELETE BUTTON */
+
+.card button {
+  border: none;
+
+  background: #ff4d4f;
+
+  color: white;
+
+  padding: 6px 12px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.card button:hover {
+  background: #d9363e;
+}
+
+.resumeTitle {
+  font-size: 15px;
+
+  font-weight: 600;
+
+  margin-bottom: 6px;
+}
+
+.limitMessage {
+  margin-top: 10px;
+
+  font-size: 13px;
+
+  color: #ff9800;
+
+  font-weight: 500;
+}

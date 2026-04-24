@@ -1,0 +1,101 @@
+.wrapper {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-top: 12px;
+}
+
+/* DROPDOWN */
+
+.resumeDropdown {
+  width: 100%;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
+  border: 1px solid #e2e6f0;
+
+  font-size: 14px;
+
+  background: #f9faff;
+
+  transition: border 0.2s ease;
+}
+
+.resumeDropdown:focus {
+  outline: none;
+
+  border: 1px solid #4a6cf7;
+}
+
+/* APPLY BUTTON */
+
+.applyBtn {
+  background: linear-gradient(135deg, #4a6cf7, #6c8dff);
+
+  color: white;
+
+  border: none;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+}
+
+.applyBtn:hover {
+  transform: translateY(-1px);
+
+  box-shadow: 0 4px 10px rgba(74, 108, 247, 0.2);
+}
+
+.applyBtn:disabled {
+  background: #bfc8ff;
+
+  cursor: not-allowed;
+}
+
+/* APPLIED STATE */
+
+.appliedBtn {
+  background: #4caf50;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
+  font-weight: 500;
+}
+
+/* DISABLED BUTTON */
+
+.disabledBtn {
+  background: #e0e3ea;
+
+  color: #777;
+
+  border: none;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
+  font-weight: 500;
+}

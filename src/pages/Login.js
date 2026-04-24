@@ -64,7 +64,7 @@ const Login = () => {
       } else if (profile.role === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/jobs");
+        navigate("/jobseeker/dashboard");
       }
     } catch (err) {
       console.error("Login error:", err);

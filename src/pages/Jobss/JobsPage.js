@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { dbApi } from "../../services/dbApi";
 
 import classes from "../../Styling/Pages/Jobs/JobsPage.module.css";
-import JobApply from "./JobApply";
+// import JobApply from "./JobApply";
 
 const JobsPage = () => {
   const [jobs, setJobs] = useState([]);
@@ -83,7 +83,7 @@ const JobsPage = () => {
 
             <div className={classes.description}>{job.description}</div>
 
-            <JobApply jobId={job.id} />
+            {/* <JobApply jobId={job.id} /> */}
           </div>
         ))}
       </div>

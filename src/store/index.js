@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "./authSlice";
 import recruiterReducer from "./recruiterSlice";
-import jobReducer from "./jobSlice";
+import jobReducer from "./jobSeekerSlice";
 
 const store = configureStore({
   reducer: {

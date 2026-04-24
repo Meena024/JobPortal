@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
-import JobsPage from "./pages/Jobs/JobsPage";
 import RecruiterDashboard from "./pages/Dashboard/RecruiterDashboard/RecruiterDashboard";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard/AdminDashboard";
 
 import PrivateRoute from "./routes/PrivateRoute";
 import Layout from "./components/Layout/Layout";
+import JobSeekerDashboard from "./pages/Dashboard/JobSeekerDashboard/JobSeekerDashboard";
 
 function App() {
   return (
@@ -25,10 +25,10 @@ function App() {
             {/* JOB SEEKER ROUTES */}
 
             <Route
-              path="/jobs"
+              path="/jobseeker/dashboard"
               element={
                 <PrivateRoute allowedRoles={["job_seeker"]}>
-                  <JobsPage />
+                  <JobSeekerDashboard />
                 </PrivateRoute>
               }
             />

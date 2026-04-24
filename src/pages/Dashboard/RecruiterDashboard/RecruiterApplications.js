@@ -19,31 +19,44 @@ const RecruiterApplications = () => {
     const fetchApplications = async () => {
       try {
         const jobsData = await dbApi.get("jobs");
+
         const usersData = await dbApi.get("users");
+
         const applicationsData = await dbApi.get("applications");
 
         if (!jobsData || !applicationsData) return;
 
-        // recruiter jobs only
+        /* GET ONLY RECRUITER JOBS */
+
         const recruiterJobs = Object.entries(jobsData)
+
           .filter(([_, job]) => job.recruiterId === userId)
+
           .reduce((acc, [id, value]) => {
             acc[id] = value;
+
             return acc;
           }, {});
 
+        /* ENRICH APPLICATION DATA */
+
         const enrichedApplications = Object.entries(applicationsData)
+
           .map(([id, app]) => {
             if (!recruiterJobs[app.jobId]) return null;
 
             return {
               id,
+
               ...app,
+
               jobTitle: recruiterJobs[app.jobId]?.title || "Unknown Job",
+
               applicantEmail:
                 usersData?.[app.userId]?.profile?.email || "Unknown User",
             };
           })
+
           .filter(Boolean);
 
         dispatch(
@@ -61,34 +74,51 @@ const RecruiterApplications = () => {
     <div className={classes.container}>
       <h1>Applications Received</h1>
 
-      {applications.length === 0 && <p>No applications yet</p>}
+      {applications.length === 0 && (
+        <p className={classes.emptyState}>No applications yet</p>
+      )}
 
       <div className={classes.grid}>
         {applications.map((app) => (
           <div key={app.id} className={classes.card}>
-            <div className={classes.label}>Applicant</div>
-            <div className={classes.value}>{app.applicantEmail}</div>
+            {/* HEADER */}
 
-            <div className={classes.label}>Job Title</div>
-            <div className={classes.value}>{app.jobTitle}</div>
+            <div className={classes.cardHeader}>
+              <h3>{app.jobTitle}</h3>
 
-            <div className={classes.label}>Applied On</div>
-            <div className={classes.value}>
-              {new Date(app.appliedAt).toLocaleDateString()}
+              <span className={`${classes.statusBadge} ${classes[app.status]}`}>
+                {app.status}
+              </span>
             </div>
+
+            {/* APPLICANT */}
+
+            <div className={classes.metaRow}>
+              <span className={classes.metaLabel}>Applicant</span>
+
+              <span className={classes.metaValue}>{app.applicantEmail}</span>
+            </div>
+
+            {/* DATE */}
+
+            <div className={classes.metaRow}>
+              <span className={classes.metaLabel}>Applied On</span>
+
+              <span className={classes.metaValue}>
+                {new Date(app.appliedAt).toLocaleDateString()}
+              </span>
+            </div>
+
+            {/* RESUME BUTTON */}
 
             <a
               href={app.resumeUrl}
               target="_blank"
               rel="noreferrer"
-              className={classes.resumeLink}
+              className={classes.resumeBtn}
             >
               View Resume
             </a>
-
-            <div className={`${classes.statusBadge} ${classes[app.status]}`}>
-              {app.status}
-            </div>
           </div>
         ))}
       </div>
