@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
@@ -14,6 +14,7 @@ const RecruiterApplications = () => {
   );
 
   const userId = localStorage.getItem("userId");
+  const notesTimers = useRef({});
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -26,8 +27,6 @@ const RecruiterApplications = () => {
 
         if (!jobsData || !applicationsData) return;
 
-        /* GET ONLY RECRUITER JOBS */
-
         const recruiterJobs = Object.entries(jobsData)
 
           .filter(([_, job]) => job.recruiterId === userId)
@@ -37,8 +36,6 @@ const RecruiterApplications = () => {
 
             return acc;
           }, {});
-
-        /* ENRICH APPLICATION DATA */
 
         const enrichedApplications = Object.entries(applicationsData)
 
@@ -70,6 +67,52 @@ const RecruiterApplications = () => {
     fetchApplications();
   }, [dispatch, userId]);
 
+  /*
+      STATUS UPDATE
+  */
+
+  const statusChangeHandler = async (
+    applicationId,
+
+    newStatus,
+  ) => {
+    await dbApi.patch(`applications/${applicationId}`, { status: newStatus });
+
+    dispatch(
+      recruiterActions.updateApplicationStatus({
+        id: applicationId,
+        status: newStatus,
+      }),
+    );
+  };
+
+  /*
+      NOTES UPDATE
+  */
+
+  const notesChangeHandler = (applicationId, notes) => {
+    dispatch(
+      recruiterActions.updateRecruiterNotes({
+        id: applicationId,
+        notes,
+      }),
+    );
+
+    if (notesTimers.current[applicationId]) {
+      clearTimeout(notesTimers.current[applicationId]);
+    }
+
+    notesTimers.current[applicationId] = setTimeout(async () => {
+      try {
+        await dbApi.patch(`applications/${applicationId}`, {
+          recruiterNotes: notes,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }, 600);
+  };
+
   return (
     <div className={classes.container}>
       <h1>Applications Received</h1>
@@ -86,9 +129,19 @@ const RecruiterApplications = () => {
             <div className={classes.cardHeader}>
               <h3>{app.jobTitle}</h3>
 
-              <span className={`${classes.statusBadge} ${classes[app.status]}`}>
-                {app.status}
-              </span>
+              <select
+                value={app.status}
+                onChange={(e) => statusChangeHandler(app.id, e.target.value)}
+                className={classes.statusDropdown}
+              >
+                <option value="pending">Pending</option>
+
+                <option value="reviewed">Reviewed</option>
+
+                <option value="shortlisted">Shortlisted</option>
+
+                <option value="rejected">Rejected</option>
+              </select>
             </div>
 
             {/* APPLICANT */}
@@ -109,7 +162,16 @@ const RecruiterApplications = () => {
               </span>
             </div>
 
-            {/* RESUME BUTTON */}
+            {/* NOTES */}
+
+            <textarea
+              placeholder="Add recruiter notes..."
+              value={app.recruiterNotes || ""}
+              onChange={(e) => notesChangeHandler(app.id, e.target.value)}
+              className={classes.notesBox}
+            />
+
+            {/* RESUME */}
 
             <a
               href={app.resumeUrl}

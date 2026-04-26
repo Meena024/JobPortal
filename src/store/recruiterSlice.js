@@ -47,6 +47,30 @@ const recruiterSlice = createSlice({
       );
     },
 
+    updateApplicationStatus(state, action) {
+      const { id, status } = action.payload;
+
+      const index = state.recruiterApplications.findIndex(
+        (app) => app.id === id,
+      );
+
+      if (index !== -1) {
+        state.recruiterApplications[index].status = status;
+      }
+    },
+
+    updateRecruiterNotes(state, action) {
+      const { id, notes } = action.payload;
+
+      const index = state.recruiterApplications.findIndex(
+        (app) => app.id === id,
+      );
+
+      if (index !== -1) {
+        state.recruiterApplications[index].recruiterNotes = notes;
+      }
+    },
+
     setActiveView(state, action) {
       state.activeView = action.payload;
     },
