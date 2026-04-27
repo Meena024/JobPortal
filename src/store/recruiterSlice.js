@@ -59,6 +59,18 @@ const recruiterSlice = createSlice({
       }
     },
 
+    updateOfferLetter(state, action) {
+      const { id, offerLetterUrl } = action.payload;
+
+      const index = state.recruiterApplications.findIndex(
+        (app) => app.id === id,
+      );
+
+      if (index !== -1) {
+        state.recruiterApplications[index].offerLetterUrl = offerLetterUrl;
+      }
+    },
+
     updateRecruiterNotes(state, action) {
       const { id, notes } = action.payload;
 
@@ -68,6 +80,21 @@ const recruiterSlice = createSlice({
 
       if (index !== -1) {
         state.recruiterApplications[index].recruiterNotes = notes;
+      }
+    },
+
+    updateInterviewDetails(state, action) {
+      const { id, interviewData } = action.payload;
+
+      const index = state.recruiterApplications.findIndex(
+        (app) => app.id === id,
+      );
+
+      if (index !== -1) {
+        state.recruiterApplications[index] = {
+          ...state.recruiterApplications[index],
+          ...interviewData,
+        };
       }
     },
 

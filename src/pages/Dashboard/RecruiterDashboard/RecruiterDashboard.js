@@ -10,7 +10,7 @@ import { recruiterActions } from "../../../store/recruiterSlice";
 
 import CreateJob from "./CreateJob";
 import MyJobs from "./MyJobs";
-import RecruiterApplications from "./RecruiterApplications";
+import RecruiterApplications from "./RecruiterApplications/RecruiterApplications";
 
 const RecruiterDashboard = () => {
   const dispatch = useDispatch();
