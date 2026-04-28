@@ -38,9 +38,9 @@ const RecruiterApplications = () => {
           return {
             id,
             ...app,
-            jobTitle: recruiterJobs[app.jobId]?.title || "Unknown Job",
+            jobTitle: recruiterJobs[app.jobId]?.title,
             applicantEmail:
-              usersData?.[app.userId]?.profile?.email || "Unknown User",
+              usersData?.[app.userId]?.profile?.email || "Unknown",
           };
         })
         .filter(Boolean);
@@ -53,9 +53,9 @@ const RecruiterApplications = () => {
 
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.title}>Applications Received</h1>
+      <h2 className={styles.title}>Applications Received</h2>
 
-      <div className={styles.list}>
+      <div className={styles.grid}>
         {applications.map((app) => (
           <ApplicationCard key={app.id} app={app} />
         ))}

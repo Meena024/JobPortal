@@ -1,13 +1,15 @@
 .card {
-  border: 1px solid #e5e7eb;
+  background: white;
   border-radius: 8px;
-  padding: 12px 14px;
-  background: #ffffff;
+  border: 1px solid #e6e8ec;
+  padding: 10px 12px;
   transition: 0.15s ease;
+  max-width: 350px;
+  border-left: 2px solid transparent;
 }
 
 .card:hover {
-  border-color: #d1d5db;
+  border-color: #cfd3da;
 }
 
 .header {
@@ -17,80 +19,137 @@
   margin-bottom: 6px;
 }
 
-.jobTitle {
-  font-size: 15px;
+.header h3 {
+  font-size: 14px;
   font-weight: 600;
-  color: #111827;
 }
 
-.statusSelect {
-  font-size: 12px;
-  padding: 3px 6px;
+select {
+  font-size: 11px;
+  padding: 2px 6px;
   border-radius: 4px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d6d9df;
+  background: #f9fafb;
+  cursor: pointer;
 }
 
-.applicant {
-  font-size: 13px;
-  color: #374151;
-  margin-bottom: 6px;
+.meta {
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 5px;
 }
 
 .notes {
   width: 100%;
-  min-height: 55px;
-  font-size: 12px;
-  padding: 6px;
-  border-radius: 5px;
-  border: 1px solid #e5e7eb;
-  resize: vertical;
-  margin-bottom: 6px;
+  min-height: 42px;
+  font-size: 11px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #e2e5ea;
+  margin-bottom: 5px;
 }
 
 .link {
-  font-size: 12px;
-  color: #4f46e5;
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-.actions {
-  margin-top: 6px;
-  display: flex;
-  gap: 6px;
-}
-
-.button {
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: none;
-  background: #4f46e5;
-  color: white;
-  cursor: pointer;
-}
-
-.buttonSecondary {
-  background: #6b7280;
-}
-
-.buttonDanger {
-  background: #ef4444;
+  font-size: 11px;
+  color: #4c5cff;
+  margin-bottom: 5px;
+  display: inline-block;
 }
 
 .offerBox {
-  margin-top: 6px;
   display: flex;
   gap: 6px;
+  margin-top: 6px;
 }
 
-.offerInput {
+.offerBox input {
   flex: 1;
-  font-size: 12px;
-  padding: 4px 6px;
+  font-size: 11px;
+  padding: 4px;
   border-radius: 4px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e1e4ea;
+}
+
+.offerBox button {
+  background: #4c5cff;
+  color: white;
+  border: none;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+
+/* =========================
+   STATUS BACKGROUND COLORS
+   ========================= */
+
+.pending {
+  background: #ffffff;
+  border-left-color: #cfd3da;
+}
+
+.reviewed {
+  background: #fff9db;
+  border-left-color: #facc15;
+}
+
+.shortlisted {
+  background: #eef4ff;
+  border-left-color: #4c5cff;
+}
+
+.selected {
+  background: #edf7f1;
+  border-left-color: #22c55e;
+}
+
+.rejected {
+  background: #fdecec;
+  border-left-color: #ef4444;
+}
+
+/* subtle hover improvements */
+
+.reviewed:hover {
+  background: #fff3c4;
+}
+
+.shortlisted:hover {
+  background: #e2ecff;
+}
+
+.selected:hover {
+  background: #e2f3e8;
+}
+
+.rejected:hover {
+  background: #f9d6d6;
+}
+
+/* OFFER LETTER VIEW MODE */
+
+.offerView {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* EDIT BUTTON */
+
+.editOfferBtn {
+  font-size: 11px;
+  padding: 2px 8px;
+
+  background: #4c5cff;
+  color: white;
+
+  border: none;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.editOfferBtn:hover {
+  background: #3f4fe0;
 }

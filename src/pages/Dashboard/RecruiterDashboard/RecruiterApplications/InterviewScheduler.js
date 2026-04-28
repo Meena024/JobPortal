@@ -18,125 +18,87 @@ const InterviewScheduler = ({ app }) => {
     interviewInstructions: app.interviewInstructions || "",
   });
 
-  const changeHandler = (field, value) => {
+  const changeHandler = (field, value) =>
     setForm((prev) => ({
       ...prev,
       [field]: value,
     }));
-  };
 
   const saveInterview = async () => {
-    const {
-      interviewDate,
-      interviewTime,
-      interviewLink,
-      interviewInstructions,
-    } = form;
-
-    if (
-      !interviewDate ||
-      !interviewTime ||
-      !interviewLink ||
-      !interviewInstructions
-    ) {
-      alert("Please complete all interview details 📅");
-      return;
-    }
-
     const interviewData = {
       interviewScheduled: true,
-      interviewDate,
-      interviewTime,
-      interviewLink,
-      interviewInstructions,
+      ...form,
     };
 
-    try {
-      await dbApi.patch(`applications/${app.id}`, interviewData);
+    await dbApi.patch(`applications/${app.id}`, interviewData);
 
-      dispatch(
-        recruiterActions.updateInterviewDetails({
-          id: app.id,
-          interviewData,
-        }),
-      );
+    dispatch(
+      recruiterActions.updateInterviewDetails({
+        id: app.id,
+        interviewData,
+      }),
+    );
 
-      setEditing(false);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save interview details ❌");
-    }
+    setEditing(false);
   };
 
-  if (!editing) {
+  if (!editing)
     return (
-      <div className={styles.wrapper}>
-        <strong className={styles.previewTitle}>Interview Scheduled ✅</strong>
+      <div className={styles.preview}>
+        <div className={styles.left}>
+          <strong className={styles.title}>Interview Scheduled</strong>
 
-        <p className={styles.info}>
-          <b>Date:</b> {app.interviewDate}
-          <br />
-          <b>Time:</b> {app.interviewTime}
-        </p>
+          <div className={styles.meta}>{app.interviewDate}</div>
 
-        <p className={styles.instructions}>{app.interviewInstructions}</p>
+          <div className={styles.meta}>{app.interviewTime}</div>
 
-        <p>
+          <button className={styles.editBtn} onClick={() => setEditing(true)}>
+            Edit
+          </button>
+        </div>
+
+        <div className={styles.right}>
           <a
             href={app.interviewLink}
             target="_blank"
             rel="noreferrer"
-            className={styles.link}
+            className={styles.join}
           >
-            Join Meeting 🔗
+            Join Meeting
           </a>
-        </p>
 
-        <button
-          className={`${styles.button} ${styles.editBtn}`}
-          onClick={() => setEditing(true)}
-        >
-          Edit Interview
-        </button>
+          <div className={styles.instructions}>{app.interviewInstructions}</div>
+        </div>
       </div>
     );
-  }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.inputRow}>
-        <input
-          className={styles.input}
-          type="date"
-          value={form.interviewDate}
-          onChange={(e) => changeHandler("interviewDate", e.target.value)}
-        />
-
-        <input
-          className={styles.input}
-          type="time"
-          value={form.interviewTime}
-          onChange={(e) => changeHandler("interviewTime", e.target.value)}
-        />
-      </div>
+    <div className={styles.editor}>
+      <input
+        type="date"
+        value={form.interviewDate}
+        onChange={(e) => changeHandler("interviewDate", e.target.value)}
+      />
 
       <input
-        className={styles.input}
+        type="time"
+        value={form.interviewTime}
+        onChange={(e) => changeHandler("interviewTime", e.target.value)}
+      />
+
+      <input
         placeholder="Meeting link"
         value={form.interviewLink}
         onChange={(e) => changeHandler("interviewLink", e.target.value)}
       />
 
       <textarea
-        className={styles.textarea}
-        placeholder="Interview instructions"
+        placeholder="Instructions"
         value={form.interviewInstructions}
         onChange={(e) => changeHandler("interviewInstructions", e.target.value)}
       />
 
-      <button className={styles.button} onClick={saveInterview}>
-        {app.interviewScheduled ? "Update Interview" : "Schedule Interview"}
-      </button>
+      <button onClick={saveInterview}>Save Interview</button>
     </div>
   );
 };
