@@ -6,10 +6,17 @@ import classes from "../../../Styling/Pages/JobSeekerDashboard/AppliedJobs.modul
 
 const AppliedJobs = () => {
   const [applications, setApplications] = useState([]);
+  const [filteredApplications, setFilteredApplications] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
+  const [statusFilter, setStatusFilter] = useState("all");
+
   const userId = localStorage.getItem("userId");
+
+  /*
+    FETCH APPLICATIONS
+  */
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -20,39 +27,32 @@ const AppliedJobs = () => {
 
         if (!applicationsData) {
           setApplications([]);
-
           return;
         }
 
         const arr = Object.entries(applicationsData)
-
           .map(([id, value]) => ({
             id,
             ...value,
           }))
-
           .filter((app) => app.userId === userId)
-
           .map((app) => {
             const job = jobsData?.[app.jobId];
 
             return {
               ...app,
-
               jobTitle: job?.title || "Job removed",
-
               companyName: job?.companyName || "Unknown company",
-
               description:
                 job?.description || "This job is no longer available.",
-
               salary: job?.salary || "-",
-
+              location: job?.location || "-",
               jobExists: !!job,
             };
           });
 
         setApplications(arr);
+        setFilteredApplications(arr);
       } catch (err) {
         console.error(err);
       } finally {
@@ -63,9 +63,40 @@ const AppliedJobs = () => {
     fetchApplications();
   }, [userId]);
 
+  /*
+    FILTER APPLICATIONS
+  */
+
+  useEffect(() => {
+    if (statusFilter === "all") {
+      setFilteredApplications(applications);
+    } else {
+      setFilteredApplications(
+        applications.filter((app) => app.status === statusFilter),
+      );
+    }
+  }, [statusFilter, applications]);
+
   return (
     <div>
-      <h1>Applied Jobs</h1>
+      {/* HEADER ROW */}
+
+      <div className={classes.headerRow}>
+        <h1>Applied Jobs</h1>
+
+        <select
+          className={classes.filterDropdown}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="reviewed">Reviewed</option>
+          <option value="shortlisted">Shortlisted</option>
+          <option value="selected">Selected</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
 
       {/* LOADING STATE */}
 
@@ -75,21 +106,28 @@ const AppliedJobs = () => {
 
       {/* EMPTY STATE */}
 
-      {!loading && applications.length === 0 && (
-        <p className={classes.infoMessage}>No applications yet</p>
+      {!loading && filteredApplications.length === 0 && (
+        <p className={classes.infoMessage}>No applications found</p>
       )}
 
       {/* APPLICATION GRID */}
 
       <div className={classes.grid}>
-        {applications.map((app) => (
-          <div key={app.id} className={classes.card}>
+        {filteredApplications.map((app) => (
+          <div
+            key={app.id}
+            className={`${classes.card} ${classes[app.status]}`}
+          >
             {/* TITLE + STATUS */}
 
             <div className={classes.titleRow}>
               <h3>{app.jobTitle}</h3>
 
-              <span className={classes.status}>{app.status}</span>
+              <span
+                className={`${classes.status} ${classes[`${app.status}Badge`]}`}
+              >
+                {app.status}
+              </span>
             </div>
 
             {/* JOB REMOVED WARNING */}
@@ -104,7 +142,7 @@ const AppliedJobs = () => {
 
             <div className={classes.metaRow}>
               <span className={classes.metaLabel}>Company:</span>{" "}
-              {app.companyName}
+              {app.companyName}, {app.location}
             </div>
 
             {/* DESCRIPTION */}
@@ -127,6 +165,19 @@ const AppliedJobs = () => {
             >
               View Resume
             </a>
+
+            {/* OFFER LETTER */}
+
+            {app.status === "selected" && app.offerLetterUrl && (
+              <a
+                href={app.offerLetterUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={classes.resumeBtn}
+              >
+                View Offer Letter
+              </a>
+            )}
           </div>
         ))}
       </div>

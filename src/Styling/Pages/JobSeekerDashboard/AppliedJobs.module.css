@@ -19,6 +19,8 @@
 
   border-radius: 12px;
 
+  border-left: 2px solid transparent;
+
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
 
   transition: transform 0.15s ease;
@@ -58,10 +60,6 @@
   font-size: 11px;
 
   font-weight: 600;
-
-  background: #fff4e5;
-
-  color: #ff9800;
 }
 
 /* REMOVED JOB BADGE */
@@ -164,4 +162,99 @@ h1 {
   font-size: 14px;
 
   color: #777;
+}
+
+/* =========================
+   STATUS BACKGROUND COLORS
+   ========================= */
+
+.pending {
+  background: #ffffff;
+  border-left-color: #cfd3da;
+}
+
+.reviewed {
+  background: #fff9db;
+  border-left-color: #facc15;
+}
+
+.shortlisted {
+  background: #eef4ff;
+  border-left-color: #4c5cff;
+}
+
+.selected {
+  background: #edf7f1;
+  border-left-color: #22c55e;
+}
+
+.rejected {
+  background: #fdecec;
+  border-left-color: #ef4444;
+}
+
+/* subtle hover improvements */
+
+.reviewed:hover {
+  background: #fff3c4;
+}
+
+.shortlisted:hover {
+  background: #e2ecff;
+}
+
+.selected:hover {
+  background: #e2f3e8;
+}
+
+.rejected:hover {
+  background: #f9d6d6;
+}
+
+/* STATUS BADGE COLORS */
+
+.pendingBadge {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.reviewedBadge {
+  background: #fff3c4;
+  color: #b45309;
+}
+
+.shortlistedBadge {
+  background: #dbe7ff;
+  color: #1e40af;
+}
+
+.selectedBadge {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.rejectedBadge {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* HEADER FILTER ROW */
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* FILTER DROPDOWN */
+
+.filterDropdown {
+  font-size: 13px;
+  padding: 4px 10px;
+
+  border-radius: 6px;
+  border: 1px solid #d6d9df;
+
+  background: white;
+  cursor: pointer;
 }
