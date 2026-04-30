@@ -8,6 +8,8 @@ const jobSeekerSlice = createSlice({
 
     appliedJobs: [],
 
+    savedJobs: [],
+
     activeView: "available",
   },
 
@@ -26,6 +28,20 @@ const jobSeekerSlice = createSlice({
 
     setAppliedJobs(state, action) {
       state.appliedJobs = action.payload;
+    },
+
+    setSavedJobs(state, action) {
+      state.savedJobs = action.payload;
+    },
+
+    addSavedJob(state, action) {
+      state.savedJobs.push(action.payload);
+    },
+
+    removeSavedJob(state, action) {
+      state.savedJobs = state.savedJobs.filter(
+        (job) => job.id !== action.payload,
+      );
     },
 
     setActiveView(state, action) {

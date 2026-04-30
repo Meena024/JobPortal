@@ -32,6 +32,8 @@
 
 .titleRow {
   margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .card h3 {
@@ -86,4 +88,45 @@
   font-size: 14px;
 
   color: #777;
+}
+
+/* HEADER ROW */
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* FILTER GROUP */
+
+.filters {
+  display: flex;
+  gap: 10px;
+}
+
+/* FILTER DROPDOWNS */
+
+.filters select {
+  font-size: 13px;
+
+  padding: 4px 10px;
+
+  border-radius: 6px;
+
+  border: 1px solid #d6d9df;
+
+  background: white;
+
+  cursor: pointer;
+}
+
+.bookmarkIcon {
+  font-size: 18px;
+  cursor: pointer;
+  color: #4c5cff;
+}
+
+.bookmarkIcon:hover {
+  transform: scale(1.15);
 }

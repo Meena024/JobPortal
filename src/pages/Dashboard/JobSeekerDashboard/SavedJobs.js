@@ -5,11 +5,9 @@ import JobApply from "./JobApply";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/AvailableJobs.module.css";
 
-const AvailableJobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
-
-  const [savedJobs, setSavedJobs] = useState({});
+const SavedJobs = () => {
+  const [savedJobsList, setSavedJobsList] = useState([]);
+  const [filteredSavedJobs, setFilteredSavedJobs] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -19,43 +17,49 @@ const AvailableJobs = () => {
   const userId = localStorage.getItem("userId");
 
   /*
-    FETCH JOBS + SAVED JOBS
+    FETCH SAVED JOBS
   */
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchSavedJobs = async () => {
       try {
+        const savedJobsData = await dbApi.get("savedJobs");
         const jobsData = await dbApi.get("jobs");
 
-        const savedJobsData = await dbApi.get("savedJobs");
-
-        if (!jobsData) {
-          setJobs([]);
+        if (!savedJobsData) {
+          setSavedJobsList([]);
           return;
         }
 
-        const approvedJobs = Object.entries(jobsData)
+        const arr = Object.entries(savedJobsData)
           .map(([id, value]) => ({
             id,
             ...value,
           }))
-          .filter((job) => job.status === "approved");
+          .filter((item) => item.userId === userId)
+          .map((item) => {
+            const job = jobsData?.[item.jobId];
 
-        setJobs(approvedJobs);
-        setFilteredJobs(approvedJobs);
+            return {
+              savedId: item.id,
+              jobId: item.jobId,
 
-        /*
-          LOAD USER SAVED JOBS
-        */
+              title: job?.title || "Job removed",
+              companyName: job?.companyName || "Unknown company",
 
-        const userSaved = Object.entries(savedJobsData || {})
-          .filter(([_, value]) => value.userId === userId)
-          .reduce((acc, [id, value]) => {
-            acc[value.jobId] = id;
-            return acc;
-          }, {});
+              location: job?.location || "-",
 
-        setSavedJobs(userSaved);
+              description:
+                job?.description || "This job is no longer available.",
+
+              salary: job?.salary || "-",
+
+              jobExists: !!job,
+            };
+          });
+
+        setSavedJobsList(arr);
+        setFilteredSavedJobs(arr);
       } catch (err) {
         console.error(err);
       } finally {
@@ -63,24 +67,22 @@ const AvailableJobs = () => {
       }
     };
 
-    fetchJobs();
+    fetchSavedJobs();
   }, [userId]);
 
   /*
-    MULTI FILTER SUPPORT
+    APPLY FILTERS (PARALLEL)
   */
 
   useEffect(() => {
-    let updatedJobs = [...jobs];
+    let updated = [...savedJobsList];
 
     if (locationFilter !== "all") {
-      updatedJobs = updatedJobs.filter(
-        (job) => job.location === locationFilter,
-      );
+      updated = updated.filter((job) => job.location === locationFilter);
     }
 
     if (salaryFilter !== "all") {
-      updatedJobs = updatedJobs.filter((job) => {
+      updated = updated.filter((job) => {
         const salary = Number(job.salary);
 
         if (salaryFilter === "0-5") return salary <= 500000;
@@ -94,50 +96,26 @@ const AvailableJobs = () => {
       });
     }
 
-    setFilteredJobs(updatedJobs);
-  }, [locationFilter, salaryFilter, jobs]);
+    setFilteredSavedJobs(updated);
+  }, [locationFilter, salaryFilter, savedJobsList]);
 
   /*
     UNIQUE LOCATIONS
   */
 
-  const uniqueLocations = [...new Set(jobs.map((job) => job.location))];
+  const uniqueLocations = [
+    ...new Set(savedJobsList.map((job) => job.location)),
+  ];
 
   /*
-    SAVE / UNSAVE JOB
+    REMOVE SAVED JOB
   */
 
-  const toggleSaveJob = async (jobId) => {
+  const removeSavedJob = async (savedId) => {
     try {
-      /*
-      REMOVE SAVED JOB
-    */
+      await dbApi.remove(`savedJobs/${savedId}`);
 
-      if (savedJobs[jobId]) {
-        await dbApi.remove(`savedJobs/${savedJobs[jobId]}`);
-
-        setSavedJobs((prev) => {
-          const updated = { ...prev };
-          delete updated[jobId];
-          return updated;
-        });
-      } else {
-
-      /*
-      SAVE JOB
-    */
-        const newId = Date.now().toString();
-
-        await dbApi.patch(`savedJobs/${newId}`, {
-          userId,
-          jobId,
-        });
-
-        setSavedJobs((prev) => ({
-          ...prev,
-          [jobId]: newId,
-        }));
-      }
+      setSavedJobsList((prev) => prev.filter((job) => job.savedId !== savedId));
     } catch (err) {
       console.error(err);
     }
@@ -148,7 +126,7 @@ const AvailableJobs = () => {
       {/* HEADER + FILTERS */}
 
       <div className={classes.headerRow}>
-        <h1>Available Jobs</h1>
+        <h1>Saved Jobs</h1>
 
         <div className={classes.filters}>
           {/* LOCATION FILTER */}
@@ -183,33 +161,42 @@ const AvailableJobs = () => {
 
       {/* LOADING */}
 
-      {loading && <p className={classes.infoMessage}>Loading jobs...</p>}
+      {loading && <p className={classes.infoMessage}>Loading saved jobs...</p>}
 
       {/* EMPTY */}
 
-      {!loading && filteredJobs.length === 0 && (
-        <p className={classes.infoMessage}>No jobs match selected filters</p>
+      {!loading && filteredSavedJobs.length === 0 && (
+        <p className={classes.infoMessage}>
+          No saved jobs match selected filters
+        </p>
       )}
 
       {/* GRID */}
 
       <div className={classes.grid}>
-        {filteredJobs.map((job) => (
-          <div key={job.id} className={classes.card}>
-            {/* TITLE + BOOKMARK */}
+        {filteredSavedJobs.map((job) => (
+          <div key={job.savedId} className={classes.card}>
+            {/* TITLE + REMOVE BOOKMARK */}
 
             <div className={classes.titleRow}>
               <h3>
                 <strong>{job.title}</strong>
               </h3>
-
               <span
                 className={classes.bookmarkIcon}
-                onClick={() => toggleSaveJob(job.id)}
+                onClick={() => removeSavedJob(job.savedId)}
               >
-                {savedJobs[job.id] ? "★" : "☆"}
+                ★
               </span>
             </div>
+
+            {/* REMOVED JOB WARNING */}
+
+            {!job.jobExists && (
+              <span className={classes.removedBadge}>
+                Job no longer available
+              </span>
+            )}
 
             {/* COMPANY */}
 
@@ -235,7 +222,7 @@ const AvailableJobs = () => {
 
             {/* APPLY BUTTON */}
 
-            <JobApply jobId={job.id} />
+            {job.jobExists && <JobApply jobId={job.jobId} />}
           </div>
         ))}
       </div>
@@ -243,4 +230,4 @@ const AvailableJobs = () => {
   );
 };
 
-export default AvailableJobs;
+export default SavedJobs;

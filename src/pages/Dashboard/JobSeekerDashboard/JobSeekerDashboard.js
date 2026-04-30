@@ -7,6 +7,7 @@ import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 import AvailableJobs from "./AvailableJobs";
 import AppliedJobs from "./AppliedJobs";
 import MyResumes from "./MyResumes";
+import SavedJobs from "./SavedJobs";
 
 const JobSeekerDashboard = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,12 @@ const JobSeekerDashboard = () => {
         </button>
 
         <button
+          onClick={() => dispatch(jobSeekerActions.setActiveView("saved"))}
+        >
+          Saved Jobs
+        </button>
+
+        <button
           onClick={() => dispatch(jobSeekerActions.setActiveView("resumes"))}
         >
           My Resumes
@@ -41,6 +48,8 @@ const JobSeekerDashboard = () => {
         {activeView === "available" && <AvailableJobs />}
 
         {activeView === "applied" && <AppliedJobs />}
+
+        {activeView === "saved" && <SavedJobs />}
 
         {activeView === "resumes" && <MyResumes />}
       </main>
