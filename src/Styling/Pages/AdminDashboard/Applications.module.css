@@ -1,36 +1,35 @@
-/* PAGE TITLE */
+/* =========================
+   PAGE TITLE
+   ========================= */
 
 .title {
   font-size: 26px;
-
   font-weight: 600;
-
   margin-bottom: 25px;
-
   color: #222;
 }
 
-/* GRID LAYOUT */
+/* =========================
+   GRID
+   ========================= */
 
 .applicationGrid {
   display: grid;
-
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-
   gap: 25px;
 }
 
-/* CARD */
+/* =========================
+   CARD
+   ========================= */
 
 .applicationCard {
+  position: relative;
   background: white;
-
   border-radius: 12px;
-
   padding: 22px;
-
+  border-left: 4px solid transparent;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-
   transition: transform 0.2s ease;
 }
 
@@ -38,72 +37,124 @@
   transform: translateY(-4px);
 }
 
-/* FIELD LABEL */
+/* =========================
+   CARD STATUS BACKGROUNDS
+   ========================= */
 
-.label {
-  font-size: 12px;
-
-  color: #888;
-
-  margin-top: 6px;
+.cardPending {
+  border-left-color: #aeb0b4;
 }
 
-/* FIELD VALUE */
+.cardReviewed {
+  background: #fff9db;
+  border-left-color: #facc15;
+}
 
-.value {
+.cardShortlisted {
+  background: #eef4ff;
+  border-left-color: #4c5cff;
+}
+
+.cardSelected {
+  background: #edf7f1;
+  border-left-color: #22c55e;
+}
+
+.cardRejected {
+  background: #fdecec;
+  border-left-color: #ef4444;
+}
+
+/* =========================
+   STATUS BADGE
+   ========================= */
+
+.statusBadge {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  text-transform: capitalize;
+}
+
+/* =========================
+   BADGE COLORS
+   ========================= */
+
+.badgePending {
+  color: #6b7280;
+}
+
+.badgeReviewed {
+  color: #92400e;
+}
+
+.badgeShortlisted {
+  color: #1e40af;
+}
+
+.badgeSelected {
+  color: #065f46;
+}
+
+.badgeRejected {
+  color: #991b1b;
+}
+
+/* =========================
+   ROW STYLE
+   ========================= */
+
+.row {
   font-size: 14px;
-
-  font-weight: 500;
-
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-/* STATUS BADGE */
+/* =========================
+   FILTER BAR
+   ========================= */
 
-.status {
-  display: inline-block;
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
 
-  padding: 4px 12px;
-
-  border-radius: 20px;
-
+.filters select {
   font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #d6d9df;
+  background: white;
+  cursor: pointer;
+}
 
-  font-weight: 500;
+/* =========================
+   RESUME BUTTON
+   ========================= */
 
+.resumeBtn {
+  display: inline-block;
   margin-top: 8px;
+  font-size: 13px;
+  color: #4c5cff;
+  text-decoration: none;
+  font-weight: 500;
 }
 
-/* STATUS COLORS */
-
-.pending {
-  background: #fff4e5;
-
-  color: #ff9800;
+.resumeBtn:hover {
+  text-decoration: underline;
 }
 
-.reviewed {
-  background: #e3f2fd;
-
-  color: #1565c0;
-}
-
-.accepted {
-  background: #e8f5e9;
-
-  color: #2e7d32;
-}
-
-.rejected {
-  background: #fdecea;
-
-  color: #d32f2f;
-}
-
-/* EMPTY STATE */
+/* =========================
+   EMPTY STATE
+   ========================= */
 
 .empty {
   font-size: 15px;
-
   color: #777;
 }

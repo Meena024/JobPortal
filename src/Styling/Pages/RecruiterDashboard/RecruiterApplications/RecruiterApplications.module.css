@@ -17,3 +17,25 @@
   gap: 14px;
   justify-content: start;
 }
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.filterDropdown {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #d6d9df;
+  background: white;
+  cursor: pointer;
+}
+
+.info {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 10px;
+}

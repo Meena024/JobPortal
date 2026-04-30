@@ -1,6 +1,9 @@
+import { useEffect, useState } from "react";
+
 import { dbApi } from "../../../services/dbApi";
 import { useDispatch, useSelector } from "react-redux";
 import { recruiterActions } from "../../../store/recruiterSlice";
+
 import classes from "../../../Styling/Pages/RecruiterDashboard/MyJobs.module.css";
 
 const MyJobs = () => {
@@ -12,6 +15,68 @@ const MyJobs = () => {
 
   const dispatch = useDispatch();
 
+  /*
+    FILTER STATE
+  */
+
+  const [filteredJobs, setFilteredJobs] = useState([]);
+
+  const [titleFilter, setTitleFilter] = useState("all");
+  const [companyFilter, setCompanyFilter] = useState("all");
+  const [locationFilter, setLocationFilter] = useState("all");
+  const [salaryFilter, setSalaryFilter] = useState("all");
+
+  /*
+    APPLY MULTIPLE FILTERS
+  */
+
+  useEffect(() => {
+    let updated = [...jobs];
+
+    if (titleFilter !== "all") {
+      updated = updated.filter((job) => job.title === titleFilter);
+    }
+
+    if (companyFilter !== "all") {
+      updated = updated.filter((job) => job.companyName === companyFilter);
+    }
+
+    if (locationFilter !== "all") {
+      updated = updated.filter((job) => job.location === locationFilter);
+    }
+
+    if (salaryFilter !== "all") {
+      updated = updated.filter((job) => {
+        const salary = Number(job.salary);
+
+        if (salaryFilter === "0-5") return salary <= 500000;
+
+        if (salaryFilter === "5-10")
+          return salary > 500000 && salary <= 1000000;
+
+        if (salaryFilter === "10+") return salary > 1000000;
+
+        return true;
+      });
+    }
+
+    setFilteredJobs(updated);
+  }, [jobs, titleFilter, companyFilter, locationFilter, salaryFilter]);
+
+  /*
+    UNIQUE FILTER VALUES
+  */
+
+  const uniqueTitles = [...new Set(jobs.map((j) => j.title))];
+
+  const uniqueCompanies = [...new Set(jobs.map((j) => j.companyName))];
+
+  const uniqueLocations = [...new Set(jobs.map((j) => j.location))];
+
+  /*
+    DELETE JOB
+  */
+
   const deleteHandler = async (jobId) => {
     try {
       await dbApi.remove(`jobs/${jobId}`);
@@ -21,6 +86,10 @@ const MyJobs = () => {
       console.error(err);
     }
   };
+
+  /*
+    EDIT JOB
+  */
 
   const editHandler = (job) => {
     dispatch(recruiterActions.setEditingJob(job));
@@ -32,16 +101,66 @@ const MyJobs = () => {
     <div className={classes.container}>
       <h1 className={classes.title}>My Job Listings</h1>
 
+      {/* FILTER ROW */}
+
+      <div className={classes.filters}>
+        <select
+          value={titleFilter}
+          onChange={(e) => setTitleFilter(e.target.value)}
+        >
+          <option value="all">All Titles</option>
+
+          {uniqueTitles.map((title) => (
+            <option key={title}>{title}</option>
+          ))}
+        </select>
+
+        <select
+          value={companyFilter}
+          onChange={(e) => setCompanyFilter(e.target.value)}
+        >
+          <option value="all">All Companies</option>
+
+          {uniqueCompanies.map((company) => (
+            <option key={company}>{company}</option>
+          ))}
+        </select>
+
+        <select
+          value={locationFilter}
+          onChange={(e) => setLocationFilter(e.target.value)}
+        >
+          <option value="all">All Locations</option>
+
+          {uniqueLocations.map((loc) => (
+            <option key={loc}>{loc}</option>
+          ))}
+        </select>
+
+        <select
+          value={salaryFilter}
+          onChange={(e) => setSalaryFilter(e.target.value)}
+        >
+          <option value="all">All Salaries</option>
+
+          <option value="0-5">0 – 5 LPA</option>
+
+          <option value="5-10">5 – 10 LPA</option>
+
+          <option value="10+">10+ LPA</option>
+        </select>
+      </div>
+
       {loading && <p className={classes.info}>Loading jobs...</p>}
 
       {error && <p className={classes.error}>{error}</p>}
 
-      {!loading && jobs.length === 0 && (
-        <p className={classes.info}>No jobs posted yet</p>
+      {!loading && filteredJobs.length === 0 && (
+        <p className={classes.info}>No jobs match selected filters</p>
       )}
 
       <div className={classes.jobGrid}>
-        {jobs.map((job) => (
+        {filteredJobs.map((job) => (
           <div key={job.id} className={classes.jobCard}>
             <div className={classes.headerRow}>
               <div className={classes.jobTitle}>{job.title}</div>

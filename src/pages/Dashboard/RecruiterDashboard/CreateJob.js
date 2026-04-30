@@ -13,6 +13,14 @@ const CreateJob = () => {
 
   const recruiterId = localStorage.getItem("userId");
 
+  /*
+    FETCH RECRUITER EMAIL FROM LOCAL STORAGE PROFILE
+  */
+
+  const recruiterProfile = JSON.parse(localStorage.getItem("profile") || "{}");
+
+  const recruiterEmail = recruiterProfile?.email || "Unknown Recruiter";
+
   const editingJob = useSelector((state) => state.recruiter.editingJob);
 
   const [form, setForm] = useState(
@@ -26,6 +34,10 @@ const CreateJob = () => {
     },
   );
 
+  /*
+    INPUT CHANGE HANDLER
+  */
+
   const changeHandler = (e) => {
     setForm({
       ...form,
@@ -33,6 +45,10 @@ const CreateJob = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  /*
+    SUBMIT HANDLER
+  */
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -42,18 +58,20 @@ const CreateJob = () => {
 
       recruiterId,
 
+      recruiterEmail, // ✅ NEW FIELD ADDED HERE
+
       status: editingJob?.status || "pending",
 
       createdAt: editingJob?.createdAt || new Date().toISOString(),
     };
 
     try {
-      if (editingJob) {
-        await dbApi.put(
-          `jobs/${editingJob.id}`,
+      /*
+        UPDATE EXISTING JOB
+      */
 
-          jobData,
-        );
+      if (editingJob) {
+        await dbApi.put(`jobs/${editingJob.id}`, jobData);
 
         dispatch(
           recruiterActions.updateRecruiterJob({
@@ -63,11 +81,10 @@ const CreateJob = () => {
           }),
         );
       } else {
-        const response = await dbApi.post(
-          "jobs",
-
-          jobData,
-        );
+        /*
+        CREATE NEW JOB
+      */
+        const response = await dbApi.post("jobs", jobData);
 
         dispatch(
           recruiterActions.addRecruiterJob({
@@ -77,6 +94,10 @@ const CreateJob = () => {
           }),
         );
       }
+
+      /*
+        RESET EDIT STATE
+      */
 
       dispatch(recruiterActions.setEditingJob(null));
 
@@ -88,7 +109,7 @@ const CreateJob = () => {
 
   return (
     <form className={classes.form} onSubmit={submitHandler}>
-      <h2>Create Job</h2>
+      <h2>{editingJob ? "Update Job" : "Create Job"}</h2>
 
       <input
         name="title"

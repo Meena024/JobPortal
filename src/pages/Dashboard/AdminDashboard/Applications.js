@@ -7,6 +7,26 @@ import classes from "../../../Styling/Pages/AdminDashboard/Applications.module.c
 const Applications = () => {
   const [applications, setApplications] = useState([]);
 
+  const [filteredApplications, setFilteredApplications] = useState([]);
+
+  const [applicantFilter, setApplicantFilter] = useState("all");
+
+  const [recruiterFilter, setRecruiterFilter] = useState("all");
+
+  const [jobFilter, setJobFilter] = useState("all");
+
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  /*
+    HELPER FUNCTION
+  */
+
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  /*
+    FETCH APPLICATIONS
+  */
+
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -18,20 +38,27 @@ const Applications = () => {
 
         if (!applicationsData) return;
 
-        const enrichedApplications = Object.entries(applicationsData)
+        const enrichedApplications = Object.entries(applicationsData).map(
+          ([id, app]) => {
+            const job = jobsData?.[app.jobId];
 
-          .map(([id, app]) => ({
-            id,
+            return {
+              id,
+              ...app,
 
-            ...app,
+              jobTitle: job?.title || "Unknown Job",
 
-            jobTitle: jobsData?.[app.jobId]?.title || "Unknown Job",
+              applicantEmail:
+                usersData?.[app.userId]?.profile?.email || "Unknown User",
 
-            applicantEmail:
-              usersData?.[app.userId]?.profile?.email || "Unknown User",
-          }));
+              recruiterEmail: job?.recruiterEmail || "Unknown Recruiter",
+            };
+          },
+        );
 
         setApplications(enrichedApplications);
+
+        setFilteredApplications(enrichedApplications);
       } catch (err) {
         console.error(err);
       }
@@ -40,28 +67,142 @@ const Applications = () => {
     fetchApplications();
   }, []);
 
+  /*
+    APPLY FILTERS
+  */
+
+  useEffect(() => {
+    let updated = [...applications];
+
+    if (applicantFilter !== "all") {
+      updated = updated.filter((app) => app.applicantEmail === applicantFilter);
+    }
+
+    if (recruiterFilter !== "all") {
+      updated = updated.filter((app) => app.recruiterEmail === recruiterFilter);
+    }
+
+    if (jobFilter !== "all") {
+      updated = updated.filter((app) => app.jobTitle === jobFilter);
+    }
+
+    if (statusFilter !== "all") {
+      updated = updated.filter((app) => app.status === statusFilter);
+    }
+
+    setFilteredApplications(updated);
+  }, [applications, applicantFilter, recruiterFilter, jobFilter, statusFilter]);
+
+  /*
+    UNIQUE FILTER VALUES
+  */
+
+  const uniqueApplicants = [
+    ...new Set(applications.map((a) => a.applicantEmail)),
+  ];
+
+  const uniqueRecruiters = [
+    ...new Set(applications.map((a) => a.recruiterEmail)),
+  ];
+
+  const uniqueJobs = [...new Set(applications.map((a) => a.jobTitle))];
+
+  const uniqueStatuses = [...new Set(applications.map((a) => a.status))];
+
   return (
     <>
       <h1 className={classes.title}>Job Applications</h1>
 
-      {applications.length === 0 && (
-        <p className={classes.empty}>No applications yet</p>
+      {/* FILTER BAR */}
+
+      <div className={classes.filters}>
+        <select
+          value={applicantFilter}
+          onChange={(e) => setApplicantFilter(e.target.value)}
+        >
+          <option value="all">All Applicants</option>
+
+          {uniqueApplicants.map((email) => (
+            <option key={email}>{email}</option>
+          ))}
+        </select>
+
+        <select
+          value={recruiterFilter}
+          onChange={(e) => setRecruiterFilter(e.target.value)}
+        >
+          <option value="all">All Recruiters</option>
+
+          {uniqueRecruiters.map((email) => (
+            <option key={email}>{email}</option>
+          ))}
+        </select>
+
+        <select
+          value={jobFilter}
+          onChange={(e) => setJobFilter(e.target.value)}
+        >
+          <option value="all">All Jobs</option>
+
+          {uniqueJobs.map((title) => (
+            <option key={title}>{title}</option>
+          ))}
+        </select>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">All Statuses</option>
+
+          {uniqueStatuses.map((status) => (
+            <option key={status}>{status}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* EMPTY STATE */}
+
+      {filteredApplications.length === 0 && (
+        <p className={classes.empty}>No applications match selected filters</p>
       )}
 
+      {/* GRID */}
+
       <div className={classes.applicationGrid}>
-        {applications.map((app) => (
-          <div key={app.id} className={classes.applicationCard}>
-            <div className={classes.label}>Applicant</div>
+        {filteredApplications.map((app) => (
+          <div
+            key={app.id}
+            className={`${classes.applicationCard} ${
+              classes[`card${capitalize(app.status)}`]
+            }`}
+          >
+            {/* STATUS BADGE */}
 
-            <div className={classes.value}>{app.applicantEmail}</div>
+            {app.status && (
+              <span
+                className={`${classes.statusBadge} ${
+                  classes[`badge${capitalize(app.status)}`]
+                }`}
+              >
+                {app.status}
+              </span>
+            )}
 
-            <div className={classes.label}>Job Title</div>
+            <div className={classes.row}>
+              <strong>Applicant:</strong> {app.applicantEmail}
+            </div>
 
-            <div className={classes.value}>{app.jobTitle}</div>
+            <div className={classes.row}>
+              <strong>Job Title:</strong> {app.jobTitle}
+            </div>
 
-            <div className={classes.label}>Applied On</div>
+            <div className={classes.row}>
+              <strong>Recruiter:</strong> {app.recruiterEmail}
+            </div>
 
-            <div className={classes.value}>
+            <div className={classes.row}>
+              <strong>Applied On:</strong>{" "}
               {new Date(app.appliedAt).toLocaleDateString()}
             </div>
 
@@ -73,12 +214,6 @@ const Applications = () => {
             >
               View Resume
             </a>
-
-            {app.status && (
-              <span className={`${classes.status} ${classes[app.status]}`}>
-                {app.status}
-              </span>
-            )}
           </div>
         ))}
       </div>
