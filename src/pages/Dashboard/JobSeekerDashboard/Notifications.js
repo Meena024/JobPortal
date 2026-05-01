@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
@@ -14,39 +13,12 @@ const Notifications = () => {
   const notifications = useSelector((state) => state.jobs.notifications || []);
 
   /*
-    FETCH NOTIFICATIONS
+    SORT: newest notification first
   */
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const data = await dbApi.get(`notifications/${userId}`);
-
-        if (!data) {
-          dispatch(jobSeekerActions.setNotifications([]));
-          return;
-        }
-
-        /*
-          IMPORTANT FIX:
-          firebaseKey must override inner id
-        */
-
-        const list = Object.entries(data)
-          .map(([firebaseKey, value]) => ({
-            ...value,
-            id: firebaseKey,
-          }))
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        dispatch(jobSeekerActions.setNotifications(list));
-      } catch (err) {
-        console.error("Notification fetch error:", err);
-      }
-    };
-
-    fetchNotifications();
-  }, [dispatch, userId]);
+  const sortedNotifications = [...notifications].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+  );
 
   /*
     MARK READ + NAVIGATE
@@ -82,12 +54,12 @@ const Notifications = () => {
     <div className={classes.wrapper}>
       <h1 className={classes.title}>Notifications</h1>
 
-      {notifications.length === 0 && (
+      {sortedNotifications.length === 0 && (
         <p className={classes.empty}>No notifications yet</p>
       )}
 
       <div className={classes.list}>
-        {notifications.map((note) => (
+        {sortedNotifications.map((note) => (
           <div
             key={note.id}
             className={`${classes.card} ${

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
@@ -21,6 +21,8 @@ const AppliedJobs = () => {
   const highlightedApplicationId = useSelector(
     (state) => state.jobs.highlightedApplicationId,
   );
+
+  const highlightedRef = useRef(null);
 
   /*
   FETCH APPLICATIONS
@@ -73,10 +75,16 @@ const AppliedJobs = () => {
   }, [userId]);
 
   /*
-    FILTER APPLICATIONS
+  FILTER APPLICATIONS
   */
 
   useEffect(() => {
+    if (highlightedApplicationId) {
+      setStatusFilter("all");
+      setFilteredApplications(applications);
+      return;
+    }
+
     if (statusFilter === "all") {
       setFilteredApplications(applications);
     } else {
@@ -84,7 +92,22 @@ const AppliedJobs = () => {
         applications.filter((app) => app.status === statusFilter),
       );
     }
-  }, [statusFilter, applications]);
+  }, [statusFilter, applications, highlightedApplicationId]);
+
+  /*
+  SCROLL INTO VIEW AFTER RENDER
+  */
+
+  useEffect(() => {
+    if (!highlightedApplicationId) return;
+
+    setTimeout(() => {
+      highlightedRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 250);
+  }, [highlightedApplicationId, filteredApplications]);
 
   /*
   CLEAR HIGHLIGHT AFTER FEW SECONDS
@@ -139,15 +162,7 @@ const AppliedJobs = () => {
         {filteredApplications.map((app) => (
           <div
             key={app.id}
-            ref={
-              highlightedApplicationId === app.id
-                ? (el) =>
-                    el?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    })
-                : null
-            }
+            ref={highlightedApplicationId === app.id ? highlightedRef : null}
             className={`${classes.card} ${classes[app.status]} ${
               highlightedApplicationId === app.id ? classes.highlightCard : ""
             }`}
