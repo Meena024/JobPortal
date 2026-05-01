@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
+import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/AppliedJobs.module.css";
 
@@ -14,8 +16,14 @@ const AppliedJobs = () => {
 
   const userId = localStorage.getItem("userId");
 
+  const dispatch = useDispatch();
+
+  const highlightedApplicationId = useSelector(
+    (state) => state.jobs.highlightedApplicationId,
+  );
+
   /*
-    FETCH APPLICATIONS
+  FETCH APPLICATIONS
   */
 
   useEffect(() => {
@@ -27,6 +35,7 @@ const AppliedJobs = () => {
 
         if (!applicationsData) {
           setApplications([]);
+          setFilteredApplications([]);
           return;
         }
 
@@ -77,6 +86,20 @@ const AppliedJobs = () => {
     }
   }, [statusFilter, applications]);
 
+  /*
+  CLEAR HIGHLIGHT AFTER FEW SECONDS
+  */
+
+  useEffect(() => {
+    if (!highlightedApplicationId) return;
+
+    const timer = setTimeout(() => {
+      dispatch(jobSeekerActions.clearHighlightedApplication());
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [highlightedApplicationId, dispatch]);
+
   return (
     <div>
       {/* HEADER ROW */}
@@ -116,7 +139,18 @@ const AppliedJobs = () => {
         {filteredApplications.map((app) => (
           <div
             key={app.id}
-            className={`${classes.card} ${classes[app.status]}`}
+            ref={
+              highlightedApplicationId === app.id
+                ? (el) =>
+                    el?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    })
+                : null
+            }
+            className={`${classes.card} ${classes[app.status]} ${
+              highlightedApplicationId === app.id ? classes.highlightCard : ""
+            }`}
           >
             {/* TITLE + STATUS */}
 

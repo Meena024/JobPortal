@@ -10,6 +10,10 @@ const jobSeekerSlice = createSlice({
 
     savedJobs: [],
 
+    notifications: [],
+
+    highlightedApplicationId: null,
+
     activeView: "available",
   },
 
@@ -46,6 +50,23 @@ const jobSeekerSlice = createSlice({
 
     setActiveView(state, action) {
       state.activeView = action.payload;
+    },
+
+    setNotifications(state, action) {
+      state.notifications = action.payload;
+    },
+
+    markNotificationRead(state, action) {
+      const note = state.notifications.find((n) => n.id === action.payload);
+      if (note) note.read = true;
+    },
+
+    setHighlightedApplication(state, action) {
+      state.highlightedApplicationId = action.payload;
+    },
+
+    clearHighlightedApplication(state) {
+      state.highlightedApplicationId = null;
     },
   },
 });

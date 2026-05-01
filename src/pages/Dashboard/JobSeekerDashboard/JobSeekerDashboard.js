@@ -8,11 +8,16 @@ import AvailableJobs from "./AvailableJobs";
 import AppliedJobs from "./AppliedJobs";
 import MyResumes from "./MyResumes";
 import SavedJobs from "./SavedJobs";
+import Notifications from "./Notifications";
 
 const JobSeekerDashboard = () => {
   const dispatch = useDispatch();
 
   const activeView = useSelector((state) => state.jobs.activeView);
+
+  const notifications = useSelector((state) => state.jobs.notifications || []);
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <div className={classes.dashboard}>
@@ -42,6 +47,20 @@ const JobSeekerDashboard = () => {
         >
           My Resumes
         </button>
+
+        {/* NEW NOTIFICATIONS BUTTON */}
+
+        <button
+          className={classes.notificationBtn}
+          onClick={() =>
+            dispatch(jobSeekerActions.setActiveView("notifications"))
+          }
+        >
+          Notifications
+          {unreadCount > 0 && (
+            <span className={classes.badge}>{unreadCount}</span>
+          )}
+        </button>
       </aside>
 
       <main className={classes.content}>
@@ -52,6 +71,8 @@ const JobSeekerDashboard = () => {
         {activeView === "saved" && <SavedJobs />}
 
         {activeView === "resumes" && <MyResumes />}
+
+        {activeView === "notifications" && <Notifications />}
       </main>
     </div>
   );

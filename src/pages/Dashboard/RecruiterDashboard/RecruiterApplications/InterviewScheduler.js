@@ -25,21 +25,32 @@ const InterviewScheduler = ({ app }) => {
     }));
 
   const saveInterview = async () => {
-    const interviewData = {
-      interviewScheduled: true,
-      ...form,
-    };
+    try {
+      const interviewData = {
+        interviewScheduled: true,
+        ...form,
+      };
 
-    await dbApi.patch(`applications/${app.id}`, interviewData);
+      await dbApi.patch(`applications/${app.id}`, interviewData);
 
-    dispatch(
-      recruiterActions.updateInterviewDetails({
-        id: app.id,
-        interviewData,
-      }),
-    );
+      dispatch(
+        recruiterActions.updateInterviewDetails({
+          id: app.id,
+          interviewData,
+        }),
+      );
 
-    setEditing(false);
+      await dbApi.post(`notifications/${app.userId}`, {
+        message: `Interview scheduled for "${app.jobTitle}" on ${form.interviewDate} at ${form.interviewTime}.`,
+        applicationId: app.id,
+        read: false,
+        createdAt: new Date().toISOString(),
+      });
+
+      setEditing(false);
+    } catch (err) {
+      console.error("Interview scheduling error:", err);
+    }
   };
 
   if (!editing)

@@ -1,0 +1,67 @@
+.wrapper {
+  max-width: 900px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+/* LIST */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* CARD */
+
+.card {
+  padding: 14px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  background: white;
+
+  border-left: 4px solid transparent;
+
+  transition: 0.18s ease;
+}
+
+/* UNREAD */
+
+.unread {
+  border-left: 4px solid #4c5cff;
+  background: #eef2ff;
+}
+
+/* READ */
+
+.read {
+  border-left: 4px solid #d1d5db;
+  background: #f9fafb;
+}
+
+/* MESSAGE */
+
+.message {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* DATE */
+
+.date {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #777;
+}
+
+/* EMPTY */
+
+.empty {
+  font-size: 14px;
+  color: #888;
+}

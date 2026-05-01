@@ -16,20 +16,45 @@ const ApplicationCard = ({ app }) => {
   const [editingOffer, setEditingOffer] = useState(false);
 
   /*
-    STATUS CHANGE
+  CREATE NOTIFICATION
+  */
+
+  const createNotification = async (message) => {
+    try {
+      await dbApi.post(`notifications/${app.userId}`, {
+        message,
+        applicationId: app.id,
+        read: false,
+        createdAt: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Notification error:", err);
+    }
+  };
+
+  /*
+  STATUS CHANGE
   */
 
   const statusChangeHandler = async (status) => {
-    await dbApi.patch(`applications/${app.id}`, {
-      status,
-    });
-
-    dispatch(
-      recruiterActions.updateApplicationStatus({
-        id: app.id,
+    try {
+      await dbApi.patch(`applications/${app.id}`, {
         status,
-      }),
-    );
+      });
+
+      dispatch(
+        recruiterActions.updateApplicationStatus({
+          id: app.id,
+          status,
+        }),
+      );
+
+      await createNotification(
+        `Your application for "${app.jobTitle}" is now ${status}.`,
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   /*
@@ -62,24 +87,28 @@ const ApplicationCard = ({ app }) => {
 
     if (!offerLetterUrl) return;
 
-    await dbApi.patch(`applications/${app.id}`, {
-      offerLetterUrl,
-    });
-
-    dispatch(
-      recruiterActions.updateOfferLetter({
-        id: app.id,
+    try {
+      await dbApi.patch(`applications/${app.id}`, {
         offerLetterUrl,
-      }),
-    );
+      });
 
-    setEditingOffer(false);
+      dispatch(
+        recruiterActions.updateOfferLetter({
+          id: app.id,
+          offerLetterUrl,
+        }),
+      );
+
+      await createNotification(`Offer letter uploaded for "${app.jobTitle}".`);
+
+      setEditingOffer(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
     <div className={`${styles.card} ${styles[app.status]}`}>
-      {/* HEADER */}
-
       <div className={styles.header}>
         <h3>{app.jobTitle}</h3>
 
@@ -95,11 +124,7 @@ const ApplicationCard = ({ app }) => {
         </select>
       </div>
 
-      {/* APPLICANT */}
-
       <div className={styles.meta}>Applicant: {app.applicantEmail}</div>
-
-      {/* NOTES */}
 
       <textarea
         className={styles.notes}
@@ -107,8 +132,6 @@ const ApplicationCard = ({ app }) => {
         value={app.recruiterNotes || ""}
         onChange={(e) => notesChangeHandler(e.target.value)}
       />
-
-      {/* RESUME LINK */}
 
       <a
         href={app.resumeUrl}
@@ -119,16 +142,12 @@ const ApplicationCard = ({ app }) => {
         View Resume
       </a>
 
-      {/* INTERVIEW BLOCK */}
-
-      {app.status === "shortlisted" && <InterviewScheduler app={app} />}
-
-      {/* OFFER LETTER SECTION */}
+      {app.status === "shortlisted" && (
+        <InterviewScheduler app={app} createNotification={createNotification} />
+      )}
 
       {app.status === "selected" && (
         <>
-          {/* VIEW MODE */}
-
           {app.offerLetterUrl && !editingOffer && (
             <div className={styles.offerView}>
               <a
@@ -148,8 +167,6 @@ const ApplicationCard = ({ app }) => {
               </button>
             </div>
           )}
-
-          {/* EDIT MODE */}
 
           {(!app.offerLetterUrl || editingOffer) && (
             <div className={styles.offerBox}>
