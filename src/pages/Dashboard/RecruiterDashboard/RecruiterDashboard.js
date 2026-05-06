@@ -11,6 +11,7 @@ import { recruiterActions } from "../../../store/recruiterSlice";
 import CreateJob from "./CreateJob";
 import MyJobs from "./MyJobs";
 import RecruiterApplications from "./RecruiterApplications/RecruiterApplications";
+import RecruiterInterviews from "./RecruiterInterviews/RecruiterInterviews";
 
 const RecruiterDashboard = () => {
   const dispatch = useDispatch();
@@ -76,6 +77,11 @@ const RecruiterDashboard = () => {
         >
           Applications
         </button>
+        <button
+          onClick={() => dispatch(recruiterActions.setActiveView("interviews"))}
+        >
+          Interviews
+        </button>
       </aside>
 
       {/* MAIN CONTENT */}
@@ -86,6 +92,8 @@ const RecruiterDashboard = () => {
         {activeView === "jobs" && <MyJobs />}
 
         {activeView === "applications" && <RecruiterApplications />}
+
+        {activeView === "interviews" && <RecruiterInterviews />}
       </main>
     </div>
   );

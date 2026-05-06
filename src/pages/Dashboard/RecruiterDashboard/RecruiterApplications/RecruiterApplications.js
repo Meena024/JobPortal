@@ -18,15 +18,17 @@ const RecruiterApplications = () => {
   const userId = localStorage.getItem("userId");
 
   /*
-    FILTER STATE
+  FILTER STATE
   */
 
   const [statusFilter, setStatusFilter] = useState("all");
 
+  const [jobFilter, setJobFilter] = useState("all");
+
   const [filteredApplications, setFilteredApplications] = useState([]);
 
   /*
-    FETCH APPLICATIONS
+  FETCH APPLICATIONS
   */
 
   useEffect(() => {
@@ -68,18 +70,31 @@ const RecruiterApplications = () => {
   }, [dispatch, userId]);
 
   /*
-    APPLY STATUS FILTER
+  UNIQUE JOB TITLE LIST (FOR FILTER DROPDOWN)
+  */
+
+  const jobTitles = [
+    "all",
+    ...new Set(applications.map((app) => app.jobTitle)),
+  ];
+
+  /*
+  APPLY FILTERS
   */
 
   useEffect(() => {
-    if (statusFilter === "all") {
-      setFilteredApplications(applications);
-    } else {
-      setFilteredApplications(
-        applications.filter((app) => app.status === statusFilter),
-      );
+    let updated = [...applications];
+
+    if (statusFilter !== "all") {
+      updated = updated.filter((app) => app.status === statusFilter);
     }
-  }, [statusFilter, applications]);
+
+    if (jobFilter !== "all") {
+      updated = updated.filter((app) => app.jobTitle === jobFilter);
+    }
+
+    setFilteredApplications(updated);
+  }, [statusFilter, jobFilter, applications]);
 
   return (
     <div className={styles.wrapper}>
@@ -88,23 +103,41 @@ const RecruiterApplications = () => {
       <div className={styles.headerRow}>
         <h2 className={styles.title}>Applications Received</h2>
 
-        <select
-          className={styles.filterDropdown}
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">All</option>
+        <div className={styles.filters}>
+          {/* STATUS FILTER */}
 
-          <option value="pending">Pending</option>
+          <select
+            className={styles.filterDropdown}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All Statuses</option>
 
-          <option value="reviewed">Reviewed</option>
+            <option value="pending">Pending</option>
 
-          <option value="shortlisted">Shortlisted</option>
+            <option value="reviewed">Reviewed</option>
 
-          <option value="selected">Selected</option>
+            <option value="shortlisted">Shortlisted</option>
 
-          <option value="rejected">Rejected</option>
-        </select>
+            <option value="selected">Selected</option>
+
+            <option value="rejected">Rejected</option>
+          </select>
+
+          {/* JOB TITLE FILTER */}
+
+          <select
+            className={styles.filterDropdown}
+            value={jobFilter}
+            onChange={(e) => setJobFilter(e.target.value)}
+          >
+            {jobTitles.map((title) => (
+              <option key={title} value={title}>
+                {title === "all" ? "All Jobs" : title}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* EMPTY STATE */}

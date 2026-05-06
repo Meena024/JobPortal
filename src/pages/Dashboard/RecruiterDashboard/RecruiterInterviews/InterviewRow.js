@@ -1,0 +1,97 @@
+import { useState } from "react";
+
+import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterInterviews.module.css";
+
+const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
+  const [editMode, setEditMode] = useState(false);
+
+  const [date, setDate] = useState(interview.interviewDate);
+
+  const [time, setTime] = useState(interview.interviewTime);
+
+  const [reason, setReason] = useState("");
+
+  return (
+    <div className={`${styles.row} ${expired ? styles.expired : ""}`}>
+      <div className={styles.info}>
+        <div>
+          <strong>Job:</strong> {interview.jobTitle}
+        </div>
+
+        <div>
+          <strong>Applicant:</strong> {interview.applicantEmail}
+        </div>
+
+        <div>
+          <strong>Date:</strong> {interview.interviewDate}
+        </div>
+
+        <div>
+          <strong>Time:</strong> {interview.interviewTime}
+        </div>
+
+        <div>
+          <strong>Notes:</strong> {interview.recruiterNotes || "-"}
+        </div>
+
+        <div>
+          <strong>Instructions:</strong> {interview.interviewInstructions}
+        </div>
+      </div>
+
+      <div className={styles.actions}>
+        {!expired ? (
+          <a
+            href={interview.interviewLink}
+            target="_blank"
+            rel="noreferrer"
+            className={styles.joinBtn}
+          >
+            Join Meeting
+          </a>
+        ) : (
+          <span className={styles.disabled}>Meeting expired</span>
+        )}
+
+        <button
+          className={styles.rescheduleBtn}
+          onClick={() => setEditMode(!editMode)}
+        >
+          Reschedule
+        </button>
+
+        {editMode && (
+          <div className={styles.rescheduleBox}>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            />
+
+            <textarea
+              placeholder="Reason for reschedule"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+
+            <button
+              onClick={() =>
+                rescheduleInterview(interview.id, date, time, reason)
+              }
+            >
+              Save
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default InterviewRow;

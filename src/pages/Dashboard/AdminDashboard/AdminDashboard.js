@@ -6,6 +6,8 @@ import Applications from "./Applications";
 
 import classes from "../../../Styling/Pages/AdminDashboard/AdminDashboard.module.css";
 
+import AllJobs from "./AllJobs";
+
 const AdminDashboard = () => {
   const [view, setView] = useState("jobs");
 
@@ -31,6 +33,13 @@ const AdminDashboard = () => {
         </button>
 
         <button
+          className={view === "AllJobs" ? classes.active : ""}
+          onClick={() => setView("AllJobs")}
+        >
+          All Jobs
+        </button>
+
+        <button
           className={view === "applications" ? classes.active : ""}
           onClick={() => setView("applications")}
         >
@@ -46,6 +55,8 @@ const AdminDashboard = () => {
         {view === "users" && <UsersList />}
 
         {view === "applications" && <Applications />}
+
+        {view === "AllJobs" && <AllJobs />}
       </main>
     </div>
   );

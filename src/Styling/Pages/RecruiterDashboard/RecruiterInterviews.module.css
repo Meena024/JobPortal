@@ -1,0 +1,72 @@
+.wrapper {
+  padding: 10px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 16px;
+
+  margin-bottom: 14px;
+
+  border-radius: 8px;
+
+  background: #f6f7fb;
+
+  border-left: 4px solid #4c5cff;
+}
+
+.expired {
+  background: #fdecec;
+  border-left: 4px solid #ef4444;
+}
+
+.info div {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.joinBtn {
+  background: #4c5cff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.disabled {
+  color: #999;
+  font-size: 13px;
+}
+
+.rescheduleBtn {
+  background: #eef2ff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rescheduleBox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.empty {
+  font-size: 14px;
+  color: #777;
+}
