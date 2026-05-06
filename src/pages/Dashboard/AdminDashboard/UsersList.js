@@ -19,7 +19,8 @@ const UsersList = () => {
           id,
 
           ...value.profile,
-        }));
+        }))
+        .filter((user) => user.role !== "admin");
 
       setUsers(usersArray);
     };

@@ -6,6 +6,7 @@ import classes from "../../../Styling/Pages/AdminDashboard/PendingJobs.module.cs
 
 const PendingJobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [rejectionReasons, setRejectionReasons] = useState({});
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -14,13 +15,7 @@ const PendingJobs = () => {
       if (!data) return;
 
       const pendingJobs = Object.entries(data)
-
-        .map(([id, value]) => ({
-          id,
-
-          ...value,
-        }))
-
+        .map(([id, value]) => ({ id, ...value }))
         .filter((job) => job.status === "pending");
 
       setJobs(pendingJobs);
@@ -30,23 +25,32 @@ const PendingJobs = () => {
   }, []);
 
   const approveHandler = async (jobId) => {
-    await dbApi.patch(
-      `jobs/${jobId}`,
-
-      { status: "approved" },
-    );
+    await dbApi.patch(`jobs/${jobId}`, { status: "approved" });
 
     setJobs((prev) => prev.filter((job) => job.id !== jobId));
   };
 
   const rejectHandler = async (jobId) => {
-    await dbApi.patch(
-      `jobs/${jobId}`,
+    const reason = rejectionReasons[jobId];
 
-      { status: "rejected" },
-    );
+    if (!reason || reason.trim() === "") {
+      alert("Please enter rejection reason");
+      return;
+    }
+
+    await dbApi.patch(`jobs/${jobId}`, {
+      status: "rejected",
+      rejectionReason: reason,
+    });
 
     setJobs((prev) => prev.filter((job) => job.id !== jobId));
+  };
+
+  const changeHandler = (jobId, value) => {
+    setRejectionReasons((prev) => ({
+      ...prev,
+      [jobId]: value,
+    }));
   };
 
   return (
@@ -81,6 +85,13 @@ const PendingJobs = () => {
             <div className={classes.skills}>{job.skillsRequired}</div>
 
             <div className={classes.description}>{job.description}</div>
+
+            <textarea
+              placeholder="Reason for rejection..."
+              className={classes.rejectionInput}
+              value={rejectionReasons[job.id] || ""}
+              onChange={(e) => changeHandler(job.id, e.target.value)}
+            />
 
             <div className={classes.cardBtns}>
               <button

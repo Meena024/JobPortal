@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
-
 import { dbApi } from "../../../services/dbApi";
-
 import classes from "../../../Styling/Pages/AdminDashboard/AllJobs.module.css";
 
 const AllJobs = () => {
   const [jobs, setJobs] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
-  /*
-    FETCH APPROVED + REJECTED JOBS
-  */
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -24,11 +17,7 @@ const AllJobs = () => {
         }
 
         const filteredJobs = Object.entries(data)
-          .map(([id, value]) => ({
-            id,
-            ...value,
-          }))
-          // ✅ ONLY APPROVED + REJECTED
+          .map(([id, value]) => ({ id, ...value }))
           .filter(
             (job) => job.status === "approved" || job.status === "rejected",
           );
@@ -48,17 +37,11 @@ const AllJobs = () => {
     <>
       <h1 className={classes.title}>All Processed Jobs</h1>
 
-      {/* LOADING */}
-
       {loading && <p className={classes.info}>Loading jobs...</p>}
-
-      {/* EMPTY */}
 
       {!loading && jobs.length === 0 && (
         <p className={classes.empty}>No jobs found</p>
       )}
-
-      {/* GRID */}
 
       <div className={classes.jobGrid}>
         {jobs.map((job) => (
@@ -89,8 +72,13 @@ const AllJobs = () => {
             </div>
 
             <div className={classes.skills}>{job.skillsRequired}</div>
-
             <div className={classes.description}>{job.description}</div>
+
+            {job.status === "rejected" && job.rejectionReason && (
+              <div className={classes.rejectionBox}>
+                <strong>Reason:</strong> {job.rejectionReason}
+              </div>
+            )}
           </div>
         ))}
       </div>

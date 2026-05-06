@@ -130,3 +130,13 @@
   background: #fee2e2;
   color: #991b1b;
 }
+
+.rejectionBox {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #fff1f2;
+  border-left: 3px solid #ef4444;
+  font-size: 13px;
+  color: #7f1d1d;
+  border-radius: 6px;
+}
