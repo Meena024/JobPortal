@@ -131,9 +131,11 @@
 
   border-radius: 6px;
 
-  background: #eef3ff;
+  background: #eeeeee;
 
-  color: #4a6cf7;
+  border: 1px solid #c2c2c2;
+
+  color: #2b2b2b;
 
   font-weight: 500;
 
@@ -189,7 +191,7 @@ h1 {
 }
 
 .rejected {
-  background: #fdecec;
+  background: #fedada;
   border-left-color: #ef4444;
 }
 
@@ -276,4 +278,28 @@ h1 {
   100% {
     background: white;
   }
+}
+
+/* CLOSED RECRUITMENT BADGE */
+
+.closedBadge {
+  display: inline-block;
+
+  margin: 0px 6px;
+
+  font-size: 12px;
+
+  background: #ffffff;
+  color: #fc2f2f;
+
+  padding: 3px 8px;
+
+  border-radius: 6px;
+
+  border: 1px solid #e5e7eb;
+}
+
+.closed {
+  background: #fedada;
+  border-left-color: #ef4444;
 }

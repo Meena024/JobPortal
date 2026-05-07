@@ -39,8 +39,11 @@ const AvailableJobs = () => {
             id,
             ...value,
           }))
-          .filter((job) => job.status === "approved");
-
+          .filter(
+            (job) =>
+              job.status === "approved" &&
+              (job.jobOpeningStatus || "open") === "open",
+          );
         setJobs(approvedJobs);
         setFilteredJobs(approvedJobs);
 
@@ -122,8 +125,7 @@ const AvailableJobs = () => {
           return updated;
         });
       } else {
-
-      /*
+        /*
       SAVE JOB
     */
         const newId = Date.now().toString();

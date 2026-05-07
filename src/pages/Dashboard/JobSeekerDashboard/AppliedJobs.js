@@ -13,6 +13,7 @@ const AppliedJobs = () => {
   const [loading, setLoading] = useState(true);
 
   const [statusFilter, setStatusFilter] = useState("all");
+  const [openingStatusFilter, setOpeningStatusFilter] = useState("all");
 
   const userId = localStorage.getItem("userId");
 
@@ -59,6 +60,7 @@ const AppliedJobs = () => {
               salary: job?.salary || "-",
               location: job?.location || "-",
               jobExists: !!job,
+              jobOpeningStatus: job?.jobOpeningStatus || "open",
             };
           });
 
@@ -79,20 +81,31 @@ const AppliedJobs = () => {
   */
 
   useEffect(() => {
+    let updated = [...applications];
     if (highlightedApplicationId) {
       setStatusFilter("all");
+      setOpeningStatusFilter("all");
       setFilteredApplications(applications);
       return;
     }
 
-    if (statusFilter === "all") {
-      setFilteredApplications(applications);
-    } else {
-      setFilteredApplications(
-        applications.filter((app) => app.status === statusFilter),
+    if (statusFilter !== "all") {
+      updated = updated.filter((app) => app.status === statusFilter);
+    }
+
+    if (openingStatusFilter !== "all") {
+      updated = updated.filter(
+        (app) => app.jobOpeningStatus === openingStatusFilter,
       );
     }
-  }, [statusFilter, applications, highlightedApplicationId]);
+
+    setFilteredApplications(updated);
+  }, [
+    statusFilter,
+    openingStatusFilter,
+    applications,
+    highlightedApplicationId,
+  ]);
 
   /*
   SCROLL INTO VIEW AFTER RENDER
@@ -130,18 +143,31 @@ const AppliedJobs = () => {
       <div className={classes.headerRow}>
         <h1>Applied Jobs</h1>
 
-        <select
-          className={classes.filterDropdown}
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">All</option>
-          <option value="pending">Pending</option>
-          <option value="reviewed">Reviewed</option>
-          <option value="shortlisted">Shortlisted</option>
-          <option value="selected">Selected</option>
-          <option value="rejected">Rejected</option>
-        </select>
+        <div>
+          <select
+            className={classes.filterDropdown}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="selected">Selected</option>
+            <option value="rejected">Rejected</option>
+          </select>
+
+          <select
+            className={classes.filterDropdown}
+            value={openingStatusFilter}
+            onChange={(e) => setOpeningStatusFilter(e.target.value)}
+            style={{ marginLeft: "8px" }}
+          >
+            <option value="all">All Openings</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
       </div>
 
       {/* LOADING STATE */}
@@ -163,9 +189,15 @@ const AppliedJobs = () => {
           <div
             key={app.id}
             ref={highlightedApplicationId === app.id ? highlightedRef : null}
-            className={`${classes.card} ${classes[app.status]} ${
-              highlightedApplicationId === app.id ? classes.highlightCard : ""
-            }`}
+            className={`${classes.card} 
+              ${
+                app.jobOpeningStatus === "closed"
+                  ? classes.closed
+                  : classes[app.status]
+              } 
+              ${
+                highlightedApplicationId === app.id ? classes.highlightCard : ""
+              }`}
           >
             {/* TITLE + STATUS */}
 
@@ -185,6 +217,12 @@ const AppliedJobs = () => {
               <span className={classes.removedBadge}>
                 Job no longer available
               </span>
+            )}
+
+            {/* CLOSED BADGE */}
+
+            {app.jobOpeningStatus === "closed" && (
+              <span className={classes.closedBadge}>Recruitment Closed</span>
             )}
 
             {/* COMPANY */}

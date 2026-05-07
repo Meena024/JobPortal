@@ -60,21 +60,22 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
 
       <div className={styles.col2}>
         {interview.rescheduleHistory?.length > 0 && (
-          <div className={styles.history}>
+          <div>
             <strong>History:</strong>
+            <div className={styles.history}>
+              {interview.rescheduleHistory
+                .slice()
+                .reverse()
+                .map((item, index) => (
+                  <div key={index} className={styles.historyItem}>
+                    <div>
+                      Previous Date: {item.previousDate} at {item.previousTime}
+                    </div>
 
-            {interview.rescheduleHistory
-              .slice()
-              .reverse()
-              .map((item, index) => (
-                <div key={index} className={styles.historyItem}>
-                  <div>
-                    Previous: {item.previousDate} at {item.previousTime}
+                    <div className={styles.reason}>{item.reason}</div>
                   </div>
-
-                  <div className={styles.reason}>{item.reason}</div>
-                </div>
-              ))}
+                ))}
+            </div>
           </div>
         )}
       </div>
