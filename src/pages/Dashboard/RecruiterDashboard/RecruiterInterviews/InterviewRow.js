@@ -30,13 +30,37 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           <strong>Time:</strong> {interview.interviewTime}
         </div>
 
-        <div>
-          <strong>Notes:</strong> {interview.recruiterNotes || "-"}
-        </div>
+        {interview.recruiterNotes && (
+          <div>
+            <strong>Notes:</strong> {interview.recruiterNotes}
+          </div>
+        )}
 
         <div>
           <strong>Instructions:</strong> {interview.interviewInstructions}
         </div>
+
+        {interview.rescheduleHistory?.length > 0 && (
+          <div className={styles.history}>
+            <strong>History:</strong>
+
+            {interview.rescheduleHistory
+              .slice()
+              .reverse()
+              .map((item, index) => (
+                <div key={index} className={styles.historyItem}>
+                  <div>
+                    <span>
+                      Previous Schedule: {item.previousDate} at
+                      {item.previousTime}
+                    </span>
+                  </div>
+
+                  <div className={styles.reason}>{item.reason}</div>
+                </div>
+              ))}
+          </div>
+        )}
       </div>
 
       <div className={styles.actions}>
@@ -53,12 +77,14 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           <span className={styles.disabled}>Meeting expired</span>
         )}
 
-        <button
-          className={styles.rescheduleBtn}
-          onClick={() => setEditMode(!editMode)}
-        >
-          Reschedule
-        </button>
+        {!editMode && (
+          <button
+            className={styles.joinBtn}
+            onClick={() => setEditMode(!editMode)}
+          >
+            Reschedule
+          </button>
+        )}
 
         {editMode && (
           <div className={styles.rescheduleBox}>
@@ -81,9 +107,11 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
             />
 
             <button
-              onClick={() =>
-                rescheduleInterview(interview.id, date, time, reason)
-              }
+              onClick={() => {
+                rescheduleInterview(interview.id, date, time, reason);
+                setReason("");
+                setEditMode(false);
+              }}
             >
               Save
             </button>

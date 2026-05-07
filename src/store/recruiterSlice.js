@@ -37,6 +37,16 @@ const recruiterSlice = createSlice({
       );
     },
 
+    updateJob(state, action) {
+      const { id, updates } = action.payload;
+
+      const job = state.recruiterJobs.find((j) => j.id === id);
+
+      if (job) {
+        Object.assign(job, updates);
+      }
+    },
+
     setRecruiterApplications(state, action) {
       state.recruiterApplications = action.payload;
     },

@@ -25,6 +25,8 @@ const MyJobs = () => {
   const [companyFilter, setCompanyFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
   const [salaryFilter, setSalaryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [openingStatusFilter, setOpeningStatusFilter] = useState("all");
 
   /*
     APPLY MULTIPLE FILTERS
@@ -60,8 +62,26 @@ const MyJobs = () => {
       });
     }
 
+    if (statusFilter !== "all") {
+      updated = updated.filter((job) => job.status === statusFilter);
+    }
+
+    if (openingStatusFilter !== "all") {
+      updated = updated.filter(
+        (job) => (job.jobOpeningStatus || "open") === openingStatusFilter,
+      );
+    }
+
     setFilteredJobs(updated);
-  }, [jobs, titleFilter, companyFilter, locationFilter, salaryFilter]);
+  }, [
+    jobs,
+    titleFilter,
+    companyFilter,
+    locationFilter,
+    salaryFilter,
+    statusFilter,
+    openingStatusFilter,
+  ]);
 
   /*
     UNIQUE FILTER VALUES
@@ -78,13 +98,8 @@ const MyJobs = () => {
   */
 
   const deleteHandler = async (jobId) => {
-    try {
-      await dbApi.remove(`jobs/${jobId}`);
-
-      dispatch(recruiterActions.removeRecruiterJob(jobId));
-    } catch (err) {
-      console.error(err);
-    }
+    await dbApi.remove(`jobs/${jobId}`);
+    dispatch(recruiterActions.removeRecruiterJob(jobId));
   };
 
   /*
@@ -95,6 +110,27 @@ const MyJobs = () => {
     dispatch(recruiterActions.setEditingJob(job));
 
     dispatch(recruiterActions.setActiveView("create"));
+  };
+
+  /*
+    CLOSE JOB
+  */
+
+  const closeJobHandler = async (jobId) => {
+    try {
+      await dbApi.patch(`jobs/${jobId}`, {
+        jobOpeningStatus: "closed",
+      });
+
+      dispatch(
+        recruiterActions.updateJob({
+          id: jobId,
+          updates: { jobOpeningStatus: "closed" },
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -149,7 +185,27 @@ const MyJobs = () => {
 
           <option value="10+">10+ LPA</option>
         </select>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">All Status</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+
+        <select
+          value={openingStatusFilter}
+          onChange={(e) => setOpeningStatusFilter(e.target.value)}
+        >
+          <option value="all">All Openings</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
       </div>
+
+      {/* STATES */}
 
       {loading && <p className={classes.info}>Loading jobs...</p>}
 
@@ -160,49 +216,74 @@ const MyJobs = () => {
       )}
 
       <div className={classes.jobGrid}>
-        {filteredJobs.map((job) => (
-          <div key={job.id} className={classes.jobCard}>
-            <div className={classes.headerRow}>
-              <div className={classes.jobTitle}>{job.title}</div>
+        {filteredJobs.map((job) => {
+          const isLocked =
+            job.status === "approved" || job.status === "rejected";
 
-              <span className={`${classes.status} ${classes[job.status]}`}>
-                {job.status}
-              </span>
-            </div>
+          const isClosed = job.jobOpeningStatus === "closed";
 
-            <div className={classes.metaRow}>
-              <div>
-                <span>Company</span>
-                <p>{job.companyName}</p>
+          return (
+            <div key={job.id} className={classes.jobCard}>
+              <div className={classes.headerRow}>
+                <div className={classes.jobTitle}>{job.title}</div>
+
+                <span className={`${classes.status} ${classes[job.status]}`}>
+                  {job.status}
+                </span>
               </div>
 
-              <div>
-                <span>Location</span>
-                <p>{job.location}</p>
+              <div className={classes.metaRow}>
+                <div>
+                  <span>Company</span>
+                  <p>{job.companyName}</p>
+                </div>
+
+                <div>
+                  <span>Location</span>
+                  <p>{job.location}</p>
+                </div>
+
+                <div>
+                  <span>Salary</span>
+                  <p>₹ {job.salary}</p>
+                </div>
               </div>
 
-              <div>
-                <span>Salary</span>
-                <p>₹ {job.salary}</p>
-              </div>
+              <div className={classes.skills}>{job.skillsRequired}</div>
+
+              <div className={classes.description}>{job.description}</div>
+
+              {isClosed && (
+                <div className={classes.metaCol}>
+                  <span>Recruitment Status</span>
+                  <p>Closed</p>
+                </div>
+              )}
+
+              {!isClosed && job.status !== "rejected" && (
+                <button
+                  className={classes.closeBtn}
+                  onClick={() => closeJobHandler(job.id)}
+                >
+                  End Recruitment
+                </button>
+              )}
+
+              {!isLocked && (
+                <div className={classes.cardBtns}>
+                  <button onClick={() => editHandler(job)}>Edit</button>
+
+                  <button
+                    className={classes.deleteBtn}
+                    onClick={() => deleteHandler(job.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
-
-            <div className={classes.skills}>{job.skillsRequired}</div>
-
-            <div className={classes.description}>{job.description}</div>
-
-            <div className={classes.cardBtns}>
-              <button onClick={() => editHandler(job)}>Edit</button>
-
-              <button
-                className={classes.deleteBtn}
-                onClick={() => deleteHandler(job.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
