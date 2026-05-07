@@ -40,6 +40,23 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           <strong>Instructions:</strong> {interview.interviewInstructions}
         </div>
 
+        {interview.rescheduleRequested && (
+          <div className={styles.requestBox}>
+            <strong>Reschedule Request:</strong>
+
+            <div className={styles.requestReason}>
+              {interview.rescheduleRequestReason}
+            </div>
+
+            {interview.rescheduleRequestedAt && (
+              <div className={styles.requestTime}>
+                Requested at:{" "}
+                {new Date(interview.rescheduleRequestedAt).toLocaleString()}
+              </div>
+            )}
+          </div>
+        )}
+
         {interview.rescheduleHistory?.length > 0 && (
           <div className={styles.history}>
             <strong>History:</strong>
@@ -51,7 +68,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
                 <div key={index} className={styles.historyItem}>
                   <div>
                     <span>
-                      Previous Schedule: {item.previousDate} at
+                      Previous Schedule: {item.previousDate} at{" "}
                       {item.previousTime}
                     </span>
                   </div>
@@ -77,11 +94,17 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           <span className={styles.disabled}>Meeting expired</span>
         )}
 
-        {!editMode && (
+        {interview.rescheduleRequested && !editMode && (
           <button
-            className={styles.joinBtn}
-            onClick={() => setEditMode(!editMode)}
+            className={styles.acceptBtn}
+            onClick={() => setEditMode(true)}
           >
+            Respond to Request
+          </button>
+        )}
+
+        {!editMode && !interview.rescheduleRequested && (
+          <button className={styles.joinBtn} onClick={() => setEditMode(true)}>
             Reschedule
           </button>
         )}

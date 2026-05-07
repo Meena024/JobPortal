@@ -132,3 +132,31 @@
 .history::-webkit-scrollbar-thumb:hover {
   background: #aebcff;
 }
+
+.requestBox {
+  margin-top: 8px;
+  padding: 8px;
+  background: #fff3cd;
+  border-left: 3px solid #ffc107;
+  border-radius: 6px;
+}
+
+.requestReason {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.requestTime {
+  font-size: 11px;
+  color: #777;
+  margin-top: 2px;
+}
+
+.acceptBtn {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+}

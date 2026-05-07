@@ -1,0 +1,114 @@
+.wrapper {
+  padding: 10px;
+}
+
+.title {
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+.empty {
+  color: #777;
+}
+
+/* ROW */
+.row {
+  display: flex;
+  justify-content: space-between;
+
+  background: #f7f8fc;
+  padding: 16px;
+  border-radius: 10px;
+
+  margin-bottom: 14px;
+  border-left: 4px solid #4a6cf7;
+}
+
+/* EXPIRED */
+.expired {
+  background: #f3f3f3;
+  border-left-color: #aaa;
+  opacity: 0.8;
+}
+
+.expiredText {
+  color: #999;
+  font-size: 13px;
+}
+
+/* LEFT */
+.info div {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* RIGHT */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+/* BUTTON */
+.joinBtn {
+  background: #4a6cf7;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+/* RESCHEDULE */
+.rescheduleBox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rescheduleBox textarea {
+  width: 220px;
+  height: 60px;
+  font-size: 12px;
+  padding: 6px;
+}
+
+.rescheduleBox button {
+  background: #4a6cf7;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* HISTORY */
+.history {
+  margin-top: 8px;
+  max-height: 100px;
+  overflow-y: auto;
+
+  border-left: 2px solid #4a6cf7;
+  padding-left: 8px;
+}
+
+.historyItem {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.reason {
+  color: #777;
+  font-size: 11px;
+}
+
+/* SCROLLBAR */
+.history::-webkit-scrollbar {
+  width: 5px;
+}
+
+.history::-webkit-scrollbar-thumb {
+  background: #cfd8ff;
+  border-radius: 5px;
+}

@@ -112,6 +112,10 @@ const RecruiterInterviews = () => {
         interviewDate: newDate,
         interviewTime: newTime,
         rescheduleHistory: updatedHistory,
+
+        rescheduleRequested: false,
+        rescheduleRequestReason: null,
+        rescheduleRequestedAt: null,
       });
 
       /*
@@ -126,14 +130,13 @@ const RecruiterInterviews = () => {
                 interviewDate: newDate,
                 interviewTime: newTime,
                 rescheduleHistory: updatedHistory,
+                rescheduleRequested: false,
+                rescheduleRequestReason: null,
+                rescheduleRequestedAt: null,
               }
             : item,
         ),
       );
-
-      /*
-        OPTIONAL REDUX UPDATE
-      */
 
       dispatch(
         recruiterActions.updateInterviewDetails({
@@ -142,6 +145,9 @@ const RecruiterInterviews = () => {
             interviewDate: newDate,
             interviewTime: newTime,
             rescheduleHistory: updatedHistory,
+            rescheduleRequested: false,
+            rescheduleRequestReason: null,
+            rescheduleRequestedAt: null,
           },
         }),
       );
