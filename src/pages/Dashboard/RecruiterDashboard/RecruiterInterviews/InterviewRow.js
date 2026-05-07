@@ -13,7 +13,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
 
   return (
     <div className={`${styles.row} ${expired ? styles.expired : ""}`}>
-      <div className={styles.info}>
+      <div className={styles.col1}>
         <div>
           <strong>Job:</strong> {interview.jobTitle}
         </div>
@@ -56,7 +56,9 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
             )}
           </div>
         )}
+      </div>
 
+      <div className={styles.col2}>
         {interview.rescheduleHistory?.length > 0 && (
           <div className={styles.history}>
             <strong>History:</strong>
@@ -67,10 +69,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
               .map((item, index) => (
                 <div key={index} className={styles.historyItem}>
                   <div>
-                    <span>
-                      Previous Schedule: {item.previousDate} at{" "}
-                      {item.previousTime}
-                    </span>
+                    Previous: {item.previousDate} at {item.previousTime}
                   </div>
 
                   <div className={styles.reason}>{item.reason}</div>
@@ -80,7 +79,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
         )}
       </div>
 
-      <div className={styles.actions}>
+      <div className={styles.col3}>
         {!expired ? (
           <a
             href={interview.interviewLink}
@@ -104,7 +103,10 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
         )}
 
         {!editMode && !interview.rescheduleRequested && (
-          <button className={styles.joinBtn} onClick={() => setEditMode(true)}>
+          <button
+            className={styles.rescheduleBtn}
+            onClick={() => setEditMode(true)}
+          >
             Reschedule
           </button>
         )}
@@ -129,15 +131,30 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
               onChange={(e) => setReason(e.target.value)}
             />
 
-            <button
-              onClick={() => {
-                rescheduleInterview(interview.id, date, time, reason);
-                setReason("");
-                setEditMode(false);
-              }}
-            >
-              Save
-            </button>
+            <div className={styles.actionBtns}>
+              <button
+                className={styles.saveBtn}
+                onClick={() => {
+                  rescheduleInterview(interview.id, date, time, reason);
+                  setReason("");
+                  setEditMode(false);
+                }}
+              >
+                Save
+              </button>
+
+              <button
+                className={styles.cancelBtn}
+                onClick={() => {
+                  setDate(interview.interviewDate);
+                  setTime(interview.interviewTime);
+                  setReason("");
+                  setEditMode(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
       </div>
