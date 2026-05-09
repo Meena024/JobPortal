@@ -17,63 +17,79 @@ const MyResumes = () => {
 
   useEffect(() => {
     const fetchResumes = async () => {
-      const data = await dbApi.get(`users/${userId}/resumes`);
+      try {
+        const data = await dbApi.get(`users/${userId}/resumes`);
 
-      if (!data) return;
+        if (!data) {
+          setResumes([]);
+          return;
+        }
 
-      const arr = Object.entries(data).map(([id, value]) => ({
-        id,
-        ...value,
-      }));
+        const arr = Object.entries(data).map(([id, value]) => ({
+          id,
+          ...value,
+        }));
 
-      setResumes(arr);
+        setResumes(arr);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchResumes();
   }, [userId]);
 
   const addResume = async () => {
-    if (!resumeTitle || !resumeUrl) {
+    if (!resumeTitle.trim() || !resumeUrl.trim()) {
       alert("Resume title and URL required");
       return;
     }
 
     if (resumes.length >= MAX_RESUMES) return;
 
-    const resume = {
-      title: resumeTitle,
-      resumeUrl,
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const resume = {
+        title: resumeTitle,
+        resumeUrl,
+        createdAt: new Date().toISOString(),
+      };
 
-    const response = await dbApi.post(`users/${userId}/resumes`, resume);
+      const response = await dbApi.post(`users/${userId}/resumes`, resume);
 
-    setResumes([
-      ...resumes,
-      {
-        id: response.name,
-        ...resume,
-      },
-    ]);
+      setResumes((prev) => [
+        ...prev,
+        {
+          id: response.name,
+          ...resume,
+        },
+      ]);
 
-    setResumeTitle("");
-    setResumeUrl("");
+      setResumeTitle("");
+      setResumeUrl("");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const deleteResume = async (id) => {
-    await dbApi.remove(`users/${userId}/resumes/${id}`);
+    try {
+      await dbApi.remove(`users/${userId}/resumes/${id}`);
 
-    setResumes(resumes.filter((r) => r.id !== id));
+      setResumes((prev) => prev.filter((r) => r.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const limitReached = resumes.length >= MAX_RESUMES;
 
   return (
-    <>
-      <h1>My Resumes</h1>
+    <div className={classes.wrapper}>
+      <h1 className={classes.title}>My Resumes</h1>
 
       <div className={classes.addSection}>
         <input
+          type="text"
           placeholder="Resume Title"
           value={resumeTitle}
           disabled={limitReached}
@@ -81,6 +97,7 @@ const MyResumes = () => {
         />
 
         <input
+          type="text"
           placeholder="Paste Resume URL"
           value={resumeUrl}
           disabled={limitReached}
@@ -99,20 +116,36 @@ const MyResumes = () => {
         </p>
       )}
 
+      {resumes.length === 0 && (
+        <p className={classes.emptyMessage}>No resumes added yet</p>
+      )}
+
       <div className={classes.grid}>
         {resumes.map((resume) => (
           <div key={resume.id} className={classes.card}>
-            <div className={classes.resumeTitle}>{resume.title}</div>
+            {/* LEFT */}
 
-            <a href={resume.resumeUrl} target="_blank" rel="noreferrer">
-              View Resume
-            </a>
+            <div className={classes.left}>
+              <div className={classes.resumeTitle}>{resume.title}</div>
 
-            <button onClick={() => deleteResume(resume.id)}>Delete</button>
+              <div className={classes.resumeDate}>
+                Added on {new Date(resume.createdAt).toLocaleDateString()}
+              </div>
+            </div>
+
+            {/* RIGHT */}
+
+            <div className={classes.cardActions}>
+              <a href={resume.resumeUrl} target="_blank" rel="noreferrer">
+                View Resume
+              </a>
+
+              <button onClick={() => deleteResume(resume.id)}>Delete</button>
+            </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

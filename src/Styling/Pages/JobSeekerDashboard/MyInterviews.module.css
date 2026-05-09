@@ -4,111 +4,228 @@
 
 .title {
   font-size: 26px;
-  margin-bottom: 12px;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 
 .empty {
+  font-size: 14px;
   color: #777;
 }
 
 /* ROW */
-.row {
-  display: flex;
-  justify-content: space-between;
 
-  background: #f7f8fc;
+.row {
+  display: grid;
+
+  grid-template-columns: 1fr 1.5fr 1.5fr;
+
+  gap: 20px;
+
   padding: 16px;
-  border-radius: 10px;
 
   margin-bottom: 14px;
-  border-left: 4px solid #4a6cf7;
+
+  border-radius: 8px;
+
+  background: #f6f7fb;
+
+  border-left: 4px solid #4c5cff;
 }
 
 /* EXPIRED */
+
 .expired {
   background: #f3f3f3;
-  border-left-color: #aaa;
-  opacity: 0.8;
+
+  border-left: 4px solid #aaa;
 }
 
-.expiredText {
-  color: #999;
-  font-size: 13px;
-}
+/* COLUMN CONTENT */
 
-/* LEFT */
-.info div {
+.col1 div,
+.col2 div {
   margin-bottom: 6px;
+
   font-size: 14px;
 }
 
-/* RIGHT */
-.actions {
+/* COLUMN 3 */
+
+.col3 {
   display: flex;
+
   flex-direction: column;
-  gap: 10px;
+
+  gap: 8px;
+
   align-items: flex-end;
 }
 
-/* BUTTON */
+/* JOIN BUTTON */
+
 .joinBtn {
-  background: #4a6cf7;
+  background: #4c5cff;
+
   color: white;
+
   padding: 6px 12px;
+
   border-radius: 6px;
+
   text-decoration: none;
+
+  font-size: 14px;
+}
+
+/* RESCHEDULE BUTTON */
+
+.rescheduleBtn {
+  background: #eef2ff;
+
+  color: #4c5cff;
+
+  border: 1px solid #4c5cff;
+
+  padding: 6px 12px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
   font-size: 13px;
 }
 
-/* RESCHEDULE */
+.rescheduleBtn:hover {
+  background: #dfe7ff;
+}
+
+/* DISABLED */
+
+.disabled {
+  color: #999;
+
+  font-size: 13px;
+}
+
+/* RESCHEDULE BOX */
+
 .rescheduleBox {
   display: flex;
+
   flex-direction: column;
+
   gap: 6px;
+
+  width: 100%;
 }
 
 .rescheduleBox textarea {
-  width: 220px;
-  height: 60px;
-  font-size: 12px;
-  padding: 6px;
+  width: 100%;
+
+  min-height: 90px;
+
+  resize: vertical;
+
+  padding: 8px;
+
+  border-radius: 6px;
+
+  border: 1px solid #d6d9df;
+
+  font-size: 13px;
+
+  font-family: inherit;
 }
 
-.rescheduleBox button {
-  background: #4a6cf7;
-  color: white;
-  border: none;
-  padding: 5px;
-  border-radius: 5px;
-  cursor: pointer;
+.rescheduleBox textarea:focus {
+  outline: none;
+
+  border-color: #4c5cff;
 }
 
 /* HISTORY */
+
 .history {
-  margin-top: 8px;
-  max-height: 100px;
+  max-height: 120px;
+
   overflow-y: auto;
 
-  border-left: 2px solid #4a6cf7;
-  padding-left: 8px;
+  padding-left: 10px;
+
+  border-left: 2px solid #9aabed;
+
+  border-radius: 10px;
+
+  margin-top: 6px;
 }
 
 .historyItem {
-  font-size: 12px;
-  margin-bottom: 6px;
+  margin: 8px 0px;
+
+  font-size: 13px;
+
+  background: #e8efff;
+
+  padding: 6px 8px;
+
+  border-radius: 10px;
 }
 
 .reason {
+  font-size: 12px;
+
   color: #777;
+}
+
+/* REQUEST BOX */
+
+.requestBox {
+  margin-top: 8px;
+
+  padding: 8px;
+
+  background: #fff3cd;
+
+  border-left: 3px solid #ffc107;
+
+  border-radius: 6px;
+}
+
+.requestReason {
+  font-size: 13px;
+
+  margin-top: 4px;
+}
+
+.requestTime {
   font-size: 11px;
+
+  color: #777;
+
+  margin-top: 4px;
 }
 
 /* SCROLLBAR */
+
 .history::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 
 .history::-webkit-scrollbar-thumb {
   background: #cfd8ff;
-  border-radius: 5px;
+
+  border-radius: 6px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .col3 {
+    align-items: stretch;
+  }
 }

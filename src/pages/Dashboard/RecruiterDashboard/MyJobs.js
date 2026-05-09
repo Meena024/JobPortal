@@ -260,7 +260,7 @@ const MyJobs = () => {
                 </div>
               )}
 
-              {!isClosed && job.status !== "rejected" && (
+              {job.status === "approved" && !isClosed && (
                 <button
                   className={classes.closeBtn}
                   onClick={() => closeJobHandler(job.id)}

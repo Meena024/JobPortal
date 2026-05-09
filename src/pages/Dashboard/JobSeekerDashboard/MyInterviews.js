@@ -65,17 +65,35 @@ const MyInterviews = () => {
   const requestReschedule = async (id) => {
     const reason = requestInputs[id];
 
-    if (!reason) return;
+    if (!reason?.trim()) return;
 
     try {
       await dbApi.patch(`applications/${id}`, {
         rescheduleRequested: true,
         rescheduleRequestReason: reason,
+
+        rescheduleRequestedAt: new Date().toISOString(),
       });
 
-      alert("Reschedule request sent");
+      setInterviews((prev) =>
+        prev.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                rescheduleRequested: true,
+                rescheduleRequestReason: reason,
+                rescheduleRequestedAt: new Date().toISOString(),
+              }
+            : item,
+        ),
+      );
 
-      setRequestInputs((prev) => ({ ...prev, [id]: "" }));
+      setRequestInputs((prev) => ({
+        ...prev,
+        [id]: "",
+      }));
+
+      alert("Reschedule request sent");
     } catch (err) {
       console.error(err);
     }
@@ -97,7 +115,7 @@ const MyInterviews = () => {
             key={item.id}
             className={`${classes.row} ${expired ? classes.expired : ""}`}
           >
-            <div className={classes.info}>
+            <div className={classes.col1}>
               <div>
                 <strong>Job:</strong> {item.jobTitle}
               </div>
@@ -120,27 +138,49 @@ const MyInterviews = () => {
                 </div>
               )}
 
-              {/* HISTORY */}
-              {item.rescheduleHistory?.length > 0 && (
-                <div className={classes.history}>
-                  <strong>History:</strong>
+              {item.rescheduleRequested && (
+                <div className={classes.requestBox}>
+                  <strong>Reschedule Request:</strong>
 
-                  {item.rescheduleHistory
-                    .slice()
-                    .reverse()
-                    .map((h, i) => (
-                      <div key={i} className={classes.historyItem}>
-                        <div>
-                          Previous: {h.previousDate} at {h.previousTime}
-                        </div>
-                        <div className={classes.reason}>{h.reason}</div>
-                      </div>
-                    ))}
+                  <div className={classes.requestReason}>
+                    {item.rescheduleRequestReason}
+                  </div>
+
+                  {item.rescheduleRequestedAt && (
+                    <div className={classes.requestTime}>
+                      Requested at:{" "}
+                      {new Date(item.rescheduleRequestedAt).toLocaleString()}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
-            <div className={classes.actions}>
+            <div className={classes.col2}>
+              {item.rescheduleHistory?.length > 0 && (
+                <div>
+                  <strong>History:</strong>
+
+                  <div className={classes.history}>
+                    {item.rescheduleHistory
+                      .slice()
+                      .reverse()
+                      .map((history, index) => (
+                        <div key={index} className={classes.historyItem}>
+                          <div>
+                            Previous Date: {history.previousDate} at{" "}
+                            {history.previousTime}
+                          </div>
+
+                          <div className={classes.reason}>{history.reason}</div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className={classes.col3}>
               {!expired ? (
                 <a
                   href={item.interviewLink}
@@ -151,14 +191,13 @@ const MyInterviews = () => {
                   Join Meeting
                 </a>
               ) : (
-                <span className={classes.expiredText}>Interview Completed</span>
+                <span className={classes.disabled}>Interview Completed</span>
               )}
 
-              {/* REQUEST RESCHEDULE */}
-              {!expired && (
+              {!expired && !item.rescheduleRequested && (
                 <div className={classes.rescheduleBox}>
                   <textarea
-                    placeholder="Request reschedule reason..."
+                    placeholder="Reason for reschedule"
                     value={requestInputs[item.id] || ""}
                     onChange={(e) =>
                       setRequestInputs((prev) => ({
@@ -168,7 +207,10 @@ const MyInterviews = () => {
                     }
                   />
 
-                  <button onClick={() => requestReschedule(item.id)}>
+                  <button
+                    className={classes.rescheduleBtn}
+                    onClick={() => requestReschedule(item.id)}
+                  >
                     Request Reschedule
                   </button>
                 </div>

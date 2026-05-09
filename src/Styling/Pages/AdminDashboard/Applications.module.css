@@ -158,3 +158,31 @@
   font-size: 15px;
   color: #777;
 }
+
+/* CLOSED RECRUITMENT */
+
+.closedBadge {
+  position: absolute;
+
+  top: 42px;
+
+  right: 18px;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  padding: 4px 8px;
+
+  border-radius: 6px;
+
+  background: #ffe5e5;
+
+  color: #d9363e;
+
+  border: 1px solid #ffb3b3;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.3px;
+}

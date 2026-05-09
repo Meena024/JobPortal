@@ -1,17 +1,17 @@
+/* .wrapper {
+  max-width: 900px;
+} */
+
 .addSection {
   display: flex;
 
-  gap: 12px;
+  gap: 10px;
 
-  margin-bottom: 25px;
+  margin-bottom: 18px;
 }
 
-/* INPUT FIELD */
-
 .addSection input {
-  flex: 1;
-
-  padding: 10px;
+  padding: 9px 12px;
 
   border-radius: 6px;
 
@@ -20,10 +20,8 @@
   font-size: 14px;
 }
 
-/* ADD BUTTON */
-
 .addSection button {
-  padding: 10px 18px;
+  padding: 9px 16px;
 
   border: none;
 
@@ -38,30 +36,34 @@
   cursor: pointer;
 }
 
-.addSection button:hover {
-  background: #3b58d0;
-}
-
-/* GRID */
+/* LIST */
 
 .grid {
-  display: grid;
+  display: flex;
 
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  flex-direction: column;
 
-  gap: 20px;
+  gap: 14px;
+
+  width: 100%;
 }
 
 /* CARD */
 
 .card {
-  background: white;
+  width: 100%;
 
-  padding: 18px;
+  max-width: 500px;
 
-  border-radius: 12px;
+  background: #ffffff;
 
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  padding: 14px 18px;
+
+  border-radius: 10px;
+
+  border-left: 3px solid #4a6cf7;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   display: flex;
 
@@ -70,18 +72,60 @@
   align-items: center;
 }
 
-/* RESUME LINK */
+/* LEFT */
+
+.left {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.resumeTitle {
+  font-size: 15px;
+
+  font-weight: 600;
+
+  color: #222;
+}
+
+.resumeDate {
+  font-size: 13px;
+
+  color: #666;
+}
+
+/* RIGHT */
+
+.cardActions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+/* VIEW BUTTON */
 
 .card a {
+  text-decoration: none;
+
+  background: #eef2ff;
+
   color: #4a6cf7;
 
-  font-weight: 500;
+  padding: 7px 12px;
 
-  text-decoration: none;
+  border-radius: 6px;
+
+  font-size: 13px;
+
+  font-weight: 500;
 }
 
 .card a:hover {
-  text-decoration: underline;
+  background: #dfe7ff;
 }
 
 /* DELETE BUTTON */
@@ -93,31 +137,33 @@
 
   color: white;
 
-  padding: 6px 12px;
+  padding: 7px 12px;
 
   border-radius: 6px;
+
+  font-size: 13px;
 
   cursor: pointer;
 }
 
 .card button:hover {
-  background: #d9363e;
+  background: #e03d3f;
 }
 
-.resumeTitle {
-  font-size: 15px;
-
-  font-weight: 600;
-
-  margin-bottom: 6px;
-}
+/* LIMIT MESSAGE */
 
 .limitMessage {
-  margin-top: 10px;
+  margin-bottom: 14px;
 
   font-size: 13px;
 
   color: #ff9800;
 
   font-weight: 500;
+}
+
+.emptyMessage {
+  font-size: 14px;
+
+  color: #777;
 }

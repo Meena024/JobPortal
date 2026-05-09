@@ -36,7 +36,11 @@ const Applications = () => {
 
         const usersData = await dbApi.get("users");
 
-        if (!applicationsData) return;
+        if (!applicationsData) {
+          setApplications([]);
+          setFilteredApplications([]);
+          return;
+        }
 
         const enrichedApplications = Object.entries(applicationsData).map(
           ([id, app]) => {
@@ -52,6 +56,8 @@ const Applications = () => {
                 usersData?.[app.userId]?.profile?.email || "Unknown User",
 
               recruiterEmail: job?.recruiterEmail || "Unknown Recruiter",
+
+              jobOpeningStatus: job?.jobOpeningStatus || "open",
             };
           },
         );
@@ -187,6 +193,10 @@ const Applications = () => {
               >
                 {app.status}
               </span>
+            )}
+
+            {app.jobOpeningStatus === "closed" && (
+              <span className={classes.closedBadge}>Recruitment Closed</span>
             )}
 
             <div className={classes.row}>
