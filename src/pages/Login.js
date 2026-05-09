@@ -54,6 +54,8 @@ const Login = () => {
           userId,
 
           role: profile.role,
+
+          emailId: data.email,
         }),
       );
 

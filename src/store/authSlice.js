@@ -6,6 +6,8 @@ const initialState = {
   userId: localStorage.getItem("userId"),
 
   role: localStorage.getItem("role"),
+
+  emailId: null,
 };
 
 const authSlice = createSlice({
@@ -20,6 +22,8 @@ const authSlice = createSlice({
       state.userId = action.payload.userId;
 
       state.role = action.payload.role;
+
+      state.emailId = action.payload.emailId;
     },
 
     logout(state) {
@@ -28,6 +32,8 @@ const authSlice = createSlice({
       state.userId = null;
 
       state.role = null;
+
+      state.emailId = null;
     },
   },
 });

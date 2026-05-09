@@ -17,9 +17,8 @@ const CreateJob = () => {
     FETCH RECRUITER EMAIL FROM LOCAL STORAGE PROFILE
   */
 
-  const recruiterProfile = JSON.parse(localStorage.getItem("profile") || "{}");
-
-  const recruiterEmail = recruiterProfile?.email || "Unknown Recruiter";
+  const recruiterEmail =
+    useSelector((state) => state.auth.emailId) || "Unknown Recruiter";
 
   const editingJob = useSelector((state) => state.recruiter.editingJob);
 
