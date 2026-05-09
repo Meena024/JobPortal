@@ -6,24 +6,16 @@ const JobApply = ({ jobId }) => {
   const userId = localStorage.getItem("userId");
 
   const [loading, setLoading] = useState(false);
-
   const [checkingStatus, setCheckingStatus] = useState(true);
-
   const [applied, setApplied] = useState(false);
-
   const [resumes, setResumes] = useState([]);
-
   const [selectedResume, setSelectedResume] = useState("");
 
-  /*
-     FETCH USER RESUMES
-  */
   useEffect(() => {
     const fetchResumes = async () => {
       if (!userId) return;
 
       const data = await dbApi.get(`users/${userId}/resumes`);
-
       if (!data) return;
 
       const resumeList = Object.entries(data).map(([id, value]) => ({
@@ -41,17 +33,12 @@ const JobApply = ({ jobId }) => {
     fetchResumes();
   }, [userId]);
 
-  /*
-     CHECK IF USER ALREADY APPLIED
-  */
-
   useEffect(() => {
     const checkApplication = async () => {
       if (!userId) return;
 
       try {
         const data = await dbApi.get("applications");
-
         if (!data) return;
 
         const alreadyApplied = Object.values(data).some(
@@ -69,14 +56,9 @@ const JobApply = ({ jobId }) => {
     checkApplication();
   }, [jobId, userId]);
 
-  /*
-     APPLY HANDLER
-  */
-
   const applyHandler = async () => {
     if (!selectedResume) {
       alert("Select resume first");
-
       return;
     }
 
@@ -85,31 +67,21 @@ const JobApply = ({ jobId }) => {
     try {
       const application = {
         jobId,
-
         userId,
-
         resumeUrl: selectedResume,
-
         status: "pending",
-
         appliedAt: new Date().toISOString(),
       };
 
       await dbApi.post("applications", application);
-
       setApplied(true);
     } catch (err) {
       console.error(err);
-
       alert("Application failed");
     } finally {
       setLoading(false);
     }
   };
-
-  /*
-     UI STATES
-  */
 
   if (!userId)
     return (
@@ -121,7 +93,7 @@ const JobApply = ({ jobId }) => {
   if (checkingStatus)
     return (
       <button className={classes.disabledBtn} disabled>
-        Checking status...
+        Checking...
       </button>
     );
 

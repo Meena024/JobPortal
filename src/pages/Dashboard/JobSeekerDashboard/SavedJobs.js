@@ -11,14 +11,13 @@ const SavedJobs = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [titleFilter, setTitleFilter] = useState("all");
+  const [companyFilter, setCompanyFilter] = useState("all");
+
   const [locationFilter, setLocationFilter] = useState("all");
   const [salaryFilter, setSalaryFilter] = useState("all");
 
   const userId = localStorage.getItem("userId");
-
-  /*
-    FETCH SAVED JOBS
-  */
 
   useEffect(() => {
     const fetchSavedJobs = async () => {
@@ -40,6 +39,8 @@ const SavedJobs = () => {
           .map((item) => {
             const job = jobsData?.[item.jobId];
 
+            if (job?.jobOpeningStatus === "closed") return null;
+
             return {
               savedId: item.id,
               jobId: item.jobId,
@@ -56,7 +57,8 @@ const SavedJobs = () => {
 
               jobExists: !!job,
             };
-          });
+          })
+          .filter(Boolean);
 
         setSavedJobsList(arr);
         setFilteredSavedJobs(arr);
@@ -76,6 +78,14 @@ const SavedJobs = () => {
 
   useEffect(() => {
     let updated = [...savedJobsList];
+
+    if (titleFilter !== "all") {
+      updated = updated.filter((job) => job.title === titleFilter);
+    }
+
+    if (companyFilter !== "all") {
+      updated = updated.filter((job) => job.companyName === companyFilter);
+    }
 
     if (locationFilter !== "all") {
       updated = updated.filter((job) => job.location === locationFilter);
@@ -97,19 +107,12 @@ const SavedJobs = () => {
     }
 
     setFilteredSavedJobs(updated);
-  }, [locationFilter, salaryFilter, savedJobsList]);
+  }, [savedJobsList, titleFilter, companyFilter, locationFilter, salaryFilter]);
+  const uniqueTitles = [...new Set(savedJobsList.map((j) => j.title))];
 
-  /*
-    UNIQUE LOCATIONS
-  */
+  const uniqueCompanies = [...new Set(savedJobsList.map((j) => j.companyName))];
 
-  const uniqueLocations = [
-    ...new Set(savedJobsList.map((job) => job.location)),
-  ];
-
-  /*
-    REMOVE SAVED JOB
-  */
+  const uniqueLocations = [...new Set(savedJobsList.map((j) => j.location))];
 
   const removeSavedJob = async (savedId) => {
     try {
@@ -129,6 +132,28 @@ const SavedJobs = () => {
         <h1>Saved Jobs</h1>
 
         <div className={classes.filters}>
+          {/* TITLE FILTER */}
+          <select
+            value={titleFilter}
+            onChange={(e) => setTitleFilter(e.target.value)}
+          >
+            <option value="all">All Titles</option>
+            {uniqueTitles.map((title) => (
+              <option key={title}>{title}</option>
+            ))}
+          </select>
+
+          {/* COMPANY FILTER */}
+          <select
+            value={companyFilter}
+            onChange={(e) => setCompanyFilter(e.target.value)}
+          >
+            <option value="all">All Companies</option>
+            {uniqueCompanies.map((company) => (
+              <option key={company}>{company}</option>
+            ))}
+          </select>
+
           {/* LOCATION FILTER */}
 
           <select
@@ -149,11 +174,8 @@ const SavedJobs = () => {
             onChange={(e) => setSalaryFilter(e.target.value)}
           >
             <option value="all">All Salaries</option>
-
             <option value="0-5">0 – 5 LPA</option>
-
             <option value="5-10">5 – 10 LPA</option>
-
             <option value="10+">10+ LPA</option>
           </select>
         </div>
@@ -171,13 +193,9 @@ const SavedJobs = () => {
         </p>
       )}
 
-      {/* GRID */}
-
       <div className={classes.grid}>
         {filteredSavedJobs.map((job) => (
           <div key={job.savedId} className={classes.card}>
-            {/* TITLE + REMOVE BOOKMARK */}
-
             <div className={classes.titleRow}>
               <h3>
                 <strong>{job.title}</strong>
@@ -190,37 +208,25 @@ const SavedJobs = () => {
               </span>
             </div>
 
-            {/* REMOVED JOB WARNING */}
-
             {!job.jobExists && (
               <span className={classes.removedBadge}>
                 Job no longer available
               </span>
             )}
 
-            {/* COMPANY */}
-
             <div className={classes.metaRow}>
               <span className={classes.metaLabel}>Company:</span>{" "}
               {job.companyName}
             </div>
-
-            {/* LOCATION */}
 
             <div className={classes.metaRow}>
               <span className={classes.metaLabel}>Location:</span>{" "}
               {job.location}
             </div>
 
-            {/* DESCRIPTION */}
-
             <p className={classes.description}>{job.description}</p>
 
-            {/* SALARY */}
-
             <div className={classes.salary}>₹ {job.salary} / Year</div>
-
-            {/* APPLY BUTTON */}
 
             {job.jobExists && <JobApply jobId={job.jobId} />}
           </div>

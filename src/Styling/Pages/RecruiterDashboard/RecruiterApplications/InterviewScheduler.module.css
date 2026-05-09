@@ -112,3 +112,50 @@
 
   overflow: hidden;
 }
+
+.actionRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancelInterviewBtn {
+  margin-top: 4px;
+
+  font-size: 11px;
+  padding: 2px 8px;
+
+  background: #d50000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: fit-content;
+  line-height: 1.2;
+}
+
+.cancelInterviewBtn:hover {
+  background: #dc2626;
+}
+
+.saveBtn {
+  background: #4c5cff;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  background: #e5e7eb;
+  color: #333;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background: #d1d5db;
+}
