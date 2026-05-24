@@ -3,7 +3,8 @@ import { Navigate, useLocation } from "react-router-dom";
 
 const PrivateRoute = ({ children, allowedRoles }) => {
   const token = useSelector((state) => state.auth.token);
-  const role = localStorage.getItem("role");
+
+  const role = useSelector((state) => state.auth.role);
 
   const location = useLocation();
 

@@ -1,64 +1,40 @@
 import { useEffect, useState } from "react";
 
-import { dbApi } from "../../../services/dbApi";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  fetchAvailableJobs,
+  saveJob,
+  unsaveJob,
+} from "../../../store/jobSeekerActions";
+
 import JobApply from "./JobApply";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/AvailableJobs.module.css";
 
 const AvailableJobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
+  const dispatch = useDispatch();
 
-  const [savedJobs, setSavedJobs] = useState({});
+  const [filteredJobs, setFilteredJobs] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
   const [locationFilter, setLocationFilter] = useState("all");
+
   const [salaryFilter, setSalaryFilter] = useState("all");
 
-  const userId = localStorage.getItem("userId");
+  const jobs = useSelector((state) => state.jobs?.availableJobs || []);
 
-  /*
-    FETCH JOBS + SAVED JOBS
-  */
+  const savedJobs = useSelector((state) => state.jobs?.savedJobs || {});
+
+  const userId = useSelector((state) => state.auth.userId);
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const loadJobs = async () => {
       try {
-        const jobsData = await dbApi.get("jobs");
+        setLoading(true);
 
-        const savedJobsData = await dbApi.get("savedJobs");
-
-        if (!jobsData) {
-          setJobs([]);
-          return;
-        }
-
-        const approvedJobs = Object.entries(jobsData)
-          .map(([id, value]) => ({
-            id,
-            ...value,
-          }))
-          .filter(
-            (job) =>
-              job.status === "approved" &&
-              (job.jobOpeningStatus || "open") === "open",
-          );
-        setJobs(approvedJobs);
-        setFilteredJobs(approvedJobs);
-
-        /*
-          LOAD USER SAVED JOBS
-        */
-
-        const userSaved = Object.entries(savedJobsData || {})
-          .filter(([_, value]) => value.userId === userId)
-          .reduce((acc, [id, value]) => {
-            acc[value.jobId] = id;
-            return acc;
-          }, {});
-
-        setSavedJobs(userSaved);
+        await dispatch(fetchAvailableJobs());
       } catch (err) {
         console.error(err);
       } finally {
@@ -66,15 +42,19 @@ const AvailableJobs = () => {
       }
     };
 
-    fetchJobs();
-  }, [userId]);
+    loadJobs();
+  }, [dispatch]);
 
   /*
-    MULTI FILTER SUPPORT
+    APPLY FILTERS
   */
 
   useEffect(() => {
     let updatedJobs = [...jobs];
+
+    /*
+      LOCATION FILTER
+    */
 
     if (locationFilter !== "all") {
       updatedJobs = updatedJobs.filter(
@@ -82,23 +62,32 @@ const AvailableJobs = () => {
       );
     }
 
+    /*
+      SALARY FILTER
+    */
+
     if (salaryFilter !== "all") {
       updatedJobs = updatedJobs.filter((job) => {
         const salary = Number(job.salary);
 
-        if (salaryFilter === "0-5") return salary <= 500000;
+        if (salaryFilter === "0-5") {
+          return salary <= 500000;
+        }
 
-        if (salaryFilter === "5-10")
+        if (salaryFilter === "5-10") {
           return salary > 500000 && salary <= 1000000;
+        }
 
-        if (salaryFilter === "10+") return salary > 1000000;
+        if (salaryFilter === "10+") {
+          return salary > 1000000;
+        }
 
         return true;
       });
     }
 
     setFilteredJobs(updatedJobs);
-  }, [locationFilter, salaryFilter, jobs]);
+  }, [jobs, locationFilter, salaryFilter]);
 
   /*
     UNIQUE LOCATIONS
@@ -113,32 +102,17 @@ const AvailableJobs = () => {
   const toggleSaveJob = async (jobId) => {
     try {
       /*
-      REMOVE SAVED JOB
-    */
+          UNSAVE JOB
+        */
 
       if (savedJobs[jobId]) {
-        await dbApi.remove(`savedJobs/${savedJobs[jobId]}`);
-
-        setSavedJobs((prev) => {
-          const updated = { ...prev };
-          delete updated[jobId];
-          return updated;
-        });
+        await dispatch(unsaveJob(userId, jobId));
       } else {
         /*
-      SAVE JOB
-    */
-        const newId = Date.now().toString();
+            SAVE JOB
+          */
 
-        await dbApi.patch(`savedJobs/${newId}`, {
-          userId,
-          jobId,
-        });
-
-        setSavedJobs((prev) => ({
-          ...prev,
-          [jobId]: newId,
-        }));
+        await dispatch(saveJob(userId, jobId));
       }
     } catch (err) {
       console.error(err);
@@ -147,13 +121,13 @@ const AvailableJobs = () => {
 
   return (
     <div>
-      {/* HEADER + FILTERS */}
+      {/* HEADER */}
 
       <div className={classes.headerRow}>
         <h1>Available Jobs</h1>
 
         <div className={classes.filters}>
-          {/* LOCATION FILTER */}
+          {/* LOCATION */}
 
           <select
             value={locationFilter}
@@ -166,7 +140,7 @@ const AvailableJobs = () => {
             ))}
           </select>
 
-          {/* SALARY FILTER */}
+          {/* SALARY */}
 
           <select
             value={salaryFilter}
@@ -198,12 +172,14 @@ const AvailableJobs = () => {
       <div className={classes.grid}>
         {filteredJobs.map((job) => (
           <div key={job.id} className={classes.card}>
-            {/* TITLE + BOOKMARK */}
+            {/* TITLE */}
 
             <div className={classes.titleRow}>
               <h3>
                 <strong>{job.title}</strong>
               </h3>
+
+              {/* BOOKMARK */}
 
               <span
                 className={classes.bookmarkIcon}
@@ -235,9 +211,14 @@ const AvailableJobs = () => {
 
             <div className={classes.salary}>₹ {job.salary} / Year</div>
 
-            {/* APPLY BUTTON */}
+            {/* APPLY */}
 
-            <JobApply jobId={job.id} />
+            <JobApply
+              jobId={job.id}
+              recruiterId={job.userId}
+              recruiterEmail={job.recruiterEmail}
+              jobTitle={job.title}
+            />
           </div>
         ))}
       </div>

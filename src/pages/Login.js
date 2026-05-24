@@ -6,9 +6,7 @@ import { useDispatch } from "react-redux";
 import classes from "./../Styling/Auth/Login.module.css";
 
 import { loginUser } from "../services/authApi";
-import { dbApi } from "../services/dbApi";
-
-import { authActions } from "../store/authSlice";
+import Initializer from "../components/Initializer/Initializer";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,37 +31,14 @@ const Login = () => {
     try {
       const data = await loginUser(email, password);
 
-      const userId = data.localId;
-
-      const profile = await dbApi.get(`users/${userId}/profile`);
-
-      /* SAVE TO LOCAL STORAGE */
-
       localStorage.setItem("token", data.idToken);
 
-      localStorage.setItem("userId", userId);
+      const role = await Initializer(dispatch);
+      console.log("role", role);
 
-      localStorage.setItem("role", profile.role);
-
-      /* SAVE TO REDUX STORE */
-
-      dispatch(
-        authActions.login({
-          token: data.idToken,
-
-          userId,
-
-          role: profile.role,
-
-          emailId: data.email,
-        }),
-      );
-
-      /* REDIRECT BASED ON ROLE */
-
-      if (profile.role === "recruiter") {
+      if (role === "recruiter") {
         navigate("/recruiter/dashboard");
-      } else if (profile.role === "admin") {
+      } else if (role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/jobseeker/dashboard");

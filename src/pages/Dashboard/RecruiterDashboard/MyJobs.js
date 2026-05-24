@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-
-import { dbApi } from "../../../services/dbApi";
 import { useDispatch, useSelector } from "react-redux";
 import { recruiterActions } from "../../../store/recruiterSlice";
+import {
+  deleteRecruiterJob,
+  closeRecruiterJob,
+} from "../../../store/recruiterActions";
 
 import classes from "../../../Styling/Pages/RecruiterDashboard/MyJobs.module.css";
 
 const MyJobs = () => {
+  const userId = useSelector((state) => state.auth.userId);
+
   const jobs = useSelector((state) => state.recruiter.recruiterJobs);
 
   const loading = useSelector((state) => state.recruiter.loading);
@@ -98,8 +102,7 @@ const MyJobs = () => {
   */
 
   const deleteHandler = async (jobId) => {
-    await dbApi.remove(`jobs/${jobId}`);
-    dispatch(recruiterActions.removeRecruiterJob(jobId));
+    await dispatch(deleteRecruiterJob(userId, jobId));
   };
 
   /*
@@ -117,20 +120,7 @@ const MyJobs = () => {
   */
 
   const closeJobHandler = async (jobId) => {
-    try {
-      await dbApi.patch(`jobs/${jobId}`, {
-        jobOpeningStatus: "closed",
-      });
-
-      dispatch(
-        recruiterActions.updateJob({
-          id: jobId,
-          updates: { jobOpeningStatus: "closed" },
-        }),
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    await dispatch(closeRecruiterJob(userId, jobId));
   };
 
   return (

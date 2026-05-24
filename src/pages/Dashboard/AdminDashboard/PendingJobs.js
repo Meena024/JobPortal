@@ -1,54 +1,101 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
+
+import { adminActions } from "../../../store/adminSlice";
 
 import classes from "../../../Styling/Pages/AdminDashboard/PendingJobs.module.css";
 
 const PendingJobs = () => {
-  const [jobs, setJobs] = useState([]);
+  const dispatch = useDispatch();
+
+  /*
+    REDUX STATE
+  */
+
+  const { allJobs } = useSelector((state) => state.admin);
+
+  /*
+    LOCAL STATE
+  */
+
   const [rejectionReasons, setRejectionReasons] = useState({});
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      const data = await dbApi.get("jobs");
+  /*
+    FILTER ONLY PENDING JOBS
+  */
 
-      if (!data) return;
+  const jobs = useMemo(() => {
+    return allJobs.filter((job) => job.status === "pending");
+  }, [allJobs]);
 
-      const pendingJobs = Object.entries(data)
-        .map(([id, value]) => ({ id, ...value }))
-        .filter((job) => job.status === "pending");
+  /*
+    APPROVE JOB
 
-      setJobs(pendingJobs);
-    };
+    STORAGE:
+    jobs/recruiterId/jobId
+  */
 
-    fetchJobs();
-  }, []);
+  const approveHandler = async (job) => {
+    try {
+      await dbApi.patch(`jobs/${job.userId}/${job.id}`, {
+        status: "approved",
+      });
 
-  const approveHandler = async (jobId) => {
-    await dbApi.patch(`jobs/${jobId}`, { status: "approved" });
-
-    setJobs((prev) => prev.filter((job) => job.id !== jobId));
+      dispatch(
+        adminActions.updateJobStatus({
+          id: job.id,
+          status: "approved",
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const rejectHandler = async (jobId) => {
-    const reason = rejectionReasons[jobId];
+  /*
+    REJECT JOB
+  */
+
+  const rejectHandler = async (job) => {
+    const reason = rejectionReasons[job.id];
 
     if (!reason || reason.trim() === "") {
       alert("Please enter rejection reason");
       return;
     }
 
-    await dbApi.patch(`jobs/${jobId}`, {
-      status: "rejected",
-      rejectionReason: reason,
-    });
+    try {
+      await dbApi.patch(`jobs/${job.userId}/${job.id}`, {
+        status: "rejected",
 
-    setJobs((prev) => prev.filter((job) => job.id !== jobId));
+        rejectionReason: reason,
+      });
+
+      dispatch(
+        adminActions.updateJobStatus({
+          id: job.id,
+
+          status: "rejected",
+
+          rejectionReason: reason,
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  /*
+    REJECTION TEXT CHANGE
+  */
 
   const changeHandler = (jobId, value) => {
     setRejectionReasons((prev) => ({
       ...prev,
+
       [jobId]: value,
     }));
   };
@@ -62,11 +109,15 @@ const PendingJobs = () => {
       <div className={classes.jobGrid}>
         {jobs.map((job) => (
           <div key={job.id} className={classes.jobCard}>
+            {/* HEADER */}
+
             <div className={classes.headerRow}>
               <div className={classes.jobTitle}>{job.title}</div>
 
               <span className={classes.status}>pending</span>
             </div>
+
+            {/* META */}
 
             <div className={classes.metaRow}>
               <div className={classes.metaBlock}>
@@ -82,9 +133,15 @@ const PendingJobs = () => {
               </div>
             </div>
 
+            {/* SKILLS */}
+
             <div className={classes.skills}>{job.skillsRequired}</div>
 
+            {/* DESCRIPTION */}
+
             <div className={classes.description}>{job.description}</div>
+
+            {/* REJECTION INPUT */}
 
             <textarea
               placeholder="Reason for rejection..."
@@ -93,17 +150,19 @@ const PendingJobs = () => {
               onChange={(e) => changeHandler(job.id, e.target.value)}
             />
 
+            {/* BUTTONS */}
+
             <div className={classes.cardBtns}>
               <button
                 className={classes.approveBtn}
-                onClick={() => approveHandler(job.id)}
+                onClick={() => approveHandler(job)}
               >
                 Approve
               </button>
 
               <button
                 className={classes.rejectBtn}
-                onClick={() => rejectHandler(job.id)}
+                onClick={() => rejectHandler(job)}
               >
                 Reject
               </button>

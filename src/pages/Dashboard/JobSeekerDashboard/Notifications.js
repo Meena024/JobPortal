@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { dbApi } from "../../../services/dbApi";
+import { markNotificationRead } from "../../../store/jobSeekerActions";
+
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/Notifications.module.css";
@@ -10,35 +11,17 @@ const Notifications = () => {
 
   const userId = localStorage.getItem("userId");
 
-  const notifications = useSelector((state) => state.jobs.notifications || []);
-
-  /*
-    SORT: newest notification first
-  */
+  const notifications = useSelector((state) => state.jobs?.notifications || []);
 
   const sortedNotifications = [...notifications].sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
   );
 
-  /*
-    MARK READ + NAVIGATE
-  */
-
   const markReadHandler = async (note) => {
     try {
-      await dbApi.patch(`notifications/${userId}/${note.id}`, { read: true });
-
-      dispatch(jobSeekerActions.markNotificationRead(note.id));
-
-      /*
-        SWITCH PAGE
-      */
+      await dispatch(markNotificationRead(userId, note.id));
 
       dispatch(jobSeekerActions.setActiveView("applied"));
-
-      /*
-        HIGHLIGHT TARGET APPLICATION
-      */
 
       if (note.applicationId) {
         dispatch(
@@ -62,9 +45,8 @@ const Notifications = () => {
         {sortedNotifications.map((note) => (
           <div
             key={note.id}
-            className={`${classes.card} ${
-              note.read ? classes.read : classes.unread
-            }`}
+            className={`${classes.card}
+              ${note.read ? classes.read : classes.unread}`}
             onClick={() => markReadHandler(note)}
           >
             <div className={classes.message}>{note.message}</div>

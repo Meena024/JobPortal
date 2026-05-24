@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { dbApi } from "../../../services/dbApi";
+import { useSelector } from "react-redux";
 
 import classes from "../../../Styling/Pages/AdminDashboard/Applications.module.css";
 
 const Applications = () => {
-  const [applications, setApplications] = useState([]);
-
-  const [filteredApplications, setFilteredApplications] = useState([]);
+  const allApplications = useSelector(
+    (state) => state.admin.allApplications || [],
+  );
 
   const [applicantFilter, setApplicantFilter] = useState("all");
 
@@ -17,68 +17,14 @@ const Applications = () => {
 
   const [statusFilter, setStatusFilter] = useState("all");
 
-  /*
-    HELPER FUNCTION
-  */
+  const capitalize = (str) => {
+    if (!str) return "";
 
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
-  /*
-    FETCH APPLICATIONS
-  */
-
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const applicationsData = await dbApi.get("applications");
-
-        const jobsData = await dbApi.get("jobs");
-
-        const usersData = await dbApi.get("users");
-
-        if (!applicationsData) {
-          setApplications([]);
-          setFilteredApplications([]);
-          return;
-        }
-
-        const enrichedApplications = Object.entries(applicationsData).map(
-          ([id, app]) => {
-            const job = jobsData?.[app.jobId];
-
-            return {
-              id,
-              ...app,
-
-              jobTitle: job?.title || "Unknown Job",
-
-              applicantEmail:
-                usersData?.[app.userId]?.profile?.email || "Unknown User",
-
-              recruiterEmail: job?.recruiterEmail || "Unknown Recruiter",
-
-              jobOpeningStatus: job?.jobOpeningStatus || "open",
-            };
-          },
-        );
-
-        setApplications(enrichedApplications);
-
-        setFilteredApplications(enrichedApplications);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchApplications();
-  }, []);
-
-  /*
-    APPLY FILTERS
-  */
-
-  useEffect(() => {
-    let updated = [...applications];
+  const filteredApplications = useMemo(() => {
+    let updated = [...allApplications];
 
     if (applicantFilter !== "all") {
       updated = updated.filter((app) => app.applicantEmail === applicantFilter);
@@ -96,30 +42,34 @@ const Applications = () => {
       updated = updated.filter((app) => app.status === statusFilter);
     }
 
-    setFilteredApplications(updated);
-  }, [applications, applicantFilter, recruiterFilter, jobFilter, statusFilter]);
-
-  /*
-    UNIQUE FILTER VALUES
-  */
+    return updated;
+  }, [
+    allApplications,
+    applicantFilter,
+    recruiterFilter,
+    jobFilter,
+    statusFilter,
+  ]);
 
   const uniqueApplicants = [
-    ...new Set(applications.map((a) => a.applicantEmail)),
+    ...new Set(allApplications.map((a) => a.applicantEmail).filter(Boolean)),
   ];
 
   const uniqueRecruiters = [
-    ...new Set(applications.map((a) => a.recruiterEmail)),
+    ...new Set(allApplications.map((a) => a.recruiterEmail).filter(Boolean)),
   ];
 
-  const uniqueJobs = [...new Set(applications.map((a) => a.jobTitle))];
+  const uniqueJobs = [
+    ...new Set(allApplications.map((a) => a.jobTitle).filter(Boolean)),
+  ];
 
-  const uniqueStatuses = [...new Set(applications.map((a) => a.status))];
+  const uniqueStatuses = [
+    ...new Set(allApplications.map((a) => a.status).filter(Boolean)),
+  ];
 
   return (
     <>
       <h1 className={classes.title}>Job Applications</h1>
-
-      {/* FILTER BAR */}
 
       <div className={classes.filters}>
         <select
@@ -129,7 +79,9 @@ const Applications = () => {
           <option value="all">All Applicants</option>
 
           {uniqueApplicants.map((email) => (
-            <option key={email}>{email}</option>
+            <option key={email} value={email}>
+              {email}
+            </option>
           ))}
         </select>
 
@@ -140,7 +92,9 @@ const Applications = () => {
           <option value="all">All Recruiters</option>
 
           {uniqueRecruiters.map((email) => (
-            <option key={email}>{email}</option>
+            <option key={email} value={email}>
+              {email}
+            </option>
           ))}
         </select>
 
@@ -151,7 +105,9 @@ const Applications = () => {
           <option value="all">All Jobs</option>
 
           {uniqueJobs.map((title) => (
-            <option key={title}>{title}</option>
+            <option key={title} value={title}>
+              {title}
+            </option>
           ))}
         </select>
 
@@ -162,33 +118,29 @@ const Applications = () => {
           <option value="all">All Statuses</option>
 
           {uniqueStatuses.map((status) => (
-            <option key={status}>{status}</option>
+            <option key={status} value={status}>
+              {status}
+            </option>
           ))}
         </select>
       </div>
 
-      {/* EMPTY STATE */}
-
       {filteredApplications.length === 0 && (
         <p className={classes.empty}>No applications match selected filters</p>
       )}
-
-      {/* GRID */}
 
       <div className={classes.applicationGrid}>
         {filteredApplications.map((app) => (
           <div
             key={app.id}
             className={`${classes.applicationCard} ${
-              classes[`card${capitalize(app.status)}`]
+              classes[`card${capitalize(app.status)}`] || ""
             }`}
           >
-            {/* STATUS BADGE */}
-
             {app.status && (
               <span
                 className={`${classes.statusBadge} ${
-                  classes[`badge${capitalize(app.status)}`]
+                  classes[`badge${capitalize(app.status)}`] || ""
                 }`}
               >
                 {app.status}
@@ -200,30 +152,34 @@ const Applications = () => {
             )}
 
             <div className={classes.row}>
-              <strong>Applicant:</strong> {app.applicantEmail}
+              <strong>Applicant:</strong> {app.applicantEmail || "Unknown"}
             </div>
 
             <div className={classes.row}>
-              <strong>Job Title:</strong> {app.jobTitle}
+              <strong>Job Title:</strong> {app.jobTitle || "Unknown"}
             </div>
 
             <div className={classes.row}>
-              <strong>Recruiter:</strong> {app.recruiterEmail}
+              <strong>Recruiter:</strong> {app.recruiterEmail || "Unknown"}
             </div>
 
             <div className={classes.row}>
               <strong>Applied On:</strong>{" "}
-              {new Date(app.appliedAt).toLocaleDateString()}
+              {app.appliedAt
+                ? new Date(app.appliedAt).toLocaleDateString()
+                : "-"}
             </div>
 
-            <a
-              href={app.resumeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className={classes.resumeBtn}
-            >
-              View Resume
-            </a>
+            {app.resumeUrl && (
+              <a
+                href={app.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={classes.resumeBtn}
+              >
+                View Resume
+              </a>
+            )}
           </div>
         ))}
       </div>

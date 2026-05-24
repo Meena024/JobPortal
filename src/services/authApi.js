@@ -23,3 +23,10 @@ export const loginUser = async (email, password) => {
 
   return res.data;
 };
+
+export const fetchUserId = async (token) => {
+  const res = await axios.post(`${authURL}:lookup?key=${API_KEY}`, {
+    idToken: token,
+  });
+  return res.data.users[0].localId;
+};

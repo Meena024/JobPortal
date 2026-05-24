@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-
 import classes from "../../../Styling/Pages/RecruiterDashboard/RecruitersDashboard.module.css";
-
-import { dbApi } from "../../../services/dbApi";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,39 +13,6 @@ const RecruiterDashboard = () => {
   const dispatch = useDispatch();
 
   const activeView = useSelector((state) => state.recruiter.activeView);
-
-  const userId = localStorage.getItem("userId");
-
-  useEffect(() => {
-    const fetchJobs = async () => {
-      dispatch(recruiterActions.setLoading(true));
-
-      try {
-        const data = await dbApi.get("jobs");
-
-        if (!data) {
-          dispatch(recruiterActions.setRecruiterJobs([]));
-
-          return;
-        }
-
-        const jobsArray = Object.entries(data)
-          .map(([id, value]) => ({
-            id,
-            ...value,
-          }))
-          .filter((job) => job.recruiterId === userId);
-
-        dispatch(recruiterActions.setRecruiterJobs(jobsArray));
-      } catch (err) {
-        dispatch(recruiterActions.setError(err.message));
-      } finally {
-        dispatch(recruiterActions.setLoading(false));
-      }
-    };
-
-    fetchJobs();
-  }, [dispatch, userId]);
 
   return (
     <div className={classes.dashboard}>

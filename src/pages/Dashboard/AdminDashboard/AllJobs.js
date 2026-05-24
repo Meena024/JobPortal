@@ -1,37 +1,20 @@
-import { useEffect, useState } from "react";
-import { dbApi } from "../../../services/dbApi";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+
 import classes from "../../../Styling/Pages/AdminDashboard/AllJobs.module.css";
 
 const AllJobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { allJobs, loading } = useSelector((state) => state.admin);
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const data = await dbApi.get("jobs");
+  /*
+    FILTER APPROVED + REJECTED JOBS
+  */
 
-        if (!data) {
-          setJobs([]);
-          return;
-        }
-
-        const filteredJobs = Object.entries(data)
-          .map(([id, value]) => ({ id, ...value }))
-          .filter(
-            (job) => job.status === "approved" || job.status === "rejected",
-          );
-
-        setJobs(filteredJobs);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchJobs();
-  }, []);
+  const jobs = useMemo(() => {
+    return allJobs.filter(
+      (job) => job.status === "approved" || job.status === "rejected",
+    );
+  }, [allJobs]);
 
   return (
     <>
@@ -62,16 +45,19 @@ const AllJobs = () => {
             <div className={classes.metaRow}>
               <div className={classes.metaBlock}>
                 <span>Company</span>
+
                 <p>{job.companyName}</p>
               </div>
 
               <div className={classes.metaBlock}>
                 <span>Location</span>
+
                 <p>{job.location}</p>
               </div>
             </div>
 
             <div className={classes.skills}>{job.skillsRequired}</div>
+
             <div className={classes.description}>{job.description}</div>
 
             {job.status === "rejected" && job.rejectionReason && (

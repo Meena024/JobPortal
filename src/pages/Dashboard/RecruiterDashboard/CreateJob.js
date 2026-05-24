@@ -2,25 +2,42 @@ import { useState } from "react";
 
 import classes from "../../../Styling/Pages/RecruiterDashboard/CreateJob.module.css";
 
-import { dbApi } from "../../../services/dbApi";
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { recruiterActions } from "../../../store/recruiterSlice";
 
+import {
+  createRecruiterJob,
+  updateRecruiterJob,
+} from "../../../store/recruiterActions";
+
 const CreateJob = () => {
   const dispatch = useDispatch();
 
-  const recruiterId = localStorage.getItem("userId");
+  /*
+    LOADING STATE
+  */
+
+  const [submitting, setSubmitting] = useState(false);
 
   /*
-    FETCH RECRUITER EMAIL FROM LOCAL STORAGE PROFILE
+    AUTH
   */
+
+  const userId = useSelector((state) => state.auth.userId);
 
   const recruiterEmail =
     useSelector((state) => state.auth.emailId) || "Unknown Recruiter";
 
+  /*
+    EDITING JOB
+  */
+
   const editingJob = useSelector((state) => state.recruiter.editingJob);
+
+  /*
+    FORM STATE
+  */
 
   const [form, setForm] = useState(
     editingJob || {
@@ -40,7 +57,6 @@ const CreateJob = () => {
   const changeHandler = (e) => {
     setForm({
       ...form,
-
       [e.target.name]: e.target.value,
     });
   };
@@ -52,57 +68,56 @@ const CreateJob = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const jobData = {
-      ...form,
+    /*
+      PREVENT MULTIPLE CLICKS
+    */
 
-      recruiterId,
-
-      recruiterEmail, // ✅ NEW FIELD ADDED HERE
-
-      status: editingJob?.status || "pending",
-
-      createdAt: editingJob?.createdAt || new Date().toISOString(),
-    };
+    if (submitting) return;
 
     try {
+      setSubmitting(true);
+
+      const jobData = {
+        ...form,
+
+        userId,
+
+        recruiterEmail,
+
+        status: editingJob?.status || "pending",
+
+        createdAt: editingJob?.createdAt || new Date().toISOString(),
+      };
+
       /*
-        UPDATE EXISTING JOB
+        UPDATE JOB
       */
 
       if (editingJob) {
-        await dbApi.put(`jobs/${editingJob.id}`, jobData);
-
-        dispatch(
-          recruiterActions.updateRecruiterJob({
-            id: editingJob.id,
-
-            ...jobData,
-          }),
-        );
+        await dispatch(updateRecruiterJob(userId, editingJob.id, jobData));
       } else {
         /*
-        CREATE NEW JOB
-      */
-        const response = await dbApi.post("jobs", jobData);
+          CREATE JOB
+        */
 
-        dispatch(
-          recruiterActions.addRecruiterJob({
-            id: response.name,
-
-            ...jobData,
-          }),
-        );
+        await dispatch(createRecruiterJob(userId, jobData));
       }
 
       /*
-        RESET EDIT STATE
+        RESET EDIT MODE
       */
 
       dispatch(recruiterActions.setEditingJob(null));
 
+      /*
+        GO TO JOBS VIEW
+      */
+
       dispatch(recruiterActions.setActiveView("jobs"));
     } catch (err) {
       console.error(err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -115,6 +130,7 @@ const CreateJob = () => {
         placeholder="Job Title"
         value={form.title}
         onChange={changeHandler}
+        disabled={submitting}
       />
 
       <input
@@ -122,6 +138,7 @@ const CreateJob = () => {
         placeholder="Company Name"
         value={form.companyName}
         onChange={changeHandler}
+        disabled={submitting}
       />
 
       <input
@@ -129,6 +146,7 @@ const CreateJob = () => {
         placeholder="Salary"
         value={form.salary}
         onChange={changeHandler}
+        disabled={submitting}
       />
 
       <input
@@ -136,6 +154,7 @@ const CreateJob = () => {
         placeholder="Location"
         value={form.location}
         onChange={changeHandler}
+        disabled={submitting}
       />
 
       <input
@@ -143,6 +162,7 @@ const CreateJob = () => {
         placeholder="Skills Required"
         value={form.skillsRequired}
         onChange={changeHandler}
+        disabled={submitting}
       />
 
       <textarea
@@ -150,9 +170,18 @@ const CreateJob = () => {
         placeholder="Job Description"
         value={form.description}
         onChange={changeHandler}
+        disabled={submitting}
       />
 
-      <button>{editingJob ? "Update Job" : "Post Job"}</button>
+      <button disabled={submitting}>
+        {submitting
+          ? editingJob
+            ? "Updating..."
+            : "Posting..."
+          : editingJob
+            ? "Update Job"
+            : "Post Job"}
+      </button>
     </form>
   );
 };

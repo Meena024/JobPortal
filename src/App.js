@@ -57,7 +57,7 @@ function App() {
 
             {/* DEFAULT ROUTE */}
 
-            <Route path="*" element={<Login />} />
+            <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Layout>
       </Router>

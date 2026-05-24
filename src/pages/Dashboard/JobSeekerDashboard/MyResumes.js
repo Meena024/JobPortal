@@ -1,91 +1,109 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { dbApi } from "../../../services/dbApi";
+import { useDispatch, useSelector } from "react-redux";
+
+import { addResume, removeResume } from "../../../store/jobSeekerActions";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/MyResumes.module.css";
 
 const MyResumes = () => {
-  const [resumes, setResumes] = useState([]);
+  const dispatch = useDispatch();
+
+  /*
+    LOCAL STATE
+  */
 
   const [resumeUrl, setResumeUrl] = useState("");
 
   const [resumeTitle, setResumeTitle] = useState("");
 
-  const userId = localStorage.getItem("userId");
+  /*
+    USER
+  */
+
+  const userId = useSelector((state) => state.auth.userId);
+
+  /*
+    CONSTANTS
+  */
 
   const MAX_RESUMES = 5;
 
-  useEffect(() => {
-    const fetchResumes = async () => {
-      try {
-        const data = await dbApi.get(`users/${userId}/resumes`);
+  /*
+    REDUX STATE
+  */
 
-        if (!data) {
-          setResumes([]);
-          return;
-        }
+  const resumes = useSelector((state) => state.jobs?.resumes || []);
 
-        const arr = Object.entries(data).map(([id, value]) => ({
-          id,
-          ...value,
-        }));
+  /*
+    ADD RESUME
+  */
 
-        setResumes(arr);
-      } catch (err) {
-        console.error(err);
-      }
-    };
+  const addResumeHandler = async () => {
+    /*
+        VALIDATION
+      */
 
-    fetchResumes();
-  }, [userId]);
-
-  const addResume = async () => {
     if (!resumeTitle.trim() || !resumeUrl.trim()) {
       alert("Resume title and URL required");
+
       return;
     }
 
-    if (resumes.length >= MAX_RESUMES) return;
+    /*
+        LIMIT CHECK
+      */
+
+    if (resumes.length >= MAX_RESUMES) {
+      return;
+    }
 
     try {
-      const resume = {
+      const resumeData = {
         title: resumeTitle,
+
         resumeUrl,
+
         createdAt: new Date().toISOString(),
       };
 
-      const response = await dbApi.post(`users/${userId}/resumes`, resume);
+      await dispatch(addResume(userId, resumeData));
 
-      setResumes((prev) => [
-        ...prev,
-        {
-          id: response.name,
-          ...resume,
-        },
-      ]);
+      /*
+          RESET INPUTS
+        */
 
       setResumeTitle("");
+
       setResumeUrl("");
     } catch (err) {
       console.error(err);
     }
   };
 
-  const deleteResume = async (id) => {
-    try {
-      await dbApi.remove(`users/${userId}/resumes/${id}`);
+  /*
+    DELETE RESUME
+  */
 
-      setResumes((prev) => prev.filter((r) => r.id !== id));
+  const deleteResumeHandler = async (id) => {
+    try {
+      await dispatch(removeResume(userId, id));
     } catch (err) {
       console.error(err);
     }
   };
+
+  /*
+    LIMIT FLAG
+  */
 
   const limitReached = resumes.length >= MAX_RESUMES;
 
   return (
     <div className={classes.wrapper}>
       <h1 className={classes.title}>My Resumes</h1>
+
+      {/* ADD SECTION */}
 
       <div className={classes.addSection}>
         <input
@@ -104,10 +122,12 @@ const MyResumes = () => {
           onChange={(e) => setResumeUrl(e.target.value)}
         />
 
-        <button disabled={limitReached} onClick={addResume}>
+        <button disabled={limitReached} onClick={addResumeHandler}>
           Add Resume
         </button>
       </div>
+
+      {/* LIMIT MESSAGE */}
 
       {limitReached && (
         <p className={classes.limitMessage}>
@@ -116,9 +136,13 @@ const MyResumes = () => {
         </p>
       )}
 
+      {/* EMPTY */}
+
       {resumes.length === 0 && (
         <p className={classes.emptyMessage}>No resumes added yet</p>
       )}
+
+      {/* GRID */}
 
       <div className={classes.grid}>
         {resumes.map((resume) => (
@@ -140,7 +164,9 @@ const MyResumes = () => {
                 View Resume
               </a>
 
-              <button onClick={() => deleteResume(resume.id)}>Delete</button>
+              <button onClick={() => deleteResumeHandler(resume.id)}>
+                Delete
+              </button>
             </div>
           </div>
         ))}
