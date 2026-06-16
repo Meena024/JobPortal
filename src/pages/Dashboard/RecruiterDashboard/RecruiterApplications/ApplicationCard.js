@@ -21,7 +21,7 @@ const ApplicationCard = ({ app }) => {
 
   const createNotification = async (message) => {
     try {
-      await dbApi.post(`notifications/${app.userId}`, {
+      await dbApi.post(`notifications/${app.applicantId}`, {
         message,
         applicationId: app.id,
         read: false,
@@ -38,7 +38,7 @@ const ApplicationCard = ({ app }) => {
 
   const statusChangeHandler = async (status) => {
     try {
-      await dbApi.patch(`applications/${app.id}`, {
+      await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
         status,
       });
 

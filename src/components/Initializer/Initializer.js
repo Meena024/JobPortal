@@ -58,16 +58,7 @@ const Initializer = async (dispatch, navigate) => {
       await dispatch(fetchNotifications(userId));
       console.log("5.4 fetched fetchNotifications");
     }
-
-    let role = profile.role;
-    if (role === "recruiter") {
-      navigate("/recruiter/dashboard");
-    } else if (role === "admin") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/jobseeker/dashboard");
-    }
-    return profile.role;
+    return;
   } catch (err) {
     console.log(err);
   }

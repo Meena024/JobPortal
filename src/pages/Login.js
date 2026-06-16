@@ -1,21 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
-
-import classes from "./../Styling/Auth/Login.module.css";
-
 import { loginUser } from "../services/authApi";
 import Initializer from "../components/Initializer/Initializer";
+import classes from "./../Styling/Auth/Login.module.css";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -25,27 +20,14 @@ const Login = () => {
     if (loading) return;
 
     setError(null);
-
     setLoading(true);
 
     try {
       const data = await loginUser(email, password);
-
       localStorage.setItem("token", data.idToken);
-
-      const role = await Initializer(dispatch, navigate);
-      console.log("role", role);
-
-      if (role === "recruiter") {
-        navigate("/recruiter/dashboard");
-      } else if (role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/jobseeker/dashboard");
-      }
+      Initializer(dispatch, navigate);
     } catch (err) {
       console.error("Login error:", err);
-
       setError(err.message || "Login failed. Please check credentials.");
     } finally {
       setLoading(false);

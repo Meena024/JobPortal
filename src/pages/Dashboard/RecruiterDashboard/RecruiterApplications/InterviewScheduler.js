@@ -56,8 +56,10 @@ const InterviewScheduler = ({ app }) => {
         rescheduleRequestedAt: "",
       };
       console.log("app", app);
-      await dbApi.patch(`applications/${app.recId}/${app.id}`, interviewData);
-
+      await dbApi.patch(
+        `applications/${app.recruiterId}/${app.id}/interviewData`,
+        interviewData,
+      );
       dispatch(
         recruiterActions.updateInterviewDetails({
           id: app.id,
@@ -65,7 +67,7 @@ const InterviewScheduler = ({ app }) => {
         }),
       );
 
-      await dbApi.post(`notifications/${app.userId}`, {
+      await dbApi.post(`notifications/${app.applicantId}`, {
         message: `Interview scheduled for "${app.jobTitle}" on ${form.interviewDate} at ${form.interviewTime}.`,
         applicationId: app.id,
         read: false,
@@ -122,7 +124,7 @@ const InterviewScheduler = ({ app }) => {
 
       setEditing(true);
 
-      await dbApi.post(`notifications/${app.userId}`, {
+      await dbApi.post(`notifications/${app.applicantId}`, {
         message: `Interview for "${app.jobTitle}" has been cancelled.`,
         applicationId: app.id,
         read: false,
