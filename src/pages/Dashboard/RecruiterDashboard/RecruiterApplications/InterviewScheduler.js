@@ -55,8 +55,8 @@ const InterviewScheduler = ({ app }) => {
         rescheduleRequestReason: "",
         rescheduleRequestedAt: "",
       };
-
-      await dbApi.patch(`applications/${app.id}`, interviewData);
+      console.log("app", app);
+      await dbApi.patch(`applications/${app.recId}/${app.id}`, interviewData);
 
       dispatch(
         recruiterActions.updateInterviewDetails({

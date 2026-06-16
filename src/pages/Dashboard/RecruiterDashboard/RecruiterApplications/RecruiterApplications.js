@@ -1,88 +1,41 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import { dbApi } from "../../../../services/dbApi";
-import { recruiterActions } from "../../../../store/recruiterSlice";
+import { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 
 import ApplicationCard from "./ApplicationCard";
 
 import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterApplications/RecruiterApplications.module.css";
 
 const RecruiterApplications = () => {
-  const dispatch = useDispatch();
-
   const applications = useSelector(
     (state) => state.recruiter.recruiterApplications,
   );
 
-  const userId = localStorage.getItem("userId");
+  const loading = useSelector((state) => state.recruiter.loading);
+
+  const error = useSelector((state) => state.recruiter.error);
 
   /*
-  FILTER STATE
+    FILTER STATE
   */
 
   const [statusFilter, setStatusFilter] = useState("all");
 
   const [jobFilter, setJobFilter] = useState("all");
 
-  const [filteredApplications, setFilteredApplications] = useState([]);
-
   /*
-  FETCH APPLICATIONS
+    UNIQUE JOB TITLES
   */
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      const jobsData = await dbApi.get("jobs");
-
-      const usersData = await dbApi.get("users");
-
-      const applicationsData = await dbApi.get("applications");
-
-      if (!jobsData || !applicationsData) return;
-
-      const recruiterJobs = Object.entries(jobsData)
-        .filter(([_, job]) => job.recruiterId === userId)
-        .reduce((acc, [id, value]) => {
-          acc[id] = value;
-          return acc;
-        }, {});
-
-      const enrichedApplications = Object.entries(applicationsData)
-        .map(([id, app]) => {
-          if (!recruiterJobs[app.jobId]) return null;
-
-          return {
-            id,
-            ...app,
-            jobTitle: recruiterJobs[app.jobId]?.title,
-
-            applicantEmail:
-              usersData?.[app.userId]?.profile?.email || "Unknown",
-          };
-        })
-        .filter(Boolean);
-
-      dispatch(recruiterActions.setRecruiterApplications(enrichedApplications));
-    };
-
-    fetchApplications();
-  }, [dispatch, userId]);
+  const jobTitles = useMemo(
+    () => ["all", ...new Set(applications.map((app) => app.jobTitle))],
+    [applications],
+  );
 
   /*
-  UNIQUE JOB TITLE LIST (FOR FILTER DROPDOWN)
+    FILTERED APPLICATIONS
   */
 
-  const jobTitles = [
-    "all",
-    ...new Set(applications.map((app) => app.jobTitle)),
-  ];
-
-  /*
-  APPLY FILTERS
-  */
-
-  useEffect(() => {
+  const filteredApplications = useMemo(() => {
     let updated = [...applications];
 
     if (statusFilter !== "all") {
@@ -93,15 +46,41 @@ const RecruiterApplications = () => {
       updated = updated.filter((app) => app.jobTitle === jobFilter);
     }
 
-    setFilteredApplications(updated);
-  }, [statusFilter, jobFilter, applications]);
+    return updated;
+  }, [applications, statusFilter, jobFilter]);
+
+  /*
+    LOADING
+  */
+
+  if (loading) {
+    return (
+      <div className={styles.wrapper}>
+        <p className={styles.info}>Loading applications...</p>
+      </div>
+    );
+  }
+
+  /*
+    ERROR
+  */
+
+  if (error) {
+    return (
+      <div className={styles.wrapper}>
+        <p className={styles.info}>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>
-      {/* HEADER + FILTER */}
+      {/* HEADER */}
 
       <div className={styles.headerRow}>
-        <h2 className={styles.title}>Applications Received</h2>
+        <h2 className={styles.title}>
+          Applications Received ({filteredApplications.length})
+        </h2>
 
         <div className={styles.filters}>
           {/* STATUS FILTER */}
@@ -112,19 +91,14 @@ const RecruiterApplications = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="all">All Statuses</option>
-
             <option value="pending">Pending</option>
-
             <option value="reviewed">Reviewed</option>
-
             <option value="shortlisted">Shortlisted</option>
-
             <option value="selected">Selected</option>
-
             <option value="rejected">Rejected</option>
           </select>
 
-          {/* JOB TITLE FILTER */}
+          {/* JOB FILTER */}
 
           <select
             className={styles.filterDropdown}
@@ -142,17 +116,17 @@ const RecruiterApplications = () => {
 
       {/* EMPTY STATE */}
 
-      {filteredApplications.length === 0 && (
-        <p className={styles.info}>No applications match selected filter</p>
+      {filteredApplications.length === 0 ? (
+        <p className={styles.info}>
+          No applications match the selected filters.
+        </p>
+      ) : (
+        <div className={styles.grid}>
+          {filteredApplications.map((app) => (
+            <ApplicationCard key={app.id} app={app} />
+          ))}
+        </div>
       )}
-
-      {/* GRID */}
-
-      <div className={styles.grid}>
-        {filteredApplications.map((app) => (
-          <ApplicationCard key={app.id} app={app} />
-        ))}
-      </div>
     </div>
   );
 };

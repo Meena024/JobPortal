@@ -2,11 +2,13 @@ import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 
 const PrivateRoute = ({ children, allowedRoles }) => {
-  const token = useSelector((state) => state.auth.token);
-
-  const role = useSelector((state) => state.auth.role);
+  const { token, role, isInitialized } = useSelector((state) => state.auth);
 
   const location = useLocation();
+
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
 
   if (!token) {
     return <Navigate to="/" replace state={{ from: location }} />;

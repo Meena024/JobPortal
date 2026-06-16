@@ -33,7 +33,7 @@ const Login = () => {
 
       localStorage.setItem("token", data.idToken);
 
-      const role = await Initializer(dispatch);
+      const role = await Initializer(dispatch, navigate);
       console.log("role", role);
 
       if (role === "recruiter") {

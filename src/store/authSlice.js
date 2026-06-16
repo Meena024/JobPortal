@@ -5,6 +5,7 @@ const initialState = {
   userId: "",
   role: null,
   emailId: null,
+  isInitialized: false,
 };
 
 const authSlice = createSlice({
@@ -18,13 +19,19 @@ const authSlice = createSlice({
       state.userId = action.payload.userId;
       state.role = action.payload.role;
       state.emailId = action.payload.emailId;
+      state.isInitialized = true;
+    },
+
+    InitializationComplete(state) {
+      state.isInitialized = true;
     },
 
     logout(state) {
-      state.token = null;
-      state.userId = null;
+      state.token = "";
+      state.userId = "";
       state.role = null;
       state.emailId = null;
+      state.isInitialized = true;
     },
   },
 });
