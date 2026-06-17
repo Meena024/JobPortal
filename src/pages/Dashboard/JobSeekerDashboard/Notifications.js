@@ -9,7 +9,7 @@ import classes from "../../../Styling/Pages/JobSeekerDashboard/Notifications.mod
 const Notifications = () => {
   const dispatch = useDispatch();
 
-  const userId = localStorage.getItem("userId");
+  const userId = useSelector((state) => state.auth.userId);
 
   const notifications = useSelector((state) => state.jobs?.notifications || []);
 

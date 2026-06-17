@@ -1,7 +1,4 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { dbApi } from "../../../services/dbApi";
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/JobSeekerDashboard.module.css";
@@ -21,44 +18,6 @@ const JobSeekerDashboard = () => {
   const notifications = useSelector((state) => state.jobs.notifications || []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
-
-  const userId = localStorage.getItem("userId");
-
-  /*
-  FETCH NOTIFICATIONS ON DASHBOARD LOAD
-  */
-
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const data = await dbApi.get(`notifications/${userId}`);
-
-        if (!data) {
-          dispatch(jobSeekerActions.setNotifications([]));
-          return;
-        }
-
-        const list = Object.entries(data)
-          .map(([firebaseKey, value]) => ({
-            ...value,
-            id: firebaseKey,
-          }))
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        dispatch(jobSeekerActions.setNotifications(list));
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchNotifications();
-
-    /*
-    ALWAYS START ON AVAILABLE JOBS
-    */
-
-    dispatch(jobSeekerActions.setActiveView("available"));
-  }, [dispatch, userId]);
 
   return (
     <div className={classes.dashboard}>

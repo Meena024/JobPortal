@@ -72,7 +72,7 @@ const RecruiterInterviews = () => {
         newHistoryEntry,
       ];
 
-      await dbApi.patch(`applications/${id}`, {
+      await dbApi.patch(`applications/${currentInterview.recruiterId}/${id}`, {
         interviewData: {
           ...interviewData,
           interviewDate: newDate,

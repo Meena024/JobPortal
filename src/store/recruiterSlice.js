@@ -94,17 +94,37 @@ const recruiterSlice = createSlice({
     },
 
     updateInterviewDetails(state, action) {
-      const { id, interviewData } = action.payload;
+      const {
+        id,
+        interviewData,
+        rescheduleHistory,
+        rescheduleRequested,
+        rescheduleRequestReason,
+        rescheduleRequestedAt,
+      } = action.payload;
 
-      const index = state.recruiterApplications.findIndex(
+      const application = state.recruiterApplications.find(
         (app) => app.id === id,
       );
 
-      if (index !== -1) {
-        state.recruiterApplications[index] = {
-          ...state.recruiterApplications[index],
-          ...interviewData,
-        };
+      if (!application) return;
+
+      application.interviewData = interviewData;
+
+      if (rescheduleHistory !== undefined) {
+        application.rescheduleHistory = rescheduleHistory;
+      }
+
+      if (rescheduleRequested !== undefined) {
+        application.rescheduleRequested = rescheduleRequested;
+      }
+
+      if (rescheduleRequestReason !== undefined) {
+        application.rescheduleRequestReason = rescheduleRequestReason;
+      }
+
+      if (rescheduleRequestedAt !== undefined) {
+        application.rescheduleRequestedAt = rescheduleRequestedAt;
       }
     },
 
