@@ -10,13 +10,15 @@ import InterviewEditor from "./InterviewEditor";
 const InterviewScheduler = ({ app }) => {
   const dispatch = useDispatch();
 
-  const [editing, setEditing] = useState(!app.interviewScheduled);
+  const [editing, setEditing] = useState(
+    !app.interviewData?.interviewScheduled,
+  );
 
   const [form, setForm] = useState({
-    interviewDate: app.interviewDate || "",
-    interviewTime: app.interviewTime || "",
-    interviewLink: app.interviewLink || "",
-    interviewInstructions: app.interviewInstructions || "",
+    interviewDate: app.interviewData?.interviewDate || "",
+    interviewTime: app.interviewData?.interviewTime || "",
+    interviewLink: app.interviewData?.interviewLink || "",
+    interviewInstructions: app.interviewData?.interviewInstructions || "",
   });
 
   const changeHandler = (field, value) => {
@@ -30,10 +32,10 @@ const InterviewScheduler = ({ app }) => {
     try {
       let updatedHistory = app.rescheduleHistory || [];
 
-      if (app.interviewScheduled) {
+      if (app.interviewData?.interviewScheduled) {
         const historyItem = {
-          previousDate: app.interviewDate,
-          previousTime: app.interviewTime,
+          previousDate: app.interviewData?.interviewDate,
+          previousTime: app.interviewData?.interviewTime,
           reason: "Interview updated by recruiter",
           changedAt: new Date().toISOString(),
         };
@@ -137,10 +139,10 @@ const InterviewScheduler = ({ app }) => {
 
   const cancelEditing = () => {
     setForm({
-      interviewDate: app.interviewDate || "",
-      interviewTime: app.interviewTime || "",
-      interviewLink: app.interviewLink || "",
-      interviewInstructions: app.interviewInstructions || "",
+      interviewDate: app.interviewData?.interviewDate || "",
+      interviewTime: app.interviewData?.interviewTime || "",
+      interviewLink: app.interviewData?.interviewLink || "",
+      interviewInstructions: app.interviewData?.interviewInstructions || "",
     });
 
     setEditing(false);

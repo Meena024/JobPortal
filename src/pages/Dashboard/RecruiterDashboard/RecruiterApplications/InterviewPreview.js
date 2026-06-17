@@ -1,14 +1,15 @@
 import styles from "./../../../../Styling/Pages/RecruiterDashboard/RecruiterApplications/InterviewScheduler.module.css";
 
 const InterviewPreview = ({ app, setEditing, cancelInterview }) => {
+  console.log("check app", app);
   return (
     <div className={styles.preview}>
       <div className={styles.left}>
         <strong className={styles.title}>Interview Scheduled</strong>
 
-        <div className={styles.meta}>{app.interviewDate}</div>
+        <div className={styles.meta}>{app.interviewData?.interviewDate}</div>
 
-        <div className={styles.meta}>{app.interviewTime}</div>
+        <div className={styles.meta}>{app.interviewData?.interviewTime}</div>
 
         <div className={styles.actionRow}>
           <button className={styles.editBtn} onClick={() => setEditing(true)}>
@@ -26,7 +27,7 @@ const InterviewPreview = ({ app, setEditing, cancelInterview }) => {
 
       <div className={styles.right}>
         <a
-          href={app.interviewLink}
+          href={app.interviewData?.interviewLink}
           target="_blank"
           rel="noreferrer"
           className={styles.join}
@@ -34,7 +35,9 @@ const InterviewPreview = ({ app, setEditing, cancelInterview }) => {
           Join Meeting
         </a>
 
-        <div className={styles.instructions}>{app.interviewInstructions}</div>
+        <div className={styles.instructions}>
+          {app.interviewData?.interviewInstructions}
+        </div>
       </div>
     </div>
   );

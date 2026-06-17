@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { dbApi } from "../../../../services/dbApi";
 import { recruiterActions } from "../../../../store/recruiterSlice";
@@ -9,66 +9,36 @@ import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterInterv
 import InterviewRow from "./InterviewRow";
 
 const RecruiterInterviews = () => {
-  const [interviews, setInterviews] = useState([]);
-
   const dispatch = useDispatch();
 
-  const userId = localStorage.getItem("userId");
+  const recruiterApplications = useSelector(
+    (state) => state.recruiter.recruiterApplications,
+  );
 
   /*
-  FETCH INTERVIEWS
+    INTERVIEWS FROM REDUX
   */
 
-  useEffect(() => {
-    const fetchInterviews = async () => {
-      try {
-        const jobs = await dbApi.get("jobs");
-        const users = await dbApi.get("users");
-        const applications = await dbApi.get("applications");
+  const interviews = useMemo(() => {
+    return (recruiterApplications || [])
+      .filter(
+        (app) => app.interviewData && app.interviewData.interviewScheduled,
+      )
+      .sort((a, b) => {
+        const dateA = new Date(
+          `${a.interviewData.interviewDate} ${a.interviewData.interviewTime}`,
+        );
 
-        if (!jobs || !applications) {
-          setInterviews([]);
-          return;
-        }
+        const dateB = new Date(
+          `${b.interviewData.interviewDate} ${b.interviewData.interviewTime}`,
+        );
 
-        const recruiterJobs = Object.entries(jobs)
-          .filter(([_, job]) => job.recruiterId === userId)
-          .reduce((acc, [id, value]) => {
-            acc[id] = value;
-            return acc;
-          }, {});
-
-        const list = Object.entries(applications)
-          .map(([id, app]) => {
-            if (!app.interviewScheduled) return null;
-
-            if (!recruiterJobs[app.jobId]) return null;
-
-            return {
-              id,
-              ...app,
-              jobTitle: recruiterJobs[app.jobId]?.title,
-              applicantEmail: users?.[app.userId]?.profile?.email || "Unknown",
-            };
-          })
-          .filter(Boolean)
-          .sort(
-            (a, b) =>
-              new Date(`${b.interviewDate} ${b.interviewTime}`) -
-              new Date(`${a.interviewDate} ${a.interviewTime}`),
-          );
-
-        setInterviews(list);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchInterviews();
-  }, [userId]);
+        return dateB - dateA;
+      });
+  }, [recruiterApplications]);
 
   /*
-  CHECK EXPIRED STATUS
+    CHECK EXPIRED STATUS
   */
 
   const isExpired = (date, time) => {
@@ -79,22 +49,20 @@ const RecruiterInterviews = () => {
   };
 
   /*
-  RESCHEDULE HANDLER
+    RESCHEDULE HANDLER
   */
 
   const rescheduleInterview = async (id, newDate, newTime, reason) => {
     try {
-      const currentInterview = interviews.find((i) => i.id === id);
+      const currentInterview = interviews.find((item) => item.id === id);
 
       if (!currentInterview) return;
 
-      /*
-        CREATE HISTORY ENTRY
-      */
+      const interviewData = currentInterview.interviewData || {};
 
       const newHistoryEntry = {
-        previousDate: currentInterview.interviewDate,
-        previousTime: currentInterview.interviewTime,
+        previousDate: interviewData.interviewDate,
+        previousTime: interviewData.interviewTime,
         reason,
         changedAt: new Date().toISOString(),
       };
@@ -104,51 +72,35 @@ const RecruiterInterviews = () => {
         newHistoryEntry,
       ];
 
-      /*
-        UPDATE BACKEND
-      */
-
       await dbApi.patch(`applications/${id}`, {
-        interviewDate: newDate,
-        interviewTime: newTime,
+        interviewData: {
+          ...interviewData,
+          interviewDate: newDate,
+          interviewTime: newTime,
+        },
+
         rescheduleHistory: updatedHistory,
 
         rescheduleRequested: false,
-        rescheduleRequestReason: null,
-        rescheduleRequestedAt: null,
+        rescheduleRequestReason: "",
+        rescheduleRequestedAt: "",
       });
-
-      /*
-        ✅ UPDATE LOCAL STATE (IMPORTANT FIX)
-      */
-
-      setInterviews((prev) =>
-        prev.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                interviewDate: newDate,
-                interviewTime: newTime,
-                rescheduleHistory: updatedHistory,
-                rescheduleRequested: false,
-                rescheduleRequestReason: null,
-                rescheduleRequestedAt: null,
-              }
-            : item,
-        ),
-      );
 
       dispatch(
         recruiterActions.updateInterviewDetails({
           id,
+
           interviewData: {
+            ...interviewData,
             interviewDate: newDate,
             interviewTime: newTime,
-            rescheduleHistory: updatedHistory,
-            rescheduleRequested: false,
-            rescheduleRequestReason: null,
-            rescheduleRequestedAt: null,
           },
+
+          rescheduleHistory: updatedHistory,
+
+          rescheduleRequested: false,
+          rescheduleRequestReason: "",
+          rescheduleRequestedAt: "",
         }),
       );
     } catch (err) {
@@ -165,7 +117,10 @@ const RecruiterInterviews = () => {
       )}
 
       {interviews.map((item) => {
-        const expired = isExpired(item.interviewDate, item.interviewTime);
+        const expired = isExpired(
+          item.interviewData.interviewDate,
+          item.interviewData.interviewTime,
+        );
 
         return (
           <InterviewRow

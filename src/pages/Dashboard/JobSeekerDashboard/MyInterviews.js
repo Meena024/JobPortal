@@ -1,101 +1,74 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 import { dbApi } from "../../../services/dbApi";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/MyInterviews.module.css";
 
 const MyInterviews = () => {
-  const [interviews, setInterviews] = useState([]);
   const [requestInputs, setRequestInputs] = useState({});
 
-  const userId = localStorage.getItem("userId");
+  const appliedJobs = useSelector((s) => s.jobs.appliedJobs);
 
   /*
-    FETCH INTERVIEWS
+    INTERVIEWS
   */
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const applications = await dbApi.get("applications");
-        const jobs = await dbApi.get("jobs");
+  const interviews = useMemo(() => {
+    return (appliedJobs || [])
+      .filter(
+        (app) => app.interviewData && app.interviewData.interviewScheduled,
+      )
+      .sort((a, b) => {
+        const dateA = new Date(
+          `${a.interviewData.interviewDate} ${a.interviewData.interviewTime}`,
+        );
 
-        if (!applications) return;
+        const dateB = new Date(
+          `${b.interviewData.interviewDate} ${b.interviewData.interviewTime}`,
+        );
 
-        const list = Object.entries(applications)
-          .map(([id, app]) => {
-            if (app.userId !== userId) return null;
-            if (!app.interviewScheduled) return null;
-
-            return {
-              id,
-              ...app,
-              jobTitle: jobs?.[app.jobId]?.title || "Job removed",
-              companyName: jobs?.[app.jobId]?.companyName || "Unknown",
-            };
-          })
-          .filter(Boolean)
-          .sort(
-            (a, b) =>
-              new Date(`${b.interviewDate} ${b.interviewTime}`) -
-              new Date(`${a.interviewDate} ${a.interviewTime}`),
-          );
-
-        setInterviews(list);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
+        return dateB - dateA;
+      });
+  }, [appliedJobs]);
 
   /*
     EXPIRED CHECK
   */
   const isExpired = (date, time) => {
     const interviewTime = new Date(`${date} ${time}`);
-    const now = new Date();
-
-    return now > interviewTime;
+    return new Date() > interviewTime;
   };
 
   /*
     REQUEST RESCHEDULE
   */
-  const requestReschedule = async (id) => {
-    const reason = requestInputs[id];
+  const requestReschedule = async (item) => {
+    const reason = requestInputs[item.id];
 
-    if (!reason?.trim()) return;
+    if (!reason?.trim()) {
+      alert("Please enter a reason");
+      return;
+    }
 
     try {
-      await dbApi.patch(`applications/${id}`, {
-        rescheduleRequested: true,
-        rescheduleRequestReason: reason,
-
-        rescheduleRequestedAt: new Date().toISOString(),
-      });
-
-      setInterviews((prev) =>
-        prev.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                rescheduleRequested: true,
-                rescheduleRequestReason: reason,
-                rescheduleRequestedAt: new Date().toISOString(),
-              }
-            : item,
-        ),
+      await dbApi.patch(
+        `applications/${item.recruiterId}/${item.id}/interviewData/`,
+        {
+          rescheduleRequested: true,
+          rescheduleRequestReason: reason,
+          rescheduleRequestedAt: new Date().toISOString(),
+        },
       );
+
+      alert("Reschedule request sent");
 
       setRequestInputs((prev) => ({
         ...prev,
-        [id]: "",
+        [item.id]: "",
       }));
-
-      alert("Reschedule request sent");
     } catch (err) {
       console.error(err);
+      alert("Failed to send request");
     }
   };
 
@@ -108,7 +81,12 @@ const MyInterviews = () => {
       )}
 
       {interviews.map((item) => {
-        const expired = isExpired(item.interviewDate, item.interviewTime);
+        const interview = item.interviewData;
+
+        const expired = isExpired(
+          interview.interviewDate,
+          interview.interviewTime,
+        );
 
         return (
           <div
@@ -121,20 +99,21 @@ const MyInterviews = () => {
               </div>
 
               <div>
-                <strong>Company:</strong> {item.companyName}
+                <strong>Recruiter:</strong> {item.recruiterEmail}
               </div>
 
               <div>
-                <strong>Date:</strong> {item.interviewDate}
+                <strong>Date:</strong> {interview.interviewDate}
               </div>
 
               <div>
-                <strong>Time:</strong> {item.interviewTime}
+                <strong>Time:</strong> {interview.interviewTime}
               </div>
 
-              {item.interviewInstructions && (
+              {interview.interviewInstructions && (
                 <div>
-                  <strong>Instructions:</strong> {item.interviewInstructions}
+                  <strong>Instructions:</strong>{" "}
+                  {interview.interviewInstructions}
                 </div>
               )}
 
@@ -162,17 +141,21 @@ const MyInterviews = () => {
                   <strong>History:</strong>
 
                   <div className={classes.history}>
-                    {item.rescheduleHistory
-                      .slice()
+                    {[...item.rescheduleHistory]
                       .reverse()
                       .map((history, index) => (
                         <div key={index} className={classes.historyItem}>
-                          <div>
-                            Previous Date: {history.previousDate} at{" "}
-                            {history.previousTime}
-                          </div>
+                          <div>Previous Date: {history.previousDate}</div>
+
+                          <div>Previous Time: {history.previousTime}</div>
 
                           <div className={classes.reason}>{history.reason}</div>
+
+                          {history.changedAt && (
+                            <div className={classes.requestTime}>
+                              {new Date(history.changedAt).toLocaleString()}
+                            </div>
+                          )}
                         </div>
                       ))}
                   </div>
@@ -183,7 +166,7 @@ const MyInterviews = () => {
             <div className={classes.col3}>
               {!expired ? (
                 <a
-                  href={item.interviewLink}
+                  href={interview.interviewLink}
                   target="_blank"
                   rel="noreferrer"
                   className={classes.joinBtn}
@@ -209,7 +192,7 @@ const MyInterviews = () => {
 
                   <button
                     className={classes.rescheduleBtn}
-                    onClick={() => requestReschedule(item.id)}
+                    onClick={() => requestReschedule(item)}
                   >
                     Request Reschedule
                   </button>

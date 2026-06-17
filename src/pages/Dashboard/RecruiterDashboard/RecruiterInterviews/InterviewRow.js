@@ -3,11 +3,13 @@ import { useState } from "react";
 import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterInterviews.module.css";
 
 const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
+  const interviewData = interview.interviewData || {};
+
   const [editMode, setEditMode] = useState(false);
 
-  const [date, setDate] = useState(interview.interviewDate);
+  const [date, setDate] = useState(interviewData.interviewDate || "");
 
-  const [time, setTime] = useState(interview.interviewTime);
+  const [time, setTime] = useState(interviewData.interviewTime || "");
 
   const [reason, setReason] = useState("");
 
@@ -23,11 +25,11 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
         </div>
 
         <div>
-          <strong>Date:</strong> {interview.interviewDate}
+          <strong>Date:</strong> {interviewData.interviewDate}
         </div>
 
         <div>
-          <strong>Time:</strong> {interview.interviewTime}
+          <strong>Time:</strong> {interviewData.interviewTime}
         </div>
 
         {interview.recruiterNotes && (
@@ -36,9 +38,11 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           </div>
         )}
 
-        <div>
-          <strong>Instructions:</strong> {interview.interviewInstructions}
-        </div>
+        {interviewData.interviewInstructions && (
+          <div>
+            <strong>Instructions:</strong> {interviewData.interviewInstructions}
+          </div>
+        )}
 
         {interview.rescheduleRequested && (
           <div className={styles.requestBox}>
@@ -62,6 +66,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
         {interview.rescheduleHistory?.length > 0 && (
           <div>
             <strong>History:</strong>
+
             <div className={styles.history}>
               {interview.rescheduleHistory
                 .slice()
@@ -73,6 +78,12 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
                     </div>
 
                     <div className={styles.reason}>{item.reason}</div>
+
+                    {item.changedAt && (
+                      <div className={styles.requestTime}>
+                        {new Date(item.changedAt).toLocaleString()}
+                      </div>
+                    )}
                   </div>
                 ))}
             </div>
@@ -83,7 +94,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
       <div className={styles.col3}>
         {!expired ? (
           <a
-            href={interview.interviewLink}
+            href={interviewData.interviewLink}
             target="_blank"
             rel="noreferrer"
             className={styles.joinBtn}
@@ -137,6 +148,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
                 className={styles.saveBtn}
                 onClick={() => {
                   rescheduleInterview(interview.id, date, time, reason);
+
                   setReason("");
                   setEditMode(false);
                 }}
@@ -147,8 +159,8 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
               <button
                 className={styles.cancelBtn}
                 onClick={() => {
-                  setDate(interview.interviewDate);
-                  setTime(interview.interviewTime);
+                  setDate(interviewData.interviewDate || "");
+                  setTime(interviewData.interviewTime || "");
                   setReason("");
                   setEditMode(false);
                 }}
