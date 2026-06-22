@@ -47,6 +47,7 @@ export const fetchAllJobs = () => {
           });
         });
       });
+      jobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       dispatch(adminActions.setAllJobs(jobs));
     } catch (err) {
@@ -121,9 +122,10 @@ export const fetchAllApplications = () => {
           );
         },
       );
-      console.log(applicationsData);
-      // console.log(recruiterApplications);
-      // console.log(application);
+
+      applications.sort(
+        (a, b) => new Date(b.appliedAt) - new Date(a.appliedAt),
+      );
       dispatch(adminActions.setAllApplications(applications));
     } catch (err) {
       dispatch(

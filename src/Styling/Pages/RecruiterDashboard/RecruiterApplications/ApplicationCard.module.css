@@ -153,3 +153,36 @@ select {
 .editOfferBtn:hover {
   background: #3f4fe0;
 }
+.closedRecruitment {
+  background: #fffaf0;
+  border-left: 4px solid #f59e0b;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.statusBadge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.closedBadge {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.closedMessage {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff3cd;
+  color: #856404;
+  font-size: 13px;
+}

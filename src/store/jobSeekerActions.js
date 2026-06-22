@@ -40,6 +40,8 @@ export const fetchAvailableJobs = () => {
         });
       });
 
+      allJobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
       /*
         FILTER APPROVED + OPEN
       */
@@ -181,6 +183,9 @@ export const fetchAppliedJobs = (userId) => {
         });
       });
 
+      applications.sort(
+        (a, b) => new Date(b.appliedAt) - new Date(a.appliedAt),
+      );
       dispatch(jobSeekerActions.setAppliedJobs(applications));
     } catch (err) {
       console.log("Fetch applied jobs failed:", err);
@@ -258,6 +263,9 @@ export const fetchNotifications = (userId) => {
         ...note,
       }));
 
+      notifications.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      );
       dispatch(jobSeekerActions.setNotifications(notifications));
     } catch (err) {
       console.log("Fetch notifications failed:", err);

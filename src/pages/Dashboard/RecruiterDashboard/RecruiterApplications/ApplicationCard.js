@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { dbApi } from "../../../../services/dbApi";
 import { recruiterActions } from "../../../../store/recruiterSlice";
@@ -12,11 +12,16 @@ const ApplicationCard = ({ app }) => {
   const dispatch = useDispatch();
 
   const notesTimers = useRef({});
+  const recruiterJobs = useSelector(
+    (state) => state.recruiter.recruiterJobs || [],
+  );
   const [offerInputs, setOfferInputs] = useState({});
   const [editingOffer, setEditingOffer] = useState(false);
+  const relatedJob = recruiterJobs.find((job) => job.id === app.jobId);
+  const recruitmentClosed = relatedJob?.jobOpeningStatus === "closed";
 
   /*
-  CREATE NOTIFICATION
+    CREATE NOTIFICATION
   */
 
   const createNotification = async (message) => {
@@ -33,7 +38,7 @@ const ApplicationCard = ({ app }) => {
   };
 
   /*
-  STATUS CHANGE
+    STATUS CHANGE
   */
 
   const statusChangeHandler = async (status) => {
@@ -72,9 +77,13 @@ const ApplicationCard = ({ app }) => {
     clearTimeout(notesTimers.current[app.id]);
 
     notesTimers.current[app.id] = setTimeout(async () => {
-      await dbApi.patch(`applications/${app.id}`, {
-        recruiterNotes: notes,
-      });
+      try {
+        await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
+          recruiterNotes: notes,
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }, 600);
   };
 
@@ -88,7 +97,7 @@ const ApplicationCard = ({ app }) => {
     if (!offerLetterUrl) return;
 
     try {
-      await dbApi.patch(`applications/${app.id}`, {
+      await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
         offerLetterUrl,
       });
 
@@ -108,12 +117,35 @@ const ApplicationCard = ({ app }) => {
   };
 
   return (
-    <div className={`${styles.card} ${styles[app.status]}`}>
+    <div
+      className={`${styles.card} ${
+        recruitmentClosed ? styles.closedRecruitment : styles[app.status]
+      }`}
+    >
       <div className={styles.header}>
-        <h3>{app.jobTitle}</h3>
+        <div>
+          <h3>{app.jobTitle}</h3>
+
+          <div className={styles.badges}>
+            <span
+              className={`${styles.statusBadge} ${
+                styles[`${app.status}Badge`]
+              }`}
+            >
+              {app.status}
+            </span>
+
+            {recruitmentClosed && (
+              <span className={`${styles.statusBadge} ${styles.closedBadge}`}>
+                Recruitment Closed
+              </span>
+            )}
+          </div>
+        </div>
 
         <select
           value={app.status}
+          disabled={recruitmentClosed}
           onChange={(e) => statusChangeHandler(e.target.value)}
         >
           <option value="pending">Pending</option>
@@ -130,6 +162,7 @@ const ApplicationCard = ({ app }) => {
         className={styles.notes}
         placeholder="Recruiter notes..."
         value={app.recruiterNotes || ""}
+        disabled={recruitmentClosed}
         onChange={(e) => notesChangeHandler(e.target.value)}
       />
 
@@ -142,11 +175,18 @@ const ApplicationCard = ({ app }) => {
         View Resume
       </a>
 
-      {app.status === "shortlisted" && (
+      {recruitmentClosed && (
+        <div className={styles.closedMessage}>
+          Recruitment has been closed for this job opening. Candidate processing
+          is locked.
+        </div>
+      )}
+
+      {!recruitmentClosed && app.status === "shortlisted" && (
         <InterviewScheduler app={app} createNotification={createNotification} />
       )}
 
-      {app.status === "selected" && (
+      {!recruitmentClosed && app.status === "selected" && (
         <>
           {app.offerLetterUrl && !editingOffer && (
             <div className={styles.offerView}>

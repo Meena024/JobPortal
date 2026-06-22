@@ -24,6 +24,7 @@ export const fetchRecruiterJobs = (userId) => {
         id,
         ...job,
       }));
+      jobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       dispatch(recruiterActions.setRecruiterJobs(jobs));
     } catch (err) {
@@ -143,6 +144,10 @@ export const fetchRecruiterApplications = (userId) => {
         id,
         ...app,
       }));
+
+      applications.sort(
+        (a, b) => new Date(b.appliedAt) - new Date(a.appliedAt),
+      );
       dispatch(recruiterActions.setRecruiterApplications(applications));
     } catch (err) {
       dispatch(
