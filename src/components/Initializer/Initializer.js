@@ -10,6 +10,7 @@ import {
   fetchAppliedJobs,
   fetchSavedJobs,
   fetchNotifications,
+  fetchAvailableJobs,
 } from "../../store/jobSeekerActions";
 import {
   fetchAllJobs,
@@ -20,7 +21,10 @@ import {
 const Initializer = async (dispatch, navigate) => {
   const token = localStorage.getItem("token");
   console.log("token", token);
-  if (!token) return;
+  if (!token) {
+    navigate("/");
+    return;
+  }
 
   try {
     const userId = await fetchUserId(token);
@@ -49,6 +53,8 @@ const Initializer = async (dispatch, navigate) => {
       await dispatch(fetchAllUsers());
       console.log("4.3 fetched fetchAllUsers");
     } else {
+      await dispatch(fetchAvailableJobs());
+      console.log("5.0 fetched fetchAvailableJobs");
       await dispatch(fetchResumes(userId));
       console.log("5.1 fetched fetchResumes");
       await dispatch(fetchAppliedJobs(userId));
@@ -60,7 +66,10 @@ const Initializer = async (dispatch, navigate) => {
     }
     return;
   } catch (err) {
-    console.log(err);
+    console.error("Initializer Error:", err);
+    localStorage.removeItem("token");
+    dispatch(authActions.logout());
+    navigate("/");
   }
 };
 

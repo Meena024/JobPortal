@@ -161,28 +161,27 @@
 
 /* CLOSED RECRUITMENT */
 
+.cardClosed {
+  background: #fffaf0;
+  border-left: 4px solid #f59e0b;
+}
+
+.badgeContainer {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
 .closedBadge {
-  position: absolute;
+  background: #fff3cd;
+  color: #856404;
+}
 
-  top: 42px;
-
-  right: 18px;
-
-  font-size: 10px;
-
+.inlineBadge {
+  font-size: 11px;
   font-weight: 600;
-
-  padding: 4px 8px;
-
+  padding: 3px 10px;
   border-radius: 6px;
-
-  background: #ffe5e5;
-
-  color: #d9363e;
-
-  border: 1px solid #ffb3b3;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.3px;
+  text-transform: capitalize;
 }

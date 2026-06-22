@@ -1,8 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-
-import { dbApi } from "../../../services/dbApi";
 
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
@@ -17,143 +15,70 @@ const AppliedJobs = () => {
     REDUX STATE
   */
 
-  const applications = useSelector((state) => state.jobs?.appliedJobs || []);
+  const applications = useSelector((state) => state.jobs.appliedJobs || []);
 
   const highlightedApplicationId = useSelector(
-    (state) => state.jobs?.highlightedApplicationId,
+    (state) => state.jobs.highlightedApplicationId,
   );
+
+  const jobsData = useSelector((state) => state.jobs.availableJobs);
 
   /*
     LOCAL UI STATE
   */
-
-  const [allApplications, setAllApplications] = useState([]);
-
-  const [filteredApplications, setFilteredApplications] = useState([]);
-
-  const [loading, setLoading] = useState(true);
 
   const [statusFilter, setStatusFilter] = useState("all");
 
   const [openingStatusFilter, setOpeningStatusFilter] = useState("all");
 
   /*
-    FETCH + ENRICH APPLICATIONS
+    ENRICH APPLICATIONS
   */
 
-  useEffect(() => {
-    const enrichApplications = async () => {
-      try {
-        setLoading(true);
+  const enrichedApplications = useMemo(() => {
+    const jobsMap = {};
 
-        /*
-            JOBS STRUCTURE:
+    (jobsData || []).forEach((job) => {
+      jobsMap[job.id] = job;
+    });
 
-            jobs: {
-              recruiterId: {
-                jobId: {...}
-              }
-            }
-          */
+    return applications.map((app) => {
+      const job = jobsMap[app.jobId];
 
-        const jobsData = await dbApi.get("jobs");
+      return {
+        ...app,
 
-        /*
-            FLATTEN JOBS
-          */
+        jobTitle: job?.title || "Job removed",
 
-        const flattenedJobs = {};
+        companyName: job?.companyName || "Unknown company",
 
-        Object.entries(jobsData || {}).forEach(([_, recruiterJobs]) => {
-          /*
-                SAFETY CHECK
-              */
+        description: job?.description || "This job is no longer available.",
 
-          if (!recruiterJobs) return;
+        salary: job?.salary || "-",
 
-          Object.entries(recruiterJobs).forEach(([jobId, job]) => {
-            /*
-                    SAFETY CHECK
-                  */
+        location: job?.location || "-",
 
-            if (!job) return;
+        jobExists: !!job,
 
-            flattenedJobs[jobId] = job;
-          });
-        });
-
-        /*
-            ENRICH APPLICATIONS
-          */
-
-        const enriched = applications.map((app) => {
-          const job = flattenedJobs[app.jobId];
-
-          return {
-            ...app,
-
-            jobTitle: job?.title || "Job removed",
-
-            companyName: job?.companyName || "Unknown company",
-
-            description: job?.description || "This job is no longer available.",
-
-            salary: job?.salary || "-",
-
-            location: job?.location || "-",
-
-            jobExists: !!job,
-
-            jobOpeningStatus: job?.jobOpeningStatus || "open",
-          };
-        });
-
-        setAllApplications(enriched);
-
-        setFilteredApplications(enriched);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    enrichApplications();
-  }, [applications]);
+        jobOpeningStatus: job?.jobOpeningStatus || "open",
+      };
+    });
+  }, [applications, jobsData]);
 
   /*
     APPLY FILTERS
   */
 
-  useEffect(() => {
-    /*
-      SHOW ALL WHEN
-      HIGHLIGHTING
-    */
-
+  const filteredApplications = useMemo(() => {
     if (highlightedApplicationId) {
-      setStatusFilter("all");
-
-      setOpeningStatusFilter("all");
-
-      setFilteredApplications(allApplications);
-
-      return;
+      return enrichedApplications;
     }
 
-    let updated = [...allApplications];
-
-    /*
-      STATUS FILTER
-    */
+    let updated = [...enrichedApplications];
 
     if (statusFilter !== "all") {
       updated = updated.filter((app) => app.status === statusFilter);
     }
-
-    /*
-      OPENING FILTER
-    */
 
     if (openingStatusFilter !== "all") {
       updated = updated.filter(
@@ -161,12 +86,12 @@ const AppliedJobs = () => {
       );
     }
 
-    setFilteredApplications(updated);
+    return updated;
   }, [
+    enrichedApplications,
     statusFilter,
     openingStatusFilter,
     highlightedApplicationId,
-    allApplications,
   ]);
 
   /*
@@ -180,11 +105,10 @@ const AppliedJobs = () => {
     setTimeout(() => {
       highlightedRef.current?.scrollIntoView({
         behavior: "smooth",
-
         block: "center",
       });
     }, 250);
-  }, [highlightedApplicationId, filteredApplications]);
+  }, [highlightedApplicationId, filteredApplications.length]);
 
   /*
     CLEAR HIGHLIGHT
@@ -247,15 +171,9 @@ const AppliedJobs = () => {
         </div>
       </div>
 
-      {/* LOADING */}
-
-      {loading && (
-        <p className={classes.infoMessage}>Loading applications...</p>
-      )}
-
       {/* EMPTY */}
 
-      {!loading && filteredApplications.length === 0 && (
+      {filteredApplications.length === 0 && (
         <p className={classes.infoMessage}>No applications found</p>
       )}
 

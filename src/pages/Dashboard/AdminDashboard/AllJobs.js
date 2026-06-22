@@ -35,10 +35,28 @@ const AllJobs = () => {
             <div className={classes.headerRow}>
               <div className={classes.jobTitle}>{job.title}</div>
 
-              <span
-                className={`${classes.status} ${classes[`${job.status}Badge`]}`}
-              >
-                {job.status}
+              <div className={classes.badges}>
+                <span
+                  className={`${classes.status} ${
+                    job.status === "rejected"
+                      ? classes.rejectedBadge
+                      : job.jobOpeningStatus === "closed"
+                        ? classes.closedBadge
+                        : classes.approvedBadge
+                  }`}
+                >
+                  {job.status === "rejected"
+                    ? "Rejected"
+                    : job.jobOpeningStatus === "closed"
+                      ? "Recruitment Closed"
+                      : "Approved"}
+                </span>
+              </div>
+            </div>
+
+            <div className={classes.metaBlock}>
+              <span>
+                Recruiter: <span>{job.recruiterEmail}</span>
               </span>
             </div>
 
@@ -53,6 +71,11 @@ const AllJobs = () => {
                 <span>Location</span>
 
                 <p>{job.location}</p>
+              </div>
+              <div className={classes.metaBlock}>
+                <span>Salary</span>
+
+                <p>₹{job.salary}</p>
               </div>
             </div>
 

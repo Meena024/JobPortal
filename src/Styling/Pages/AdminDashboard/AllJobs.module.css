@@ -91,6 +91,11 @@
   font-weight: 500;
 }
 
+.metaBlock span span {
+  color: black;
+  font-size: 13px;
+  font-weight: 500;
+}
 /* SKILLS */
 
 .skills {
@@ -139,4 +144,9 @@
   font-size: 13px;
   color: #7f1d1d;
   border-radius: 6px;
+}
+
+.closedBadge {
+  background: #fff3cd;
+  color: #856404;
 }

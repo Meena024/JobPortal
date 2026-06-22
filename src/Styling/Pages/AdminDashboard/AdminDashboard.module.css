@@ -219,3 +219,18 @@
 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+.closedBadge {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.cardClosed {
+  background: #fffaf0;
+  border-left: 4px solid #f59e0b;
+}
+
+.cardClosed {
+  background: #fff7ed;
+  border-left: 4px solid #ea580c;
+}

@@ -1,7 +1,6 @@
 import styles from "./../../../../Styling/Pages/RecruiterDashboard/RecruiterApplications/InterviewScheduler.module.css";
 
 const InterviewPreview = ({ app, setEditing, cancelInterview }) => {
-  console.log("check app", app);
   return (
     <div className={styles.preview}>
       <div className={styles.left}>

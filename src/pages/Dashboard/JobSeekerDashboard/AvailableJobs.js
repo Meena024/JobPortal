@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  fetchAvailableJobs,
-  saveJob,
-  unsaveJob,
-} from "../../../store/jobSeekerActions";
+import { saveJob, unsaveJob } from "../../../store/jobSeekerActions";
 
 import JobApply from "./JobApply";
 
@@ -17,8 +13,6 @@ const AvailableJobs = () => {
 
   const [filteredJobs, setFilteredJobs] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-
   const [locationFilter, setLocationFilter] = useState("all");
 
   const [salaryFilter, setSalaryFilter] = useState("all");
@@ -28,22 +22,6 @@ const AvailableJobs = () => {
   const savedJobs = useSelector((state) => state.jobs?.savedJobs || {});
 
   const userId = useSelector((state) => state.auth.userId);
-
-  useEffect(() => {
-    const loadJobs = async () => {
-      try {
-        setLoading(true);
-
-        await dispatch(fetchAvailableJobs());
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadJobs();
-  }, [dispatch]);
 
   /*
     APPLY FILTERS
@@ -157,13 +135,9 @@ const AvailableJobs = () => {
         </div>
       </div>
 
-      {/* LOADING */}
-
-      {loading && <p className={classes.infoMessage}>Loading jobs...</p>}
-
       {/* EMPTY */}
 
-      {!loading && filteredJobs.length === 0 && (
+      {filteredJobs.length === 0 && (
         <p className={classes.infoMessage}>No jobs match selected filters</p>
       )}
 

@@ -9,6 +9,8 @@ const Applications = () => {
     (state) => state.admin.allApplications || [],
   );
 
+  const allJobs = useSelector((state) => state.admin.allJobs || []);
+
   const [applicantFilter, setApplicantFilter] = useState("all");
 
   const [recruiterFilter, setRecruiterFilter] = useState("all");
@@ -22,6 +24,13 @@ const Applications = () => {
 
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+
+  const jobsMap = useMemo(() => {
+    return allJobs.reduce((acc, job) => {
+      acc[job.id] = job;
+      return acc;
+    }, {});
+  }, [allJobs]);
 
   const filteredApplications = useMemo(() => {
     let updated = [...allApplications];
@@ -130,58 +139,69 @@ const Applications = () => {
       )}
 
       <div className={classes.applicationGrid}>
-        {filteredApplications.map((app) => (
-          <div
-            key={app.id}
-            className={`${classes.applicationCard} ${
-              classes[`card${capitalize(app.status)}`] || ""
-            }`}
-          >
-            {app.status && (
-              <span
-                className={`${classes.statusBadge} ${
-                  classes[`badge${capitalize(app.status)}`] || ""
-                }`}
-              >
-                {app.status}
-              </span>
-            )}
+        {filteredApplications.map((app) => {
+          const relatedJob = jobsMap[app.jobId];
 
-            {app.jobOpeningStatus === "closed" && (
-              <span className={classes.closedBadge}>Recruitment Closed</span>
-            )}
+          const recruitmentClosed = relatedJob?.jobOpeningStatus === "closed";
 
-            <div className={classes.row}>
-              <strong>Applicant:</strong> {app.applicantEmail || "Unknown"}
+          return (
+            <div
+              key={app.id}
+              className={`${classes.applicationCard} ${
+                recruitmentClosed
+                  ? classes.cardClosed
+                  : classes[`card${capitalize(app.status)}`] || ""
+              }`}
+            >
+              <div className={classes.badgeContainer}>
+                <span
+                  className={`${classes.inlineBadge}
+      ${classes[`badge${capitalize(app.status)}`]}`}
+                >
+                  {capitalize(app.status)}
+                </span>
+
+                {recruitmentClosed && (
+                  <span
+                    className={`${classes.inlineBadge} ${classes.closedBadge}`}
+                  >
+                    Recruitment Closed
+                  </span>
+                )}
+              </div>
+
+              <div className={classes.row}>
+                <strong>Applicant:</strong> {app.applicantEmail || "Unknown"}
+              </div>
+
+              <div className={classes.row}>
+                <strong>Job Title:</strong> {app.jobTitle || "Unknown"}
+              </div>
+
+              <div className={classes.row}>
+                <strong>Recruiter:</strong> {app.recruiterEmail || "Unknown"}
+              </div>
+
+              <div className={classes.row}>
+                <strong>Applied On:</strong>{" "}
+                {app.appliedAt
+                  ? new Date(app.appliedAt).toLocaleDateString()
+                  : "-"}
+              </div>
+
+              {app.resumeUrl && (
+                <a
+                  href={app.resumeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={classes.resumeBtn}
+                >
+                  View Resume
+                </a>
+              )}
             </div>
-
-            <div className={classes.row}>
-              <strong>Job Title:</strong> {app.jobTitle || "Unknown"}
-            </div>
-
-            <div className={classes.row}>
-              <strong>Recruiter:</strong> {app.recruiterEmail || "Unknown"}
-            </div>
-
-            <div className={classes.row}>
-              <strong>Applied On:</strong>{" "}
-              {app.appliedAt
-                ? new Date(app.appliedAt).toLocaleDateString()
-                : "-"}
-            </div>
-
-            {app.resumeUrl && (
-              <a
-                href={app.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className={classes.resumeBtn}
-              >
-                View Resume
-              </a>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

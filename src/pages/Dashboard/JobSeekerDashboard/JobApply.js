@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { dbApi } from "../../../services/dbApi";
-import {
-  fetchResumes,
-  fetchAppliedJobs,
-} from "../../../store/jobSeekerActions";
+import { fetchAppliedJobs } from "../../../store/jobSeekerActions";
 import classes from "../../../Styling/Pages/JobSeekerDashboard/JobApply.module.css";
 
 const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
@@ -16,47 +13,14 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
   const appliedJobs = useSelector((state) => state.jobs?.appliedJobs || []);
 
   const [loading, setLoading] = useState(false);
-  const [checkingStatus, setCheckingStatus] = useState(true);
-  const [applied, setApplied] = useState(false);
-  const [selectedResume, setSelectedResume] = useState("");
 
-  useEffect(() => {
-    if (!userId) return;
+  const [selectedResume, setSelectedResume] = useState(
+    resumes.length > 0 ? resumes[0].id : "",
+  );
 
-    dispatch(fetchResumes(userId));
-  }, [dispatch, userId]);
-
-  useEffect(() => {
-    if (resumes.length > 0 && !selectedResume) {
-      setSelectedResume(resumes[0].id);
-    }
-  }, [resumes, selectedResume]);
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const loadApplications = async () => {
-      try {
-        setCheckingStatus(true);
-
-        await dispatch(fetchAppliedJobs(userId));
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setCheckingStatus(false);
-      }
-    };
-
-    loadApplications();
-  }, [dispatch, userId]);
-
-  useEffect(() => {
-    const alreadyApplied = appliedJobs.some(
-      (app) => app.jobId === jobId && app.applicantId === userId,
-    );
-
-    setApplied(alreadyApplied);
-  }, [appliedJobs, jobId, userId]);
+  const alreadyApplied = appliedJobs.some(
+    (application) => application.jobId === jobId,
+  );
 
   const applyHandler = async () => {
     if (!selectedResume) {
@@ -71,7 +35,7 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
       return;
     }
 
-    if (loading) return;
+    if (loading || alreadyApplied) return;
 
     try {
       setLoading(true);
@@ -100,7 +64,6 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
       };
 
       await dbApi.post(`applications/${recruiterId}`, application);
-      setApplied(true);
       await dispatch(fetchAppliedJobs(userId));
     } catch (err) {
       console.error(err);
@@ -118,15 +81,7 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
     );
   }
 
-  if (checkingStatus) {
-    return (
-      <button className={classes.disabledBtn} disabled>
-        Checking...
-      </button>
-    );
-  }
-
-  if (applied) {
+  if (alreadyApplied) {
     return (
       <button className={classes.appliedBtn} disabled>
         Applied ✓

@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchSavedJobs, unsaveJob } from "../../../store/jobSeekerActions";
-
-import { dbApi } from "../../../services/dbApi";
+import { unsaveJob } from "../../../store/jobSeekerActions";
 
 import JobApply from "./JobApply";
 
@@ -13,11 +11,11 @@ import classes from "../../../Styling/Pages/JobSeekerDashboard/AvailableJobs.mod
 const SavedJobs = () => {
   const dispatch = useDispatch();
 
-  const [savedJobsList, setSavedJobsList] = useState([]);
+  const userId = useSelector((state) => state.auth.userId);
 
-  const [filteredSavedJobs, setFilteredSavedJobs] = useState([]);
+  const savedJobs = useSelector((state) => state.jobs.savedJobs || {});
 
-  const [loading, setLoading] = useState(true);
+  const availableJobs = useSelector((state) => state.jobs.availableJobs || []);
 
   const [titleFilter, setTitleFilter] = useState("all");
 
@@ -27,82 +25,30 @@ const SavedJobs = () => {
 
   const [salaryFilter, setSalaryFilter] = useState("all");
 
-  const userId = useSelector((state) => state.auth.userId);
+  const savedJobsList = useMemo(() => {
+    return availableJobs
+      .filter((job) => savedJobs[job.id])
+      .filter((job) => job.jobOpeningStatus !== "closed")
+      .map((job) => ({
+        jobId: job.id,
 
-  const savedJobs = useSelector((state) => state.jobs?.savedJobs || {});
+        userId: job.userId,
 
-  useEffect(() => {
-    if (!userId) return;
+        title: job.title,
 
-    dispatch(fetchSavedJobs(userId));
-  }, [dispatch, userId]);
+        companyName: job.companyName,
 
-  useEffect(() => {
-    const loadSavedJobs = async () => {
-      try {
-        setLoading(true);
+        location: job.location,
 
-        const jobsData = await dbApi.get("jobs");
+        description: job.description,
 
-        if (!jobsData) {
-          setSavedJobsList([]);
+        salary: job.salary,
 
-          setFilteredSavedJobs([]);
+        jobExists: true,
+      }));
+  }, [availableJobs, savedJobs]);
 
-          return;
-        }
-
-        const flattenedJobs = {};
-
-        Object.entries(jobsData).forEach(([_, recruiterJobs]) => {
-          Object.entries(recruiterJobs).forEach(([jobId, job]) => {
-            flattenedJobs[jobId] = job;
-          });
-        });
-
-        const arr = Object.keys(savedJobs || {})
-          .map((jobId) => {
-            const job = flattenedJobs[jobId];
-
-            if (job && job.jobOpeningStatus === "closed") {
-              return null;
-            }
-
-            return {
-              jobId,
-
-              userId: job?.userId,
-
-              title: job?.title || "Job removed",
-
-              companyName: job?.companyName || "Unknown company",
-
-              location: job?.location || "-",
-
-              description:
-                job?.description || "This job is no longer available.",
-
-              salary: job?.salary || "-",
-
-              jobExists: !!job,
-            };
-          })
-          .filter(Boolean);
-
-        setSavedJobsList(arr);
-
-        setFilteredSavedJobs(arr);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadSavedJobs();
-  }, [savedJobs]);
-
-  useEffect(() => {
+  const filteredSavedJobs = useMemo(() => {
     let updated = [...savedJobsList];
 
     if (titleFilter !== "all") {
@@ -137,7 +83,7 @@ const SavedJobs = () => {
       });
     }
 
-    setFilteredSavedJobs(updated);
+    return updated;
   }, [savedJobsList, titleFilter, companyFilter, locationFilter, salaryFilter]);
 
   const uniqueTitles = [...new Set(savedJobsList.map((job) => job.title))];
@@ -153,8 +99,6 @@ const SavedJobs = () => {
   const removeSavedJobHandler = async (jobId) => {
     try {
       await dispatch(unsaveJob(userId, jobId));
-
-      setSavedJobsList((prev) => prev.filter((job) => job.jobId !== jobId));
     } catch (err) {
       console.error(err);
     }
@@ -173,7 +117,9 @@ const SavedJobs = () => {
             <option value="all">All Titles</option>
 
             {uniqueTitles.map((title) => (
-              <option key={title}>{title}</option>
+              <option key={title} value={title}>
+                {title}
+              </option>
             ))}
           </select>
 
@@ -184,7 +130,9 @@ const SavedJobs = () => {
             <option value="all">All Companies</option>
 
             {uniqueCompanies.map((company) => (
-              <option key={company}>{company}</option>
+              <option key={company} value={company}>
+                {company}
+              </option>
             ))}
           </select>
 
@@ -195,7 +143,9 @@ const SavedJobs = () => {
             <option value="all">All Locations</option>
 
             {uniqueLocations.map((loc) => (
-              <option key={loc}>{loc}</option>
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
             ))}
           </select>
 
@@ -214,9 +164,7 @@ const SavedJobs = () => {
         </div>
       </div>
 
-      {loading && <p className={classes.infoMessage}>Loading saved jobs...</p>}
-
-      {!loading && filteredSavedJobs.length === 0 && (
+      {filteredSavedJobs.length === 0 && (
         <p className={classes.infoMessage}>
           No saved jobs match selected filters
         </p>
@@ -237,11 +185,6 @@ const SavedJobs = () => {
                 ★
               </span>
             </div>
-            {!job.jobExists && (
-              <span className={classes.removedBadge}>
-                Job no longer available
-              </span>
-            )}
             <div className={classes.metaRow}>
               <span className={classes.metaLabel}>Company:</span>{" "}
               {job.companyName}
@@ -253,9 +196,7 @@ const SavedJobs = () => {
             <p className={classes.description}>{job.description}</p>
             <div className={classes.salary}>₹ {job.salary} / Year</div>
 
-            {job.jobExists && (
-              <JobApply jobId={job.jobId} recruiterId={job.userId} />
-            )}
+            <JobApply jobId={job.jobId} recruiterId={job.userId} />
           </div>
         ))}
       </div>
