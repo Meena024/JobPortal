@@ -19,6 +19,8 @@ const Applications = () => {
 
   const [statusFilter, setStatusFilter] = useState("all");
 
+  const [search, setSearch] = useState("");
+
   const capitalize = (str) => {
     if (!str) return "";
 
@@ -51,6 +53,21 @@ const Applications = () => {
       updated = updated.filter((app) => app.status === statusFilter);
     }
 
+    /*
+    SEARCH FILTER
+  */
+
+    const query = search.trim().toLowerCase();
+
+    if (query) {
+      updated = updated.filter((app) =>
+        [app.applicantEmail, app.jobTitle, app.recruiterEmail]
+          .join(" ")
+          .toLowerCase()
+          .includes(query),
+      );
+    }
+
     return updated;
   }, [
     allApplications,
@@ -58,6 +75,7 @@ const Applications = () => {
     recruiterFilter,
     jobFilter,
     statusFilter,
+    search,
   ]);
 
   const uniqueApplicants = [
@@ -132,6 +150,14 @@ const Applications = () => {
             </option>
           ))}
         </select>
+
+        <input
+          type="text"
+          placeholder="Search applicant, recruiter or job..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className={classes.search}
+        />
       </div>
 
       {filteredApplications.length === 0 && (

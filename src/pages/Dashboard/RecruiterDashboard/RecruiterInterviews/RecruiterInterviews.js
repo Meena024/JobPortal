@@ -15,15 +15,29 @@ const RecruiterInterviews = () => {
     (state) => state.recruiter.recruiterApplications,
   );
 
+  const recruiterJobs = useSelector((state) => state.recruiter.recruiterJobs);
+
+  const jobsMap = useMemo(() => {
+    const map = {};
+
+    (recruiterJobs || []).forEach((job) => {
+      map[job.id] = job;
+    });
+
+    return map;
+  }, [recruiterJobs]);
+
   /*
     INTERVIEWS FROM REDUX
   */
 
   const interviews = useMemo(() => {
     return (recruiterApplications || [])
-      .filter(
-        (app) => app.interviewData && app.interviewData.interviewScheduled,
-      )
+      .filter((app) => app.interviewData?.interviewScheduled)
+      .map((app) => ({
+        ...app,
+        recruitmentClosed: jobsMap[app.jobId]?.jobOpeningStatus === "closed",
+      }))
       .sort((a, b) => {
         const dateA = new Date(
           `${a.interviewData.interviewDate} ${a.interviewData.interviewTime}`,
@@ -35,7 +49,7 @@ const RecruiterInterviews = () => {
 
         return dateB - dateA;
       });
-  }, [recruiterApplications]);
+  }, [recruiterApplications, jobsMap]);
 
   /*
     CHECK EXPIRED STATUS
@@ -127,6 +141,7 @@ const RecruiterInterviews = () => {
             key={item.id}
             interview={item}
             expired={expired}
+            recruitmentClosed={item.recruitmentClosed}
             rescheduleInterview={rescheduleInterview}
           />
         );

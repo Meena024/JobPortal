@@ -154,3 +154,53 @@ button:disabled {
   cursor: not-allowed;
   opacity: 1;
 }
+
+.closedState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* CLOSED RECRUITMENT */
+
+.headerBadges {
+  margin-bottom: 10px;
+}
+
+.closedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 6px;
+
+  background: #fff3cd;
+  color: #856404;
+
+  border: 1px solid #f6d365;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.inactiveRow {
+  background: #fff3cd;
+  border-left: 5px solid #f59e0b;
+  opacity: 0.92;
+}
+
+.inactiveRow .joinBtn,
+.inactiveRow .rescheduleBtn,
+.inactiveRow .acceptBtn {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.inactiveRow .col1,
+.inactiveRow .col2 {
+  color: #5f6368;
+}

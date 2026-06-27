@@ -113,8 +113,6 @@ const PendingJobs = () => {
 
             <div className={classes.headerRow}>
               <div className={classes.jobTitle}>{job.title}</div>
-
-              <span className={classes.status}>pending</span>
             </div>
 
             {/* META */}

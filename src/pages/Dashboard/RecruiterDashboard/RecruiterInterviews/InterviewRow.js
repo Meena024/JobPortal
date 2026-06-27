@@ -2,7 +2,12 @@ import { useState } from "react";
 
 import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterInterviews.module.css";
 
-const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
+const InterviewRow = ({
+  interview,
+  expired,
+  recruitmentClosed,
+  rescheduleInterview,
+}) => {
   const interviewData = interview.interviewData || {};
 
   const [editMode, setEditMode] = useState(false);
@@ -14,7 +19,12 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
   const [reason, setReason] = useState("");
 
   return (
-    <div className={`${styles.row} ${expired ? styles.expired : ""}`}>
+    <div
+      className={`${styles.row}
+        ${expired ? styles.expired : ""}
+        ${recruitmentClosed ? styles.inactiveRow : ""}
+      `}
+    >
       <div className={styles.col1}>
         <div>
           <strong>Job:</strong> {interview.jobTitle}
@@ -54,7 +64,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
 
             {interview.rescheduleRequestedAt && (
               <div className={styles.requestTime}>
-                Requested at:{" "}
+                Requested at{" "}
                 {new Date(interview.rescheduleRequestedAt).toLocaleString()}
               </div>
             )}
@@ -92,7 +102,14 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
       </div>
 
       <div className={styles.col3}>
-        {!expired ? (
+        {recruitmentClosed ? (
+          <div className={styles.closedState}>
+            <span className={styles.closedBadge}>
+              Recruitment Closed. Interview Inactive
+            </span>
+            <span className={styles.closedText}></span>
+          </div>
+        ) : !expired ? (
           <a
             href={interviewData.interviewLink}
             target="_blank"
@@ -102,10 +119,10 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
             Join Meeting
           </a>
         ) : (
-          <span className={styles.disabled}>Meeting expired</span>
+          <span className={styles.disabled}>Meeting Expired</span>
         )}
 
-        {interview.rescheduleRequested && !editMode && (
+        {!recruitmentClosed && interview.rescheduleRequested && !editMode && (
           <button
             className={styles.acceptBtn}
             onClick={() => setEditMode(true)}
@@ -114,7 +131,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           </button>
         )}
 
-        {!editMode && !interview.rescheduleRequested && (
+        {!recruitmentClosed && !editMode && !interview.rescheduleRequested && (
           <button
             className={styles.rescheduleBtn}
             onClick={() => setEditMode(true)}
@@ -123,7 +140,7 @@ const InterviewRow = ({ interview, expired, rescheduleInterview }) => {
           </button>
         )}
 
-        {editMode && (
+        {!recruitmentClosed && editMode && (
           <div className={styles.rescheduleBox}>
             <input
               type="date"

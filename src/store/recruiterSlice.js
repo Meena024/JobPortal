@@ -18,7 +18,7 @@ const recruiterSlice = createSlice({
     },
 
     addRecruiterJob(state, action) {
-      state.recruiterJobs.push(action.payload);
+      state.recruiterJobs.unshift(action.payload);
     },
 
     updateRecruiterJob(state, action) {

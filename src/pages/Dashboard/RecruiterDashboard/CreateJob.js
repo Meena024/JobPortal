@@ -131,6 +131,7 @@ const CreateJob = () => {
         value={form.title}
         onChange={changeHandler}
         disabled={submitting}
+        required
       />
 
       <input
@@ -139,6 +140,7 @@ const CreateJob = () => {
         value={form.companyName}
         onChange={changeHandler}
         disabled={submitting}
+        required
       />
 
       <input
@@ -147,6 +149,7 @@ const CreateJob = () => {
         value={form.salary}
         onChange={changeHandler}
         disabled={submitting}
+        required
       />
 
       <input
@@ -155,6 +158,7 @@ const CreateJob = () => {
         value={form.location}
         onChange={changeHandler}
         disabled={submitting}
+        required
       />
 
       <input
@@ -163,6 +167,7 @@ const CreateJob = () => {
         value={form.skillsRequired}
         onChange={changeHandler}
         disabled={submitting}
+        required
       />
 
       <textarea
@@ -171,6 +176,7 @@ const CreateJob = () => {
         value={form.description}
         onChange={changeHandler}
         disabled={submitting}
+        required
       />
 
       <button disabled={submitting}>

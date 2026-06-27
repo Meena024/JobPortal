@@ -1,17 +1,60 @@
 /* =========================
    PAGE TITLE
-   ========================= */
+========================= */
 
 .title {
   font-size: 26px;
   font-weight: 600;
-  margin-bottom: 25px;
+  margin-bottom: 24px;
   color: #222;
 }
 
 /* =========================
+   FILTER BAR
+========================= */
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.filters select,
+.filters input {
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d6d9e0;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.filters select {
+  width: 170px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.filters input {
+  flex: 1;
+  min-width: 0;
+}
+
+.filters select:focus,
+.filters input:focus {
+  border-color: #4c5cff;
+}
+
+.filters input::placeholder {
+  color: #9aa3b2;
+}
+
+/* =========================
    GRID
-   ========================= */
+========================= */
 
 .applicationGrid {
   display: grid;
@@ -21,13 +64,12 @@
 
 /* =========================
    CARD
-   ========================= */
+========================= */
 
 .applicationCard {
-  position: relative;
-  background: white;
-  border-radius: 12px;
+  background: #fff;
   padding: 22px;
+  border-radius: 12px;
   border-left: 4px solid transparent;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease;
@@ -38,8 +80,8 @@
 }
 
 /* =========================
-   CARD STATUS BACKGROUNDS
-   ========================= */
+   CARD STATUS
+========================= */
 
 .cardPending {
   border-left-color: #aeb0b4;
@@ -65,24 +107,29 @@
   border-left-color: #ef4444;
 }
 
-/* =========================
-   STATUS BADGE
-   ========================= */
-
-.statusBadge {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 6px;
-  text-transform: capitalize;
+.cardClosed {
+  background: #fffaf0;
+  border-left-color: #f59e0b;
 }
 
 /* =========================
-   BADGE COLORS
-   ========================= */
+   BADGES
+========================= */
+
+.badgeContainer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.inlineBadge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
 
 .badgePending {
   color: #6b7280;
@@ -104,45 +151,31 @@
   color: #991b1b;
 }
 
+.closedBadge {
+  background: #fff3cd;
+  color: #856404;
+}
+
 /* =========================
-   ROW STYLE
-   ========================= */
+   CARD CONTENT
+========================= */
 
 .row {
   font-size: 14px;
   margin-bottom: 10px;
-}
-
-/* =========================
-   FILTER BAR
-   ========================= */
-
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-.filters select {
-  font-size: 12px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1px solid #d6d9df;
-  background: white;
-  cursor: pointer;
+  line-height: 1.5;
 }
 
 /* =========================
    RESUME BUTTON
-   ========================= */
+========================= */
 
 .resumeBtn {
   display: inline-block;
   margin-top: 8px;
-  font-size: 13px;
   color: #4c5cff;
   text-decoration: none;
+  font-size: 13px;
   font-weight: 500;
 }
 
@@ -151,37 +184,10 @@
 }
 
 /* =========================
-   EMPTY STATE
-   ========================= */
+   EMPTY
+========================= */
 
 .empty {
-  font-size: 15px;
   color: #777;
-}
-
-/* CLOSED RECRUITMENT */
-
-.cardClosed {
-  background: #fffaf0;
-  border-left: 4px solid #f59e0b;
-}
-
-.badgeContainer {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-.closedBadge {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.inlineBadge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 6px;
-  text-transform: capitalize;
+  font-size: 15px;
 }
