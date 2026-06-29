@@ -127,14 +127,6 @@ const ApplicationCard = ({ app }) => {
           <h3>{app.jobTitle}</h3>
 
           <div className={styles.badges}>
-            <span
-              className={`${styles.statusBadge} ${
-                styles[`${app.status}Badge`]
-              }`}
-            >
-              {app.status}
-            </span>
-
             {recruitmentClosed && (
               <span className={`${styles.statusBadge} ${styles.closedBadge}`}>
                 Recruitment Closed
@@ -156,7 +148,10 @@ const ApplicationCard = ({ app }) => {
         </select>
       </div>
 
-      <div className={styles.meta}>Applicant: {app.applicantEmail}</div>
+      <div className={styles.meta}>
+        <strong>Applicant: </strong>
+        {app.applicantEmail}
+      </div>
 
       <textarea
         className={styles.notes}

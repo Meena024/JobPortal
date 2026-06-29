@@ -8,7 +8,18 @@ import classes from "../../../Styling/Pages/JobSeekerDashboard/MyInterviews.modu
 const MyInterviews = () => {
   const [requestInputs, setRequestInputs] = useState({});
 
-  const appliedJobs = useSelector((s) => s.jobs.appliedJobs);
+  const appliedJobs = useSelector((state) => state.jobs.appliedJobs || []);
+  const allJobs = useSelector((state) => state.jobs.allJobs || []);
+
+  /*
+    JOB LOOKUP
+  */
+  const jobsMap = useMemo(() => {
+    return allJobs.reduce((acc, job) => {
+      acc[job.id] = job;
+      return acc;
+    }, {});
+  }, [allJobs]);
 
   /*
     INTERVIEWS
@@ -88,10 +99,22 @@ const MyInterviews = () => {
           interview.interviewTime,
         );
 
+        const relatedJob = jobsMap[item.jobId];
+
+        /*
+          jobOpeningStatus exists ONLY when recruitment is closed
+        */
+
+        const recruitmentClosed =
+          relatedJob && relatedJob.jobOpeningStatus === "closed";
+
         return (
           <div
             key={item.id}
-            className={`${classes.row} ${expired ? classes.expired : ""}`}
+            className={`${classes.row}
+              ${expired ? classes.expired : ""}
+              ${recruitmentClosed ? classes.closedRow : ""}
+            `}
           >
             <div className={classes.col1}>
               <div>
@@ -164,7 +187,9 @@ const MyInterviews = () => {
             </div>
 
             <div className={classes.col3}>
-              {!expired ? (
+              {recruitmentClosed ? (
+                <span className={classes.closedBadge}>Recruitment Ended</span>
+              ) : !expired ? (
                 <a
                   href={interview.interviewLink}
                   target="_blank"
@@ -177,11 +202,18 @@ const MyInterviews = () => {
                 <span className={classes.disabled}>Interview Completed</span>
               )}
 
-              {!expired && !item.rescheduleRequested && (
+              {!recruitmentClosed && !expired && (
                 <div className={classes.rescheduleBox}>
                   <textarea
                     placeholder="Reason for reschedule"
-                    value={requestInputs[item.id] || ""}
+                    value={
+                      item.rescheduleRequested
+                        ? item.rescheduleRequestReason ||
+                          requestInputs[item.id] ||
+                          ""
+                        : requestInputs[item.id] || ""
+                    }
+                    disabled={item.rescheduleRequested}
                     onChange={(e) =>
                       setRequestInputs((prev) => ({
                         ...prev,
@@ -191,10 +223,17 @@ const MyInterviews = () => {
                   />
 
                   <button
-                    className={classes.rescheduleBtn}
+                    className={
+                      item.rescheduleRequested
+                        ? classes.requestedBtn
+                        : classes.rescheduleBtn
+                    }
+                    disabled={item.rescheduleRequested}
                     onClick={() => requestReschedule(item)}
                   >
-                    Request Reschedule
+                    {item.rescheduleRequested
+                      ? "Reschedule Requested"
+                      : "Request Reschedule"}
                   </button>
                 </div>
               )}

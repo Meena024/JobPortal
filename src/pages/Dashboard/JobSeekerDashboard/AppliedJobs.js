@@ -21,7 +21,7 @@ const AppliedJobs = () => {
     (state) => state.jobs.highlightedApplicationId,
   );
 
-  const jobsData = useSelector((state) => state.jobs.availableJobs);
+  const jobsData = useSelector((state) => state.jobs.allJobs);
 
   /*
     LOCAL UI STATE
@@ -250,39 +250,40 @@ const AppliedJobs = () => {
             >
               View Resume
             </a>
-            {(() => {
-              const interview = app.interviewData;
+            {app.jobOpeningStatus !== "closed" &&
+              (() => {
+                const interview = app.interviewData;
 
-              if (!interview?.interviewScheduled) return null;
+                if (!interview?.interviewScheduled) return null;
 
-              const interviewDateTime = new Date(
-                `${interview.interviewDate} ${interview.interviewTime}`,
-              );
+                const interviewDateTime = new Date(
+                  `${interview.interviewDate} ${interview.interviewTime}`,
+                );
 
-              if (interviewDateTime <= new Date()) return null;
+                if (interviewDateTime <= new Date()) return null;
 
-              return (
-                <div className={classes.interviewBox}>
-                  <div className={classes.interviewTitle}>
-                    Upcoming Interview
-                  </div>
-
-                  <div className={classes.interviewMeta}>
-                    <span>{interview.interviewDate}</span>
-                    <span>
-                      <span className={classes.interviewLabel}>Time: </span>
-                      {interview.interviewTime}
-                    </span>
-                  </div>
-
-                  {interview.interviewInstructions && (
-                    <div className={classes.interviewInstructions}>
-                      {interview.interviewInstructions}
+                return (
+                  <div className={classes.interviewBox}>
+                    <div className={classes.interviewTitle}>
+                      Upcoming Interview
                     </div>
-                  )}
-                </div>
-              );
-            })()}
+
+                    <div className={classes.interviewMeta}>
+                      <span>{interview.interviewDate}</span>
+                      <span>
+                        <span className={classes.interviewLabel}>Time: </span>
+                        {interview.interviewTime}
+                      </span>
+                    </div>
+
+                    {interview.interviewInstructions && (
+                      <div className={classes.interviewInstructions}>
+                        {interview.interviewInstructions}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
             {/* OFFER LETTER */}
 

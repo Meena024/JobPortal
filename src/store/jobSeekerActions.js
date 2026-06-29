@@ -43,7 +43,7 @@ export const fetchAvailableJobs = () => {
       allJobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
       /*
-        FILTER APPROVED + OPEN
+        FILTER APPROVED + OPEN 
       */
 
       const availableJobs = allJobs.filter(
@@ -52,6 +52,7 @@ export const fetchAvailableJobs = () => {
           (job.jobOpeningStatus || "open") === "open",
       );
 
+      dispatch(jobSeekerActions.setAllJobs(allJobs));
       dispatch(jobSeekerActions.setAvailableJobs(availableJobs));
     } catch (err) {
       console.log("Fetch available jobs failed:", err);

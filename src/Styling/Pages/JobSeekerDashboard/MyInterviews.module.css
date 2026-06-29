@@ -229,3 +229,30 @@
     align-items: stretch;
   }
 }
+
+.closedRow {
+  background: #fff4f4;
+  border-left: 5px solid #dc2626;
+  opacity: 0.9;
+}
+
+.closedBadge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.disabled {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-weight: 600;
+  text-align: center;
+}

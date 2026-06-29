@@ -4,6 +4,8 @@ const jobSeekerSlice = createSlice({
   name: "jobSeeker",
 
   initialState: {
+    allJobs: [],
+
     availableJobs: [],
 
     resumes: [],
@@ -20,6 +22,10 @@ const jobSeekerSlice = createSlice({
   },
 
   reducers: {
+    setAllJobs(state, action) {
+      state.allJobs = action.payload;
+    },
+
     setAvailableJobs(state, action) {
       state.availableJobs = action.payload;
     },
