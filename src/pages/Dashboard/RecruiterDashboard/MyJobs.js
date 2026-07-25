@@ -245,8 +245,15 @@ const MyJobs = () => {
 
               {isClosed && (
                 <div className={classes.metaCol}>
-                  <span>Recruitment Status</span>
+                  <span>Recruitment Status:</span>
                   <p>Closed</p>
+                </div>
+              )}
+
+              {job.status === "rejected" && (
+                <div className={classes.metaCol}>
+                  <span>Reason for Rejection:</span>
+                  <p>{job.rejectionReason}</p>
                 </div>
               )}
 

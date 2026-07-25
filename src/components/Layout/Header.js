@@ -2,6 +2,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import classes from "../../Styling/Layout/Header.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/authSlice";
+import { adminActions } from "../../store/adminSlice";
+import { jobSeekerActions } from "../../store/jobSeekerSlice";
+import { recruiterActions } from "../../store/recruiterSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -14,6 +17,9 @@ const Header = () => {
     localStorage.clear();
 
     dispatch(authActions.logout());
+    dispatch(adminActions.setReset());
+    dispatch(jobSeekerActions.setReset());
+    dispatch(recruiterActions.setReset());
 
     navigate("/login");
   };

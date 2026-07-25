@@ -1,25 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  allJobs: [],
+
+  availableJobs: [],
+
+  resumes: [],
+
+  appliedJobs: [],
+
+  savedJobs: {},
+
+  notifications: [],
+
+  highlightedApplicationId: null,
+
+  activeView: "available",
+};
+
 const jobSeekerSlice = createSlice({
   name: "jobSeeker",
 
-  initialState: {
-    allJobs: [],
-
-    availableJobs: [],
-
-    resumes: [],
-
-    appliedJobs: [],
-
-    savedJobs: {},
-
-    notifications: [],
-
-    highlightedApplicationId: null,
-
-    activeView: "available",
-  },
+  initialState,
 
   reducers: {
     setAllJobs(state, action) {
@@ -126,6 +128,14 @@ const jobSeekerSlice = createSlice({
 
     clearHighlightedApplication(state) {
       state.highlightedApplicationId = null;
+    },
+
+    /*
+      Reset
+    */
+
+    setReset() {
+      return initialState;
     },
   },
 });

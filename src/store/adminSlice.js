@@ -2,17 +2,19 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  allJobs: [],
+  allApplications: [],
+  allUsers: [],
+
+  loading: false,
+  error: null,
+};
+
 const adminSlice = createSlice({
   name: "admin",
 
-  initialState: {
-    allJobs: [],
-    allApplications: [],
-    allUsers: [],
-
-    loading: false,
-    error: null,
-  },
+  initialState,
 
   reducers: {
     /*
@@ -79,6 +81,10 @@ const adminSlice = createSlice({
 
     setError(state, action) {
       state.error = action.payload;
+    },
+
+    setReset() {
+      return initialState;
     },
   },
 });

@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  recruiterJobs: [],
+  recruiterApplications: [],
+  loading: false,
+  error: null,
+  activeView: "jobs",
+  editingJob: null,
+};
+
 const recruiterSlice = createSlice({
   name: "recruiter",
 
-  initialState: {
-    recruiterJobs: [],
-    recruiterApplications: [],
-    loading: false,
-    error: null,
-    activeView: "jobs",
-    editingJob: null,
-  },
+  initialState,
 
   reducers: {
     setRecruiterJobs(state, action) {
@@ -142,6 +144,10 @@ const recruiterSlice = createSlice({
 
     setError(state, action) {
       state.error = action.payload;
+    },
+
+    setReset() {
+      return initialState;
     },
   },
 });

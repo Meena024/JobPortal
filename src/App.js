@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
@@ -14,11 +14,10 @@ import JobSeekerDashboard from "./pages/Dashboard/JobSeekerDashboard/JobSeekerDa
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    Initializer(dispatch, navigate);
-  }, [dispatch, navigate]);
+    Initializer(dispatch);
+  }, [dispatch]);
 
   return (
     <Layout>
