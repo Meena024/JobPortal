@@ -61,6 +61,8 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
         resumeUrl: selectedResumeData.resumeUrl,
         status: "pending",
         appliedAt: new Date().toISOString(),
+        recruiterNotes: null,
+        interviewData: {},
       };
 
       await dbApi.post(`applications/${recruiterId}`, application);

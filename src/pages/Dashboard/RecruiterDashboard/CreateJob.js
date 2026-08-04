@@ -84,6 +84,8 @@ const CreateJob = () => {
 
         recruiterEmail,
 
+        jobOpeningStatus: "open",
+
         status: editingJob?.status || "pending",
 
         createdAt: editingJob?.createdAt || new Date().toISOString(),

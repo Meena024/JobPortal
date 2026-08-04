@@ -8,6 +8,8 @@ import { adminActions } from "../../../store/adminSlice";
 
 import classes from "../../../Styling/Pages/AdminDashboard/PendingJobs.module.css";
 
+import { approveOrRejectJob } from "../../../store/adminActions";
+
 const PendingJobs = () => {
   const dispatch = useDispatch();
 
@@ -32,60 +34,16 @@ const PendingJobs = () => {
   }, [allJobs]);
 
   /*
-    APPROVE JOB
-
-    STORAGE:
-    jobs/recruiterId/jobId
+    APPROVE/REJECT JOB
   */
 
-  const approveHandler = async (job) => {
-    try {
-      await dbApi.patch(`jobs/${job.userId}/${job.id}`, {
-        status: "approved",
-      });
-
-      dispatch(
-        adminActions.updateJobStatus({
-          id: job.id,
-          status: "approved",
-        }),
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  /*
-    REJECT JOB
-  */
-
-  const rejectHandler = async (job) => {
+  const jobApproveOrReject = (job, status) => {
     const reason = rejectionReasons[job.id];
-
-    if (!reason || reason.trim() === "") {
+    if (status === "rejected" && (!reason || reason.trim() === "")) {
       alert("Please enter rejection reason");
       return;
     }
-
-    try {
-      await dbApi.patch(`jobs/${job.userId}/${job.id}`, {
-        status: "rejected",
-
-        rejectionReason: reason,
-      });
-
-      dispatch(
-        adminActions.updateJobStatus({
-          id: job.id,
-
-          status: "rejected",
-
-          rejectionReason: reason,
-        }),
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    dispatch(approveOrRejectJob(job, status, reason));
   };
 
   /*
@@ -153,14 +111,14 @@ const PendingJobs = () => {
             <div className={classes.cardBtns}>
               <button
                 className={classes.approveBtn}
-                onClick={() => approveHandler(job)}
+                onClick={() => jobApproveOrReject(job, "approved")}
               >
                 Approve
               </button>
 
               <button
                 className={classes.rejectBtn}
-                onClick={() => rejectHandler(job)}
+                onClick={() => jobApproveOrReject(job, "rejected")}
               >
                 Reject
               </button>

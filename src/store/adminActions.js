@@ -136,3 +136,23 @@ export const fetchAllApplications = () => {
     }
   };
 };
+
+export const approveOrRejectJob =
+  (job, status, rejReason) => async (dispatch) => {
+    try {
+      await dbApi.patch(`jobs/${job.recruiterId}/${job.id}`, {
+        status: status,
+        rejectionReason: rejReason,
+      });
+
+      dispatch(
+        adminActions.updateJobStatus({
+          id: job.id,
+          status,
+          rejectionReason: rejReason,
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
