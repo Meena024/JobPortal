@@ -1,28 +1,10 @@
-import { useSelector, useDispatch } from "react-redux";
-
-import { dbApi } from "../../../services/dbApi";
-import { adminActions } from "../../../store/adminSlice";
+import { useSelector } from "react-redux";
+import { removeUser } from "../../../store/adminActions";
 
 import classes from "../../../Styling/Pages/AdminDashboard/UsersList.module.css";
 
 const UsersList = () => {
-  const dispatch = useDispatch();
-
   const { allUsers } = useSelector((state) => state.admin);
-
-  /*
-    DELETE USER
-  */
-
-  const deleteHandler = async (userId) => {
-    try {
-      await dbApi.remove(`users/${userId}`);
-
-      dispatch(adminActions.removeUser(userId));
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <>
@@ -42,7 +24,7 @@ const UsersList = () => {
             <div className={classes.cardBtns}>
               <button
                 className={classes.deleteBtn}
-                onClick={() => deleteHandler(user.id)}
+                onClick={() => removeUser(user.id)}
               >
                 Delete User
               </button>

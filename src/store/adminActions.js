@@ -156,3 +156,12 @@ export const approveOrRejectJob =
       console.error(err);
     }
   };
+
+export const removeUser = (userId) => async (dispatch) => {
+  try {
+    await dbApi.remove(`users/${userId}`);
+    dispatch(adminActions.removeUser(userId));
+  } catch (err) {
+    console.error(err);
+  }
+};
