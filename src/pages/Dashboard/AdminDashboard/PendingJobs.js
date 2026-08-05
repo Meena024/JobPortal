@@ -2,10 +2,6 @@ import { useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { dbApi } from "../../../services/dbApi";
-
-import { adminActions } from "../../../store/adminSlice";
-
 import classes from "../../../Styling/Pages/AdminDashboard/PendingJobs.module.css";
 
 import { approveOrRejectJob } from "../../../store/adminActions";

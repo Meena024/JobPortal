@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import classes from "./../Styling/Auth/Login.module.css";
 
 import { signUpUser } from "../services/authApi";
-import { dbApi } from "../services/dbApi";
+import { setRoleDb } from "../store/authActions";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,23 +35,23 @@ const SignUp = () => {
 
     try {
       const data = await signUpUser(email, password);
-
       const userId = data.localId;
 
-      await dbApi.put(
-        `users/${userId}/profile`,
-
-        {
-          email,
-          role,
-          createdAt: new Date().toISOString(),
-        },
-      );
-      navigate("/");
+      try {
+        await dispatch(setRoleDb(userId, email, role));
+        navigate("/");
+      } catch (err) {
+        console.error("Failed to save user profile:", err);
+        setError(
+          "Your account was created, but we couldn't save your profile. Please retry with new email Id.",
+        );
+      }
     } catch (err) {
-      console.error(err);
-
-      setError(err.message || "Signup failed. Please try again.");
+      console.error("Signup failed:", err);
+      setError(
+        err.response?.data?.error?.message ||
+          "Failed to create your account. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
