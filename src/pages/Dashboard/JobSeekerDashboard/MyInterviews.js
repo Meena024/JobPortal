@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-
-import { dbApi } from "../../../services/dbApi";
+import { useSelector, useDispatch } from "react-redux";
+import { rescheduleRequest } from "../../../store/jobSeekerActions";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/MyInterviews.module.css";
 
 const MyInterviews = () => {
+  const dispatch = useDispatch();
   const [requestInputs, setRequestInputs] = useState({});
 
   const appliedJobs = useSelector((state) => state.jobs.appliedJobs || []);
@@ -60,17 +60,13 @@ const MyInterviews = () => {
       alert("Please enter a reason");
       return;
     }
-
+    const rescheduleRequestData = {
+      rescheduleRequested: true,
+      rescheduleRequestReason: reason,
+      rescheduleRequestedAt: new Date().toISOString(),
+    };
     try {
-      await dbApi.patch(
-        `applications/${item.recruiterId}/${item.id}/interviewData/`,
-        {
-          rescheduleRequested: true,
-          rescheduleRequestReason: reason,
-          rescheduleRequestedAt: new Date().toISOString(),
-        },
-      );
-
+      await dispatch(rescheduleRequest(item, rescheduleRequestData));
       alert("Reschedule request sent");
 
       setRequestInputs((prev) => ({
@@ -100,10 +96,6 @@ const MyInterviews = () => {
         );
 
         const relatedJob = jobsMap[item.jobId];
-
-        /*
-          jobOpeningStatus exists ONLY when recruitment is closed
-        */
 
         const recruitmentClosed =
           relatedJob && relatedJob.jobOpeningStatus === "closed";

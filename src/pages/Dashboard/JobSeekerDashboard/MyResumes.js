@@ -1,7 +1,5 @@
 import { useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { addResume, removeResume } from "../../../store/jobSeekerActions";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/MyResumes.module.css";
@@ -9,50 +7,20 @@ import classes from "../../../Styling/Pages/JobSeekerDashboard/MyResumes.module.
 const MyResumes = () => {
   const dispatch = useDispatch();
 
-  /*
-    LOCAL STATE
-  */
-
   const [resumeUrl, setResumeUrl] = useState("");
-
   const [resumeTitle, setResumeTitle] = useState("");
 
-  /*
-    USER
-  */
-
   const userId = useSelector((state) => state.auth.userId);
-
-  /*
-    CONSTANTS
-  */
+  const resumes = useSelector((state) => state.jobs?.resumes || []);
 
   const MAX_RESUMES = 5;
 
-  /*
-    REDUX STATE
-  */
-
-  const resumes = useSelector((state) => state.jobs?.resumes || []);
-
-  /*
-    ADD RESUME
-  */
-
   const addResumeHandler = async () => {
-    /*
-        VALIDATION
-      */
-
     if (!resumeTitle.trim() || !resumeUrl.trim()) {
       alert("Resume title and URL required");
 
       return;
     }
-
-    /*
-        LIMIT CHECK
-      */
 
     if (resumes.length >= MAX_RESUMES) {
       return;
@@ -69,21 +37,12 @@ const MyResumes = () => {
 
       await dispatch(addResume(userId, resumeData));
 
-      /*
-          RESET INPUTS
-        */
-
       setResumeTitle("");
-
       setResumeUrl("");
     } catch (err) {
       console.error(err);
     }
   };
-
-  /*
-    DELETE RESUME
-  */
 
   const deleteResumeHandler = async (id) => {
     try {
@@ -92,10 +51,6 @@ const MyResumes = () => {
       console.error(err);
     }
   };
-
-  /*
-    LIMIT FLAG
-  */
 
   const limitReached = resumes.length >= MAX_RESUMES;
 

@@ -1,9 +1,6 @@
 import { useMemo, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { unsaveJob } from "../../../store/jobSeekerActions";
-
 import JobApply from "./JobApply";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/AvailableJobs.module.css";
@@ -12,17 +9,12 @@ const SavedJobs = () => {
   const dispatch = useDispatch();
 
   const userId = useSelector((state) => state.auth.userId);
-
   const savedJobs = useSelector((state) => state.jobs.savedJobs || {});
-
   const availableJobs = useSelector((state) => state.jobs.availableJobs || []);
 
   const [titleFilter, setTitleFilter] = useState("all");
-
   const [companyFilter, setCompanyFilter] = useState("all");
-
   const [locationFilter, setLocationFilter] = useState("all");
-
   const [salaryFilter, setSalaryFilter] = useState("all");
 
   const savedJobsList = useMemo(() => {
@@ -31,19 +23,12 @@ const SavedJobs = () => {
       .filter((job) => job.jobOpeningStatus !== "closed")
       .map((job) => ({
         jobId: job.id,
-
         userId: job.userId,
-
         title: job.title,
-
         companyName: job.companyName,
-
         location: job.location,
-
         description: job.description,
-
         salary: job.salary,
-
         jobExists: true,
       }));
   }, [availableJobs, savedJobs]);

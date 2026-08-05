@@ -104,6 +104,7 @@ export const addResume = (userId, resumeData) => {
       );
     } catch (err) {
       console.log("Add resume failed:", err);
+      throw err;
     }
   };
 };
@@ -120,6 +121,7 @@ export const removeResume = (userId, resumeId) => {
       dispatch(jobSeekerActions.removeResume(resumeId));
     } catch (err) {
       console.log("Remove resume failed:", err);
+      throw err;
     }
   };
 };
@@ -142,6 +144,7 @@ export const editResume = (userId, resumeId, updatedData) => {
       );
     } catch (err) {
       console.log("Edit resume failed:", err);
+      throw err;
     }
   };
 };
@@ -224,6 +227,7 @@ export const saveJob = (userId, jobId) => {
       dispatch(jobSeekerActions.addSavedJob(jobId));
     } catch (err) {
       console.log("Save job failed:", err);
+      throw err;
     }
   };
 };
@@ -240,6 +244,7 @@ export const unsaveJob = (userId, jobId) => {
       dispatch(jobSeekerActions.removeSavedJob(jobId));
     } catch (err) {
       console.log("Unsave job failed:", err);
+      throw err;
     }
   };
 };
@@ -275,30 +280,6 @@ export const fetchNotifications = (userId) => {
 };
 
 /*
-  ADD NOTIFICATION
-*/
-
-export const addNotification = (userId, notificationData) => {
-  return async (dispatch) => {
-    try {
-      const response = await dbApi.post(
-        `notifications/${userId}`,
-        notificationData,
-      );
-
-      dispatch(
-        jobSeekerActions.addNotification({
-          id: response.name,
-          ...notificationData,
-        }),
-      );
-    } catch (err) {
-      console.log("Add notification failed:", err);
-    }
-  };
-};
-
-/*
   MARK NOTIFICATION READ
 */
 
@@ -312,22 +293,50 @@ export const markNotificationRead = (userId, notificationId) => {
       dispatch(jobSeekerActions.markNotificationRead(notificationId));
     } catch (err) {
       console.log("Mark notification read failed:", err);
+      throw err;
     }
   };
 };
 
-/*
-  REMOVE NOTIFICATION
-*/
+export const apply = (recruiterId, application) => async (dispatch) => {
+  try {
+    const response = await dbApi.post(
+      `applications/${recruiterId}`,
+      application,
+    );
 
-export const removeNotification = (userId, notificationId) => {
-  return async (dispatch) => {
-    try {
-      await dbApi.remove(`notifications/${userId}/${notificationId}`);
+    dispatch(
+      jobSeekerActions.addAppliedJobs({
+        id: response.name,
+        ...application,
+      }),
+    );
+  } catch (err) {
+    console.error("Apply job failed:", err);
+    throw err;
+  }
+};
 
-      dispatch(jobSeekerActions.removeNotification(notificationId));
-    } catch (err) {
-      console.log("Remove notification failed:", err);
-    }
-  };
+export const rescheduleRequest = (item, rescheduleRequestData) => async () => {
+  const histReason =
+    "Reschedule requested by the Apllicant." +
+    rescheduleRequestData.rescheduleRequestReason;
+  try {
+    await dbApi.patch(
+      `applications/${item.recruiterId}/${item.id}/interviewData/rescheduleRequest`,
+      rescheduleRequestData,
+    );
+    await dbApi.post(
+      `applications/${item.recruiterId}/${item.id}/interviewData/rescheduleHistory/`,
+      {
+        changedAt: new Date().toISOString(),
+        previousDate: item.interviewData.interviewDate,
+        previousTime: item.interviewData.interviewTime,
+        reason: histReason,
+      },
+    );
+  } catch (err) {
+    console.error("Request failed. Try again!", err);
+    throw err;
+  }
 };

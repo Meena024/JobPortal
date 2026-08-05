@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-
 import { markNotificationRead } from "../../../store/jobSeekerActions";
-
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/Notifications.module.css";
@@ -10,7 +8,6 @@ const Notifications = () => {
   const dispatch = useDispatch();
 
   const userId = useSelector((state) => state.auth.userId);
-
   const notifications = useSelector((state) => state.jobs?.notifications || []);
 
   const sortedNotifications = [...notifications].sort(

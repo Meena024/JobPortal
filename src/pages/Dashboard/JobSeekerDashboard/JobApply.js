@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { dbApi } from "../../../services/dbApi";
-import { fetchAppliedJobs } from "../../../store/jobSeekerActions";
+import { apply } from "../../../store/jobSeekerActions";
+
 import classes from "../../../Styling/Pages/JobSeekerDashboard/JobApply.module.css";
 
 const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
@@ -64,9 +64,7 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
         recruiterNotes: null,
         interviewData: {},
       };
-
-      await dbApi.post(`applications/${recruiterId}`, application);
-      await dispatch(fetchAppliedJobs(userId));
+      await dispatch(apply(userId, recruiterId, application));
     } catch (err) {
       console.error(err);
       alert("Application failed");

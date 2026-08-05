@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { saveJob, unsaveJob } from "../../../store/jobSeekerActions";
-
 import JobApply from "./JobApply";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/AvailableJobs.module.css";
@@ -12,15 +9,11 @@ const AvailableJobs = () => {
   const dispatch = useDispatch();
 
   const [filteredJobs, setFilteredJobs] = useState([]);
-
   const [locationFilter, setLocationFilter] = useState("all");
-
   const [salaryFilter, setSalaryFilter] = useState("all");
 
   const jobs = useSelector((state) => state.jobs?.availableJobs || []);
-
   const savedJobs = useSelector((state) => state.jobs?.savedJobs || {});
-
   const userId = useSelector((state) => state.auth.userId);
 
   /*

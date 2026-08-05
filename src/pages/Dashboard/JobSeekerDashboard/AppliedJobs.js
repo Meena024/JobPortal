@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
-
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/AppliedJobs.module.css";
@@ -11,24 +9,13 @@ const AppliedJobs = () => {
 
   const highlightedRef = useRef(null);
 
-  /*
-    REDUX STATE
-  */
-
+  const jobsData = useSelector((state) => state.jobs.allJobs);
   const applications = useSelector((state) => state.jobs.appliedJobs || []);
-
   const highlightedApplicationId = useSelector(
     (state) => state.jobs.highlightedApplicationId,
   );
 
-  const jobsData = useSelector((state) => state.jobs.allJobs);
-
-  /*
-    LOCAL UI STATE
-  */
-
   const [statusFilter, setStatusFilter] = useState("all");
-
   const [openingStatusFilter, setOpeningStatusFilter] = useState("all");
 
   /*
@@ -49,17 +36,11 @@ const AppliedJobs = () => {
         ...app,
 
         jobTitle: job?.title || "Job removed",
-
         companyName: job?.companyName || "Unknown company",
-
         description: job?.description || "This job is no longer available.",
-
         salary: job?.salary || "-",
-
         location: job?.location || "-",
-
         jobExists: !!job,
-
         jobOpeningStatus: job?.jobOpeningStatus || "open",
       };
     });
@@ -140,15 +121,10 @@ const AppliedJobs = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="all">All Status</option>
-
             <option value="pending">Pending</option>
-
             <option value="reviewed">Reviewed</option>
-
             <option value="shortlisted">Shortlisted</option>
-
             <option value="selected">Selected</option>
-
             <option value="rejected">Rejected</option>
           </select>
 
@@ -163,9 +139,7 @@ const AppliedJobs = () => {
             }}
           >
             <option value="all">All Openings</option>
-
             <option value="open">Open</option>
-
             <option value="closed">Closed</option>
           </select>
         </div>
@@ -182,7 +156,7 @@ const AppliedJobs = () => {
       <div className={classes.grid}>
         {filteredApplications.map((app) => (
           <div
-            key={app.id}
+            key={app.jobId}
             ref={highlightedApplicationId === app.id ? highlightedRef : null}
             className={`${classes.card}
 

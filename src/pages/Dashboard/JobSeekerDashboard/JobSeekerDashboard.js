@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
-import classes from "../../../Styling/Pages/JobSeekerDashboard/JobSeekerDashboard.module.css";
-
 import AvailableJobs from "./AvailableJobs";
 import AppliedJobs from "./AppliedJobs";
 import MyResumes from "./MyResumes";
 import SavedJobs from "./SavedJobs";
 import Notifications from "./Notifications";
 import MyInterviews from "./MyInterviews";
+
+import classes from "../../../Styling/Pages/JobSeekerDashboard/JobSeekerDashboard.module.css";
 
 const JobSeekerDashboard = () => {
   const dispatch = useDispatch();
