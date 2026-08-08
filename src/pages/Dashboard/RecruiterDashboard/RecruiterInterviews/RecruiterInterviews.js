@@ -1,30 +1,27 @@
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { dbApi } from "../../../../services/dbApi";
-import { recruiterActions } from "../../../../store/recruiterSlice";
+import { rescheduleInterview } from "../../../../store/recruiterActions";
+import InterviewRow from "./InterviewRow";
 
 import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterInterviews.module.css";
-
-import InterviewRow from "./InterviewRow";
 
 const RecruiterInterviews = () => {
   const dispatch = useDispatch();
 
   const recruiterApplications = useSelector(
-    (state) => state.recruiter.recruiterApplications,
+    (state) => state.recruiter.recruiterApplications || [],
   );
 
-  const recruiterJobs = useSelector((state) => state.recruiter.recruiterJobs);
+  const recruiterJobs = useSelector(
+    (state) => state.recruiter.recruiterJobs || [],
+  );
 
   const jobsMap = useMemo(() => {
-    const map = {};
-
-    (recruiterJobs || []).forEach((job) => {
+    return recruiterJobs.reduce((map, job) => {
       map[job.id] = job;
-    });
-
-    return map;
+      return map;
+    }, {});
   }, [recruiterJobs]);
 
   /*
@@ -32,7 +29,7 @@ const RecruiterInterviews = () => {
   */
 
   const interviews = useMemo(() => {
-    return (recruiterApplications || [])
+    return recruiterApplications
       .filter((app) => app.interviewData?.interviewScheduled)
       .map((app) => ({
         ...app,
@@ -56,96 +53,46 @@ const RecruiterInterviews = () => {
   */
 
   const isExpired = (date, time) => {
-    const interviewTime = new Date(`${date} ${time}`);
-    const now = new Date();
-
-    return now - interviewTime > 30 * 60 * 1000;
+    return new Date() - new Date(`${date} ${time}`) > 30 * 60 * 1000;
   };
 
   /*
     RESCHEDULE HANDLER
   */
 
-  const rescheduleInterview = async (id, newDate, newTime, reason) => {
+  const rescheduleInterviewHandler = async (
+    interview,
+    newDate,
+    newTime,
+    reason,
+  ) => {
     try {
-      const currentInterview = interviews.find((item) => item.id === id);
-
-      if (!currentInterview) return;
-
-      const interviewData = currentInterview.interviewData || {};
-
-      const newHistoryEntry = {
-        previousDate: interviewData.interviewDate,
-        previousTime: interviewData.interviewTime,
-        reason,
-        changedAt: new Date().toISOString(),
-      };
-
-      const updatedHistory = [
-        ...(currentInterview.rescheduleHistory || []),
-        newHistoryEntry,
-      ];
-
-      await dbApi.patch(`applications/${currentInterview.recruiterId}/${id}`, {
-        interviewData: {
-          ...interviewData,
-          interviewDate: newDate,
-          interviewTime: newTime,
-        },
-
-        rescheduleHistory: updatedHistory,
-
-        rescheduleRequested: false,
-        rescheduleRequestReason: "",
-        rescheduleRequestedAt: "",
-      });
-
-      dispatch(
-        recruiterActions.updateInterviewDetails({
-          id,
-
-          interviewData: {
-            ...interviewData,
-            interviewDate: newDate,
-            interviewTime: newTime,
-          },
-
-          rescheduleHistory: updatedHistory,
-
-          rescheduleRequested: false,
-          rescheduleRequestReason: "",
-          rescheduleRequestedAt: "",
-        }),
-      );
+      await dispatch(rescheduleInterview(interview, newDate, newTime, reason));
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.container}>
       <h1 className={styles.title}>Scheduled Interviews</h1>
 
       {interviews.length === 0 && (
         <p className={styles.empty}>No interviews scheduled</p>
       )}
 
-      {interviews.map((item) => {
-        const expired = isExpired(
-          item.interviewData.interviewDate,
-          item.interviewData.interviewTime,
-        );
-
-        return (
-          <InterviewRow
-            key={item.id}
-            interview={item}
-            expired={expired}
-            recruitmentClosed={item.recruitmentClosed}
-            rescheduleInterview={rescheduleInterview}
-          />
-        );
-      })}
+      {interviews.map((item) => (
+        <InterviewRow
+          key={item.id}
+          interview={item}
+          expired={isExpired(
+            item.interviewData.interviewDate,
+            item.interviewData.interviewTime,
+          )}
+          recruitmentClosed={item.recruitmentClosed}
+          rescheduleInterview={rescheduleInterviewHandler}
+        />
+      ))}
     </div>
   );
 };

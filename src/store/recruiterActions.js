@@ -160,3 +160,237 @@ export const fetchRecruiterApplications = (userId) => {
     }
   };
 };
+
+export const saveOfferLetter = (app, offerLetterUrl) => async (dispatch) => {
+  try {
+    await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
+      offerLetterUrl,
+    });
+
+    dispatch(
+      recruiterActions.updateOfferLetter({
+        id: app.id,
+        offerLetterUrl,
+      }),
+    );
+
+    await dispatch(
+      createNotification(`Offer letter uploaded for "${app.jobTitle}".`, app),
+    );
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const createNotification = (message, app) => async () => {
+  try {
+    await dbApi.post(`notifications/${app.applicantId}`, {
+      message,
+      applicationId: app.id,
+      read: false,
+      createdAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error("Notification error:", err);
+    throw err;
+  }
+};
+
+export const statusChangeHandler = (app, status) => async (dispatch) => {
+  try {
+    await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
+      status,
+    });
+
+    dispatch(
+      recruiterActions.updateApplicationStatus({
+        id: app.id,
+        status,
+      }),
+    );
+
+    await dispatch(
+      createNotification(
+        `Your application for "${app.jobTitle}" is now ${status}.`,
+        app,
+      ),
+    );
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const updateRecruiterNotes = (app, notes) => async () => {
+  try {
+    await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
+      recruiterNotes: notes,
+    });
+  } catch (err) {
+    console.error("Failed to update recruiter notes:", err);
+    throw err;
+  }
+};
+
+export const saveInterview = (app, form) => async (dispatch) => {
+  try {
+    let updatedHistory = app.interviewData?.rescheduleHistory || [];
+
+    if (app.interviewData?.interviewScheduled) {
+      updatedHistory = [
+        ...updatedHistory,
+        {
+          previousDate: app.interviewData.interviewDate,
+          previousTime: app.interviewData.interviewTime,
+          reason: "Interview updated by recruiter",
+          changedAt: new Date().toISOString(),
+        },
+      ];
+    }
+
+    const interviewData = {
+      interviewScheduled: true,
+      interviewDate: form.interviewDate,
+      interviewTime: form.interviewTime,
+      interviewLink: form.interviewLink,
+      interviewInstructions: form.interviewInstructions,
+
+      rescheduleHistory: updatedHistory,
+
+      rescheduleRequest: {
+        rescheduleRequested: false,
+        rescheduleRequestReason: "",
+        rescheduleRequestedAt: "",
+      },
+    };
+
+    await dbApi.patch(
+      `applications/${app.recruiterId}/${app.id}/interviewData`,
+      interviewData,
+    );
+
+    dispatch(
+      recruiterActions.updateInterviewDetails({
+        id: app.id,
+        interviewData,
+      }),
+    );
+
+    await dispatch(
+      createNotification(
+        `Interview scheduled for "${app.jobTitle}" on ${form.interviewDate} at ${form.interviewTime}.`,
+        app,
+      ),
+    );
+  } catch (err) {
+    console.error("Save interview failed:", err);
+    throw err;
+  }
+};
+
+export const cancelInterview = (app) => async (dispatch) => {
+  try {
+    const updatedHistory = [
+      ...(app.interviewData?.rescheduleHistory || []),
+      {
+        previousDate: app.interviewData?.interviewDate,
+        previousTime: app.interviewData?.interviewTime,
+        reason: "Interview cancelled by recruiter",
+        changedAt: new Date().toISOString(),
+      },
+    ];
+
+    const interviewData = {
+      interviewScheduled: false,
+
+      interviewDate: "",
+      interviewTime: "",
+      interviewLink: "",
+      interviewInstructions: "",
+
+      rescheduleHistory: updatedHistory,
+
+      rescheduleRequest: {
+        rescheduleRequested: false,
+        rescheduleRequestReason: "",
+        rescheduleRequestedAt: "",
+      },
+    };
+
+    await dbApi.patch(
+      `applications/${app.recruiterId}/${app.id}/interviewData`,
+      interviewData,
+    );
+
+    dispatch(
+      recruiterActions.updateInterviewDetails({
+        id: app.id,
+        interviewData,
+      }),
+    );
+
+    await dispatch(
+      createNotification(
+        `Interview for "${app.jobTitle}" has been cancelled.`,
+        app,
+      ),
+    );
+  } catch (err) {
+    console.error("Cancel interview failed:", err);
+    throw err;
+  }
+};
+
+export const rescheduleInterview =
+  (currentInterview, newDate, newTime, reason) => async (dispatch) => {
+    try {
+      const interviewData = currentInterview.interviewData || {};
+
+      const updatedHistory = [
+        ...(interviewData.rescheduleHistory || []),
+        {
+          previousDate: interviewData.interviewDate,
+          previousTime: interviewData.interviewTime,
+          reason,
+          changedAt: new Date().toISOString(),
+        },
+      ];
+
+      const updatedInterviewData = {
+        ...interviewData,
+
+        interviewDate: newDate,
+        interviewTime: newTime,
+
+        rescheduleHistory: updatedHistory,
+
+        rescheduleRequest: {
+          rescheduleRequested: false,
+          rescheduleRequestReason: "",
+          rescheduleRequestedAt: "",
+        },
+      };
+      await dbApi.patch(
+        `applications/${currentInterview.recruiterId}/${currentInterview.id}/interviewData`,
+        updatedInterviewData,
+      );
+
+      dispatch(
+        recruiterActions.updateInterviewDetails({
+          id: currentInterview.id,
+          interviewData: updatedInterviewData,
+        }),
+      );
+
+      await dispatch(
+        createNotification(
+          `Interview for "${currentInterview.jobTitle}" has been rescheduled to ${newDate} at ${newTime}.`,
+          currentInterview,
+        ),
+      );
+    } catch (err) {
+      console.error("Reschedule interview failed:", err);
+      throw err;
+    }
+  };

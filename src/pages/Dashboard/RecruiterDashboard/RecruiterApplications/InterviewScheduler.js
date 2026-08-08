@@ -1,25 +1,31 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useDispatch } from "react-redux";
 
-import { dbApi } from "../../../../services/dbApi";
-import { recruiterActions } from "../../../../store/recruiterSlice";
-
+import {
+  saveInterview,
+  cancelInterview,
+} from "../../../../store/recruiterActions";
 import InterviewPreview from "./InterviewPreview";
 import InterviewEditor from "./InterviewEditor";
 
 const InterviewScheduler = ({ app }) => {
   const dispatch = useDispatch();
 
+  const initialForm = useMemo(
+    () => ({
+      interviewDate: app.interviewData?.interviewDate || "",
+      interviewTime: app.interviewData?.interviewTime || "",
+      interviewLink: app.interviewData?.interviewLink || "",
+      interviewInstructions: app.interviewData?.interviewInstructions || "",
+    }),
+    [app.interviewData],
+  );
+
   const [editing, setEditing] = useState(
     !app.interviewData?.interviewScheduled,
   );
 
-  const [form, setForm] = useState({
-    interviewDate: app.interviewData?.interviewDate || "",
-    interviewTime: app.interviewData?.interviewTime || "",
-    interviewLink: app.interviewData?.interviewLink || "",
-    interviewInstructions: app.interviewData?.interviewInstructions || "",
-  });
+  const [form, setForm] = useState(initialForm);
 
   const changeHandler = (field, value) => {
     setForm((prev) => ({
@@ -28,127 +34,32 @@ const InterviewScheduler = ({ app }) => {
     }));
   };
 
-  const saveInterview = async () => {
+  const saveInterviewHandler = async () => {
     try {
-      let updatedHistory = app.rescheduleHistory || [];
-
-      if (app.interviewData?.interviewScheduled) {
-        const historyItem = {
-          previousDate: app.interviewData?.interviewDate,
-          previousTime: app.interviewData?.interviewTime,
-          reason: "Interview updated by recruiter",
-          changedAt: new Date().toISOString(),
-        };
-
-        updatedHistory = [...updatedHistory, historyItem];
-      }
-
-      const interviewData = {
-        interviewScheduled: true,
-
-        interviewDate: form.interviewDate,
-        interviewTime: form.interviewTime,
-        interviewLink: form.interviewLink,
-        interviewInstructions: form.interviewInstructions,
-
-        rescheduleHistory: updatedHistory,
-
-        rescheduleRequested: false,
-        rescheduleRequestReason: "",
-        rescheduleRequestedAt: "",
-      };
-      console.log("app", app);
-      await dbApi.patch(
-        `applications/${app.recruiterId}/${app.id}/interviewData`,
-        interviewData,
-      );
-      dispatch(
-        recruiterActions.updateInterviewDetails({
-          id: app.id,
-          interviewData,
-        }),
-      );
-
-      await dbApi.post(`notifications/${app.applicantId}`, {
-        message: `Interview scheduled for "${app.jobTitle}" on ${form.interviewDate} at ${form.interviewTime}.`,
-        applicationId: app.id,
-        read: false,
-        createdAt: new Date().toISOString(),
-      });
-
+      await dispatch(saveInterview(app, form));
       setEditing(false);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const cancelInterview = async () => {
+  const cancelInterviewHandler = async () => {
     try {
-      const historyItem = {
-        previousDate: app.interviewDate,
-        previousTime: app.interviewTime,
-        reason: "Interview cancelled by recruiter",
-        changedAt: new Date().toISOString(),
-      };
+      await dispatch(cancelInterview(app));
 
-      const updatedHistory = [...(app.rescheduleHistory || []), historyItem];
-
-      const clearedData = {
-        interviewScheduled: false,
-
-        interviewDate: "",
-        interviewTime: "",
-        interviewLink: "",
-        interviewInstructions: "",
-
-        rescheduleHistory: updatedHistory,
-
-        rescheduleRequested: false,
-        rescheduleRequestReason: "",
-        rescheduleRequestedAt: "",
-      };
-
-      await dbApi.patch(
-        `applications/${app.recruiterId}/${app.id}/interviewData`,
-        clearedData,
-      );
-
-      dispatch(
-        recruiterActions.updateInterviewDetails({
-          id: app.id,
-          interviewData: clearedData,
-        }),
-      );
-
-      setForm({
-        interviewDate: "",
-        interviewTime: "",
-        interviewLink: "",
-        interviewInstructions: "",
-      });
-
+      setForm(initialForm);
       setEditing(true);
-
-      await dbApi.post(`notifications/${app.applicantId}`, {
-        message: `Interview for "${app.jobTitle}" has been cancelled.`,
-        applicationId: app.id,
-        read: false,
-        createdAt: new Date().toISOString(),
-      });
     } catch (err) {
       console.error(err);
     }
   };
 
   const cancelEditing = () => {
-    setForm({
-      interviewDate: app.interviewData?.interviewDate || "",
-      interviewTime: app.interviewData?.interviewTime || "",
-      interviewLink: app.interviewData?.interviewLink || "",
-      interviewInstructions: app.interviewData?.interviewInstructions || "",
-    });
+    setForm(initialForm);
 
-    setEditing(false);
+    if (app.interviewData?.interviewScheduled) {
+      setEditing(false);
+    }
   };
 
   if (!editing) {
@@ -156,7 +67,7 @@ const InterviewScheduler = ({ app }) => {
       <InterviewPreview
         app={app}
         setEditing={setEditing}
-        cancelInterview={cancelInterview}
+        cancelInterview={cancelInterviewHandler}
       />
     );
   }
@@ -166,7 +77,7 @@ const InterviewScheduler = ({ app }) => {
       app={app}
       form={form}
       changeHandler={changeHandler}
-      saveInterview={saveInterview}
+      saveInterview={saveInterviewHandler}
       cancelEditing={cancelEditing}
     />
   );

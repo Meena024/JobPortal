@@ -1,9 +1,13 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { dbApi } from "../../../../services/dbApi";
 import { recruiterActions } from "../../../../store/recruiterSlice";
-
+import {
+  statusChangeHandler,
+  createNotification,
+  saveOfferLetter,
+  updateRecruiterNotes,
+} from "../../../../store/recruiterActions";
 import InterviewScheduler from "./InterviewScheduler";
 
 import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterApplications/ApplicationCard.module.css";
@@ -20,51 +24,18 @@ const ApplicationCard = ({ app }) => {
   const relatedJob = recruiterJobs.find((job) => job.id === app.jobId);
   const recruitmentClosed = relatedJob?.jobOpeningStatus === "closed";
 
-  /*
-    CREATE NOTIFICATION
-  */
+  const saveOfferLetterHandler = async () => {
+    const offerLetterUrl = offerInputs[app.id];
 
-  const createNotification = async (message) => {
+    if (!offerLetterUrl) return;
+
     try {
-      await dbApi.post(`notifications/${app.applicantId}`, {
-        message,
-        applicationId: app.id,
-        read: false,
-        createdAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error("Notification error:", err);
-    }
-  };
-
-  /*
-    STATUS CHANGE
-  */
-
-  const statusChangeHandler = async (status) => {
-    try {
-      await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
-        status,
-      });
-
-      dispatch(
-        recruiterActions.updateApplicationStatus({
-          id: app.id,
-          status,
-        }),
-      );
-
-      await createNotification(
-        `Your application for "${app.jobTitle}" is now ${status}.`,
-      );
+      await dispatch(saveOfferLetter(app, offerLetterUrl));
+      setEditingOffer(false);
     } catch (err) {
       console.error(err);
     }
   };
-
-  /*
-    NOTES SAVE (DEBOUNCED)
-  */
 
   const notesChangeHandler = (notes) => {
     dispatch(
@@ -76,44 +47,9 @@ const ApplicationCard = ({ app }) => {
 
     clearTimeout(notesTimers.current[app.id]);
 
-    notesTimers.current[app.id] = setTimeout(async () => {
-      try {
-        await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
-          recruiterNotes: notes,
-        });
-      } catch (err) {
-        console.error(err);
-      }
+    notesTimers.current[app.id] = setTimeout(() => {
+      dispatch(updateRecruiterNotes(app, notes));
     }, 600);
-  };
-
-  /*
-    OFFER LETTER SAVE / UPDATE
-  */
-
-  const saveOfferLetter = async () => {
-    const offerLetterUrl = offerInputs[app.id];
-
-    if (!offerLetterUrl) return;
-
-    try {
-      await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
-        offerLetterUrl,
-      });
-
-      dispatch(
-        recruiterActions.updateOfferLetter({
-          id: app.id,
-          offerLetterUrl,
-        }),
-      );
-
-      await createNotification(`Offer letter uploaded for "${app.jobTitle}".`);
-
-      setEditingOffer(false);
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   return (
@@ -138,7 +74,7 @@ const ApplicationCard = ({ app }) => {
         <select
           value={app.status}
           disabled={recruitmentClosed}
-          onChange={(e) => statusChangeHandler(e.target.value)}
+          onChange={(e) => dispatch(statusChangeHandler(app, e.target.value))}
         >
           <option value="pending">Pending</option>
           <option value="reviewed">Reviewed</option>
@@ -216,7 +152,7 @@ const ApplicationCard = ({ app }) => {
                 }
               />
 
-              <button onClick={saveOfferLetter}>
+              <button onClick={saveOfferLetterHandler}>
                 {app.offerLetterUrl ? "Update" : "Save"}
               </button>
             </div>

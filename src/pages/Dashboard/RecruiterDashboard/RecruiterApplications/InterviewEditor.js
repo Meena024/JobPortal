@@ -38,11 +38,9 @@ const InterviewEditor = ({
           Save
         </button>
 
-        {app.interviewScheduled && (
-          <button className={styles.cancelBtn} onClick={cancelEditing}>
-            Cancel
-          </button>
-        )}
+        <button className={styles.saveBtn} onClick={cancelEditing}>
+          Cancel
+        </button>
       </div>
     </div>
   );

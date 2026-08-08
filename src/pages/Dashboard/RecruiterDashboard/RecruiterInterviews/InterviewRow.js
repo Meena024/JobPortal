@@ -10,13 +10,28 @@ const InterviewRow = ({
 }) => {
   const interviewData = interview.interviewData || {};
 
+  const rescheduleRequest = interviewData.rescheduleRequest || {};
+
+  const rescheduleHistory = interviewData.rescheduleHistory || [];
+
   const [editMode, setEditMode] = useState(false);
-
   const [date, setDate] = useState(interviewData.interviewDate || "");
-
   const [time, setTime] = useState(interviewData.interviewTime || "");
-
   const [reason, setReason] = useState("");
+
+  const saveHandler = () => {
+    rescheduleInterview(interview, date, time, reason);
+
+    setReason("");
+    setEditMode(false);
+  };
+
+  const cancelHandler = () => {
+    setDate(interviewData.interviewDate || "");
+    setTime(interviewData.interviewTime || "");
+    setReason("");
+    setEditMode(false);
+  };
 
   return (
     <div
@@ -26,9 +41,7 @@ const InterviewRow = ({
       `}
     >
       <div className={styles.col1}>
-        <div>
-          <strong>Job:</strong> {interview.jobTitle}
-        </div>
+        <h4>Job: {interview.jobTitle}</h4>
 
         <div>
           <strong>Applicant:</strong> {interview.applicantEmail}
@@ -53,32 +66,15 @@ const InterviewRow = ({
             <strong>Instructions:</strong> {interviewData.interviewInstructions}
           </div>
         )}
-
-        {interview.rescheduleRequested && (
-          <div className={styles.requestBox}>
-            <strong>Reschedule Request:</strong>
-
-            <div className={styles.requestReason}>
-              {interview.rescheduleRequestReason}
-            </div>
-
-            {interview.rescheduleRequestedAt && (
-              <div className={styles.requestTime}>
-                Requested at{" "}
-                {new Date(interview.rescheduleRequestedAt).toLocaleString()}
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       <div className={styles.col2}>
-        {interview.rescheduleHistory?.length > 0 && (
+        {rescheduleHistory.length > 0 && (
           <div>
             <strong>History:</strong>
 
             <div className={styles.history}>
-              {interview.rescheduleHistory
+              {rescheduleHistory
                 .slice()
                 .reverse()
                 .map((item, index) => (
@@ -107,6 +103,7 @@ const InterviewRow = ({
             <span className={styles.closedBadge}>
               Recruitment Closed. Interview Inactive
             </span>
+
             <span className={styles.closedText}></span>
           </div>
         ) : !expired ? (
@@ -122,22 +119,45 @@ const InterviewRow = ({
           <span className={styles.disabled}>Meeting Expired</span>
         )}
 
-        {!recruitmentClosed && interview.rescheduleRequested && !editMode && (
-          <button
-            className={styles.acceptBtn}
-            onClick={() => setEditMode(true)}
-          >
-            Respond to Request
-          </button>
-        )}
+        {!recruitmentClosed &&
+          rescheduleRequest.rescheduleRequested &&
+          !editMode && (
+            <button
+              className={styles.acceptBtn}
+              onClick={() => setEditMode(true)}
+            >
+              Respond to Request
+            </button>
+          )}
 
-        {!recruitmentClosed && !editMode && !interview.rescheduleRequested && (
-          <button
-            className={styles.rescheduleBtn}
-            onClick={() => setEditMode(true)}
-          >
-            Reschedule
-          </button>
+        {!recruitmentClosed &&
+          !editMode &&
+          !rescheduleRequest.rescheduleRequested && (
+            <button
+              className={styles.rescheduleBtn}
+              onClick={() => setEditMode(true)}
+            >
+              Reschedule
+            </button>
+          )}
+
+        {rescheduleRequest.rescheduleRequested && (
+          <div className={styles.requestBox}>
+            <strong>Reschedule Request:</strong>
+
+            <div className={styles.requestReason}>
+              {rescheduleRequest.rescheduleRequestReason}
+            </div>
+
+            {rescheduleRequest.rescheduleRequestedAt && (
+              <div className={styles.requestTime}>
+                Requested at{" "}
+                {new Date(
+                  rescheduleRequest.rescheduleRequestedAt,
+                ).toLocaleString()}
+              </div>
+            )}
+          </div>
         )}
 
         {!recruitmentClosed && editMode && (
@@ -161,27 +181,11 @@ const InterviewRow = ({
             />
 
             <div className={styles.actionBtns}>
-              <button
-                className={styles.saveBtn}
-                onClick={() => {
-                  rescheduleInterview(interview.id, date, time, reason);
-
-                  setReason("");
-                  setEditMode(false);
-                }}
-              >
+              <button className={styles.saveBtn} onClick={saveHandler}>
                 Save
               </button>
 
-              <button
-                className={styles.cancelBtn}
-                onClick={() => {
-                  setDate(interviewData.interviewDate || "");
-                  setTime(interviewData.interviewTime || "");
-                  setReason("");
-                  setEditMode(false);
-                }}
-              >
+              <button className={styles.cancelBtn} onClick={cancelHandler}>
                 Cancel
               </button>
             </div>

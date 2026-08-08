@@ -318,21 +318,24 @@ export const apply = (recruiterId, application) => async (dispatch) => {
 };
 
 export const rescheduleRequest = (item, rescheduleRequestData) => async () => {
-  const histReason =
-    "Reschedule requested by the Apllicant." +
-    rescheduleRequestData.rescheduleRequestReason;
   try {
-    await dbApi.patch(
-      `applications/${item.recruiterId}/${item.id}/interviewData/rescheduleRequest`,
-      rescheduleRequestData,
-    );
-    await dbApi.post(
-      `applications/${item.recruiterId}/${item.id}/interviewData/rescheduleHistory/`,
+    const history = item.interviewData?.rescheduleHistory || [];
+
+    const updatedHistory = [
+      ...history,
       {
         changedAt: new Date().toISOString(),
         previousDate: item.interviewData.interviewDate,
         previousTime: item.interviewData.interviewTime,
-        reason: histReason,
+        reason: `Reschedule requested by the applicant. ${rescheduleRequestData.rescheduleRequestReason}`,
+      },
+    ];
+
+    await dbApi.patch(
+      `applications/${item.recruiterId}/${item.id}/interviewData`,
+      {
+        rescheduleRequest: rescheduleRequestData,
+        rescheduleHistory: updatedHistory,
       },
     );
   } catch (err) {
