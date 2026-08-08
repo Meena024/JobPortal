@@ -65,7 +65,6 @@ const MyInterviews = () => {
     };
     try {
       await dispatch(rescheduleRequest(item, rescheduleRequestData));
-      alert("Reschedule request sent");
 
       setRequestInputs((prev) => ({
         ...prev,

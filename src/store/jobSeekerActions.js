@@ -317,29 +317,40 @@ export const apply = (recruiterId, application) => async (dispatch) => {
   }
 };
 
-export const rescheduleRequest = (item, rescheduleRequestData) => async () => {
-  try {
-    const history = item.interviewData?.rescheduleHistory || [];
+export const rescheduleRequest =
+  (item, rescheduleRequestData) => async (dispatch) => {
+    try {
+      const history = item.interviewData?.rescheduleHistory || [];
 
-    const updatedHistory = [
-      ...history,
-      {
-        changedAt: new Date().toISOString(),
-        previousDate: item.interviewData.interviewDate,
-        previousTime: item.interviewData.interviewTime,
-        reason: `Reschedule requested by the applicant. ${rescheduleRequestData.rescheduleRequestReason}`,
-      },
-    ];
+      const updatedHistory = [
+        ...history,
+        {
+          changedAt: new Date().toISOString(),
+          previousDate: item.interviewData.interviewDate,
+          previousTime: item.interviewData.interviewTime,
+          reason: `Reschedule requested by the applicant. ${rescheduleRequestData.rescheduleRequestReason}`,
+        },
+      ];
 
-    await dbApi.patch(
-      `applications/${item.recruiterId}/${item.id}/interviewData`,
-      {
+      const interviewData = {
+        ...item.interviewData,
         rescheduleRequest: rescheduleRequestData,
         rescheduleHistory: updatedHistory,
-      },
-    );
-  } catch (err) {
-    console.error("Request failed. Try again!", err);
-    throw err;
-  }
-};
+      };
+
+      await dbApi.patch(
+        `applications/${item.recruiterId}/${item.id}/interviewData`,
+        interviewData,
+      );
+
+      dispatch(
+        jobSeekerActions.updateInterviewData({
+          id: item.id,
+          interviewData,
+        }),
+      );
+    } catch (err) {
+      console.error("Request failed. Try again!", err);
+      throw err;
+    }
+  };

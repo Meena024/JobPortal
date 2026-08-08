@@ -15,6 +15,10 @@ const recruiterSlice = createSlice({
   initialState,
 
   reducers: {
+    /*
+      JOBS
+    */
+
     setRecruiterJobs(state, action) {
       state.recruiterJobs = action.payload;
     },
@@ -49,6 +53,10 @@ const recruiterSlice = createSlice({
       }
     },
 
+    /*
+      APPLICATIONS
+    */
+
     setRecruiterApplications(state, action) {
       state.recruiterApplications = action.payload;
     },
@@ -62,48 +70,45 @@ const recruiterSlice = createSlice({
     updateApplicationStatus(state, action) {
       const { id, status } = action.payload;
 
-      const index = state.recruiterApplications.findIndex(
+      const application = state.recruiterApplications.find(
         (app) => app.id === id,
       );
 
-      if (index !== -1) {
-        state.recruiterApplications[index].status = status;
+      if (application) {
+        application.status = status;
       }
     },
 
     updateOfferLetter(state, action) {
       const { id, offerLetterUrl } = action.payload;
 
-      const index = state.recruiterApplications.findIndex(
+      const application = state.recruiterApplications.find(
         (app) => app.id === id,
       );
 
-      if (index !== -1) {
-        state.recruiterApplications[index].offerLetterUrl = offerLetterUrl;
+      if (application) {
+        application.offerLetterUrl = offerLetterUrl;
       }
     },
 
     updateRecruiterNotes(state, action) {
       const { id, notes } = action.payload;
 
-      const index = state.recruiterApplications.findIndex(
+      const application = state.recruiterApplications.find(
         (app) => app.id === id,
       );
 
-      if (index !== -1) {
-        state.recruiterApplications[index].recruiterNotes = notes;
+      if (application) {
+        application.recruiterNotes = notes;
       }
     },
 
+    /*
+      INTERVIEW
+    */
+
     updateInterviewDetails(state, action) {
-      const {
-        id,
-        interviewData,
-        rescheduleHistory,
-        rescheduleRequested,
-        rescheduleRequestReason,
-        rescheduleRequestedAt,
-      } = action.payload;
+      const { id, interviewData } = action.payload;
 
       const application = state.recruiterApplications.find(
         (app) => app.id === id,
@@ -112,23 +117,11 @@ const recruiterSlice = createSlice({
       if (!application) return;
 
       application.interviewData = interviewData;
-
-      if (rescheduleHistory !== undefined) {
-        application.rescheduleHistory = rescheduleHistory;
-      }
-
-      if (rescheduleRequested !== undefined) {
-        application.rescheduleRequested = rescheduleRequested;
-      }
-
-      if (rescheduleRequestReason !== undefined) {
-        application.rescheduleRequestReason = rescheduleRequestReason;
-      }
-
-      if (rescheduleRequestedAt !== undefined) {
-        application.rescheduleRequestedAt = rescheduleRequestedAt;
-      }
     },
+
+    /*
+      UI
+    */
 
     setActiveView(state, action) {
       state.activeView = action.payload;
@@ -138,6 +131,10 @@ const recruiterSlice = createSlice({
       state.editingJob = action.payload;
     },
 
+    /*
+      STATUS
+    */
+
     setLoading(state, action) {
       state.loading = action.payload;
     },
@@ -145,6 +142,10 @@ const recruiterSlice = createSlice({
     setError(state, action) {
       state.error = action.payload;
     },
+
+    /*
+      RESET
+    */
 
     setReset() {
       return initialState;

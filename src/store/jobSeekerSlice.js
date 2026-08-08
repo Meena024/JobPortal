@@ -63,6 +63,16 @@ const jobSeekerSlice = createSlice({
       state.appliedJobs.push(action.payload);
     },
 
+    updateInterviewData(state, action) {
+      const { id, interviewData } = action.payload;
+
+      const application = state.appliedJobs.find((app) => app.id === id);
+
+      if (application) {
+        application.interviewData = interviewData;
+      }
+    },
+
     /*
       SAVED JOBS
     */
