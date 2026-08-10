@@ -1,0 +1,83 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.wrapper button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.primary {
+  background: #2563eb;
+  color: white;
+}
+
+.primary:hover {
+  background: #1d4ed8;
+}
+
+.successBtn {
+  background: #16a34a;
+  color: white;
+}
+
+.successBtn:hover {
+  background: #15803d;
+}
+
+.secondary {
+  background: #e5e7eb;
+}
+
+.secondary:hover {
+  background: #d1d5db;
+}
+
+.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.danger:hover {
+  background: #b91c1c;
+}
+
+.success {
+  width: 100%;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.warning {
+  width: 100%;
+  color: #c2410c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rejected {
+  width: 100%;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.info {
+  width: 100%;
+  color: #4b5563;
+  font-size: 12px;
+}
+
+.locked {
+  margin: 12px 0;
+  color: #92400e;
+  font-weight: 600;
+}

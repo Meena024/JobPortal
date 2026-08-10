@@ -1,13 +1,17 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
-import ApplicationCard from "./ApplicationCard";
+import ApplicationCard from "./ApplicationCard/ApplicationCard";
 
 import styles from "../../../../Styling/Pages/RecruiterDashboard/RecruiterApplications/RecruiterApplications.module.css";
 
 const RecruiterApplications = () => {
   const applications = useSelector(
-    (state) => state.recruiter.recruiterApplications,
+    (state) => state.recruiter.recruiterApplications || [],
+  );
+
+  const recruiterJobs = useSelector(
+    (state) => state.recruiter.recruiterJobs || [],
   );
 
   const loading = useSelector((state) => state.recruiter.loading);
@@ -15,25 +19,35 @@ const RecruiterApplications = () => {
   const error = useSelector((state) => state.recruiter.error);
 
   /*
-    FILTER STATE
-  */
+   * FILTERS
+   */
 
   const [statusFilter, setStatusFilter] = useState("all");
-
   const [jobFilter, setJobFilter] = useState("all");
 
   /*
-    UNIQUE JOB TITLES
-  */
+   * JOB LOOKUP MAP
+   * O(1) lookup instead of find() inside every card
+   */
 
-  const jobTitles = useMemo(
-    () => ["all", ...new Set(applications.map((app) => app.jobTitle))],
-    [applications],
-  );
+  const jobsMap = useMemo(() => {
+    return recruiterJobs.reduce((map, job) => {
+      map[job.id] = job;
+      return map;
+    }, {});
+  }, [recruiterJobs]);
 
   /*
-    FILTERED APPLICATIONS
-  */
+   * JOB TITLES
+   */
+
+  const jobTitles = useMemo(() => {
+    return ["all", ...new Set(applications.map((app) => app.jobTitle))];
+  }, [applications]);
+
+  /*
+   * FILTERED APPLICATIONS
+   */
 
   const filteredApplications = useMemo(() => {
     let updated = [...applications];
@@ -50,8 +64,8 @@ const RecruiterApplications = () => {
   }, [applications, statusFilter, jobFilter]);
 
   /*
-    LOADING
-  */
+   * LOADING
+   */
 
   if (loading) {
     return (
@@ -62,8 +76,8 @@ const RecruiterApplications = () => {
   }
 
   /*
-    ERROR
-  */
+   * ERROR
+   */
 
   if (error) {
     return (
@@ -79,11 +93,11 @@ const RecruiterApplications = () => {
 
       <div className={styles.headerRow}>
         <h2 className={styles.title}>
-          Applications Received ({filteredApplications.length})
+          Applications ({filteredApplications.length})
         </h2>
 
         <div className={styles.filters}>
-          {/* STATUS FILTER */}
+          {/* STATUS */}
 
           <select
             className={styles.filterDropdown}
@@ -98,7 +112,7 @@ const RecruiterApplications = () => {
             <option value="rejected">Rejected</option>
           </select>
 
-          {/* JOB FILTER */}
+          {/* JOB */}
 
           <select
             className={styles.filterDropdown}
@@ -114,16 +128,18 @@ const RecruiterApplications = () => {
         </div>
       </div>
 
-      {/* EMPTY STATE */}
+      {/* EMPTY */}
 
       {filteredApplications.length === 0 ? (
-        <p className={styles.info}>
-          No applications match the selected filters.
-        </p>
+        <p className={styles.info}>No applications found.</p>
       ) : (
         <div className={styles.grid}>
           {filteredApplications.map((app) => (
-            <ApplicationCard key={app.id} app={app} />
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              relatedJob={jobsMap[app.jobId]}
+            />
           ))}
         </div>
       )}

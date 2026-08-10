@@ -163,14 +163,20 @@ export const fetchRecruiterApplications = (userId) => {
 
 export const saveOfferLetter = (app, offerLetterUrl) => async (dispatch) => {
   try {
+    const offerLetter = {
+      url: offerLetterUrl,
+      uploadedAt: new Date().toISOString(),
+      uploadedBy: app.recruiterId,
+    };
+
     await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
-      offerLetterUrl,
+      offerLetter,
     });
 
     dispatch(
       recruiterActions.updateOfferLetter({
         id: app.id,
-        offerLetterUrl,
+        offerLetter,
       }),
     );
 
@@ -197,30 +203,37 @@ export const createNotification = (message, app) => async () => {
   }
 };
 
-export const statusChangeHandler = (app, status) => async (dispatch) => {
-  try {
-    await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, {
-      status,
-    });
-
-    dispatch(
-      recruiterActions.updateApplicationStatus({
-        id: app.id,
+export const statusChangeHandler =
+  (app, status, additionalData = {}) =>
+  async (dispatch) => {
+    try {
+      const updates = {
         status,
-      }),
-    );
+        updatedAt: new Date().toISOString(),
+        ...additionalData,
+      };
 
-    await dispatch(
-      createNotification(
-        `Your application for "${app.jobTitle}" is now ${status}.`,
-        app,
-      ),
-    );
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
+      await dbApi.patch(`applications/${app.recruiterId}/${app.id}`, updates);
+
+      dispatch(
+        recruiterActions.updateApplicationStatus({
+          id: app.id,
+          status,
+          updates,
+        }),
+      );
+
+      await dispatch(
+        createNotification(
+          `Your application for "${app.jobTitle}" is now ${status}.`,
+          app,
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
 
 export const updateRecruiterNotes = (app, notes) => async () => {
   try {
@@ -251,6 +264,7 @@ export const saveInterview = (app, form) => async (dispatch) => {
 
     const interviewData = {
       interviewScheduled: true,
+      interviewStatus: "scheduled",
       interviewDate: form.interviewDate,
       interviewTime: form.interviewTime,
       interviewLink: form.interviewLink,
@@ -303,6 +317,7 @@ export const cancelInterview = (app) => async (dispatch) => {
 
     const interviewData = {
       interviewScheduled: false,
+      interviewStatus: "",
 
       interviewDate: "",
       interviewTime: "",
@@ -394,3 +409,41 @@ export const rescheduleInterview =
       throw err;
     }
   };
+
+export const submitInterviewFeedback = (app, comments) => async (dispatch) => {
+  try {
+    const interviewData = {
+      ...app.interviewData,
+
+      interviewStatus: "completed",
+
+      recruiterFeedback: {
+        submitted: true,
+        comments,
+        submittedAt: new Date().toISOString(),
+      },
+    };
+
+    await dbApi.patch(
+      `applications/${app.recruiterId}/${app.id}/interviewData`,
+      interviewData,
+    );
+
+    dispatch(
+      recruiterActions.updateInterviewDetails({
+        id: app.id,
+        interviewData,
+      }),
+    );
+
+    await dispatch(
+      createNotification(
+        `Your interview for "${app.jobTitle}" has been marked as completed.`,
+        app,
+      ),
+    );
+  } catch (err) {
+    console.error("Submit interview feedback failed:", err);
+    throw err;
+  }
+};

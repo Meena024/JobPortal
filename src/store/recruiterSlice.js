@@ -27,14 +27,18 @@ const recruiterSlice = createSlice({
       state.recruiterJobs.unshift(action.payload);
     },
 
-    updateRecruiterJob(state, action) {
-      const index = state.recruiterJobs.findIndex(
-        (job) => job.id === action.payload.id,
+    updateApplicationStatus(state, action) {
+      const { id, status, updates = {} } = action.payload;
+
+      const application = state.recruiterApplications.find(
+        (app) => app.id === id,
       );
 
-      if (index !== -1) {
-        state.recruiterJobs[index] = action.payload;
-      }
+      if (!application) return;
+
+      application.status = status;
+
+      Object.assign(application, updates);
     },
 
     removeRecruiterJob(state, action) {
@@ -67,28 +71,28 @@ const recruiterSlice = createSlice({
       );
     },
 
-    updateApplicationStatus(state, action) {
-      const { id, status } = action.payload;
+    updateApplication(state, action) {
+      const { id, updates } = action.payload;
 
       const application = state.recruiterApplications.find(
         (app) => app.id === id,
       );
 
-      if (application) {
-        application.status = status;
-      }
+      if (!application) return;
+
+      Object.assign(application, updates);
     },
 
     updateOfferLetter(state, action) {
-      const { id, offerLetterUrl } = action.payload;
+      const { id, offerLetter } = action.payload;
 
       const application = state.recruiterApplications.find(
         (app) => app.id === id,
       );
 
-      if (application) {
-        application.offerLetterUrl = offerLetterUrl;
-      }
+      if (!application) return;
+
+      application.offerLetter = offerLetter;
     },
 
     updateRecruiterNotes(state, action) {

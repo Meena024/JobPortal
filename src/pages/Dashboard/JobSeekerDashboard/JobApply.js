@@ -64,7 +64,7 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
         recruiterNotes: null,
         interviewData: {},
       };
-      await dispatch(apply(userId, recruiterId, application));
+      await dispatch(apply(recruiterId, application));
     } catch (err) {
       console.error(err);
       alert("Application failed");

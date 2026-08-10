@@ -49,14 +49,6 @@ const RecruiterInterviews = () => {
   }, [recruiterApplications, jobsMap]);
 
   /*
-    CHECK EXPIRED STATUS
-  */
-
-  const isExpired = (date, time) => {
-    return new Date() - new Date(`${date} ${time}`) > 30 * 60 * 1000;
-  };
-
-  /*
     RESCHEDULE HANDLER
   */
 
@@ -85,10 +77,6 @@ const RecruiterInterviews = () => {
         <InterviewRow
           key={item.id}
           interview={item}
-          expired={isExpired(
-            item.interviewData.interviewDate,
-            item.interviewData.interviewTime,
-          )}
           recruitmentClosed={item.recruitmentClosed}
           rescheduleInterview={rescheduleInterviewHandler}
         />
