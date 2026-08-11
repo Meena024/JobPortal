@@ -1,0 +1,243 @@
+/* ==========================================
+   TYPOGRAPHY
+   ========================================== */
+
+/* ==========================================
+   PAGE HEADINGS
+   ========================================== */
+
+.page-title {
+  margin: 0;
+
+  font-size: var(--font-size-2xl);
+
+  font-weight: var(--font-weight-bold);
+
+  line-height: 1.2;
+
+  color: var(--text-primary);
+}
+
+.page-subtitle {
+  margin: var(--space-2) 0 0;
+
+  font-size: var(--font-size-md);
+
+  font-weight: var(--font-weight-normal);
+
+  color: var(--text-muted);
+
+  line-height: var(--line-height);
+}
+
+/* ==========================================
+   SECTION HEADINGS
+   ========================================== */
+
+.section-title {
+  margin: 0;
+
+  font-size: var(--font-size-xl);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+.section-subtitle {
+  margin-top: var(--space-2);
+
+  font-size: var(--font-size-sm);
+
+  color: var(--text-muted);
+
+  line-height: var(--line-height);
+}
+
+/* ==========================================
+   CARD TYPOGRAPHY
+   ========================================== */
+
+.card-title {
+  margin: 0;
+
+  font-size: var(--font-size-lg);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+.card-subtitle {
+  margin-top: var(--space-1);
+
+  font-size: var(--font-size-sm);
+
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   FORM LABELS
+   ========================================== */
+
+.label {
+  display: block;
+
+  margin-bottom: var(--space-2);
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-medium);
+
+  color: var(--text-primary);
+}
+
+/* ==========================================
+   BODY TEXT
+   ========================================== */
+
+.text {
+  margin: 0;
+
+  font-size: var(--font-size-md);
+
+  color: var(--text-primary);
+
+  line-height: var(--line-height);
+}
+
+.text-small {
+  font-size: var(--font-size-sm);
+
+  color: var(--text-secondary);
+
+  line-height: var(--line-height);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   EMPHASIS
+   ========================================== */
+
+.text-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.text-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.text-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+/* ==========================================
+   TEXT COLORS
+   ========================================== */
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+/* ==========================================
+   ALIGNMENT
+   ========================================== */
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* ==========================================
+   TEXT BEHAVIOUR
+   ========================================== */
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.text-break {
+  word-break: break-word;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* ==========================================
+   LINKS
+   ========================================== */
+
+.text-link {
+  color: var(--color-primary);
+
+  text-decoration: none;
+
+  font-weight: var(--font-weight-medium);
+
+  transition: color var(--transition-fast);
+}
+
+.text-link:hover {
+  color: var(--color-primary-dark);
+
+  text-decoration: underline;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.65rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+  }
+}

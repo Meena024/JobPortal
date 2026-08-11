@@ -1,0 +1,81 @@
+/* ==========================================
+   TABLE CONTAINER
+   ========================================== */
+
+.table-container {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border-radius: var(--radius-lg);
+
+  border: var(--border);
+
+  background: var(--color-white);
+
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================
+   TABLE
+   ========================================== */
+
+.table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 1rem;
+
+  background: var(--color-gray-100);
+
+  color: var(--text-primary);
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  text-align: left;
+}
+
+.table td {
+  padding: 1rem;
+
+  border-top: var(--border);
+
+  color: var(--text-secondary);
+
+  font-size: var(--font-size-sm);
+
+  vertical-align: top;
+}
+
+.table tbody tr {
+  transition: background var(--transition-fast);
+}
+
+.table tbody tr:hover {
+  background: var(--color-gray-50);
+}
+
+/* ==========================================
+   COMPACT TABLE
+   ========================================== */
+
+.table--compact th,
+.table--compact td {
+  padding: 0.75rem;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    white-space: nowrap;
+  }
+}

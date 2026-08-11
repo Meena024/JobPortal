@@ -1,0 +1,235 @@
+/* ==========================================
+   BASE CARD
+   ========================================== */
+
+.card {
+  display: flex;
+  flex-direction: column;
+
+  background: var(--color-surface);
+
+  border: var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  overflow: hidden;
+
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================
+   CARD VARIANTS
+   ========================================== */
+
+.card-flat {
+  box-shadow: none;
+}
+
+.card-elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+.card-clickable:hover {
+  transform: translateY(-3px);
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================
+   CARD SECTIONS
+   ========================================== */
+
+.card-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: var(--space-4);
+
+  padding: var(--space-5);
+
+  border-bottom: var(--border);
+
+  flex-wrap: wrap;
+}
+
+.card-body {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: var(--space-4);
+
+  padding: var(--space-5);
+
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: var(--space-3);
+
+  flex-wrap: wrap;
+
+  padding: var(--space-5);
+
+  border-top: var(--border);
+
+  background: var(--color-gray-50);
+}
+
+/* ==========================================
+   COMPACT VARIANTS
+   ========================================== */
+
+.card-header-sm {
+  padding: var(--space-4);
+}
+
+.card-body-sm {
+  padding: var(--space-4);
+}
+
+.card-footer-sm {
+  padding: var(--space-4);
+}
+
+/* ==========================================
+   CARD DIVIDERS
+   ========================================== */
+
+.card-divider {
+  border-top: var(--border);
+
+  margin: var(--space-4) 0;
+}
+
+/* ==========================================
+   STATUS STRIP
+   ========================================== */
+
+.card-status-success {
+  border-left: 5px solid var(--color-success);
+}
+
+.card-status-warning {
+  border-left: 5px solid var(--color-warning);
+}
+
+.card-status-danger {
+  border-left: 5px solid var(--color-danger);
+}
+
+.card-status-info {
+  border-left: 5px solid var(--color-primary);
+}
+
+/* ==========================================
+   CARD ACTIONS
+   ========================================== */
+
+.card-actions {
+  display: flex;
+
+  gap: var(--space-3);
+
+  flex-wrap: wrap;
+
+  align-items: center;
+}
+
+/* ==========================================
+   CARD META
+   ========================================== */
+
+.card-meta {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: var(--space-4);
+
+  color: var(--text-secondary);
+
+  font-size: var(--font-size-sm);
+}
+
+.card-meta-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: var(--space-2);
+}
+
+/* ==========================================
+   CARD CONTENT
+   ========================================== */
+
+.card-content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: var(--space-3);
+}
+
+/* ==========================================
+   EMPTY CARD
+   ========================================== */
+
+.card-empty {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: var(--space-4);
+
+  min-height: 220px;
+
+  text-align: center;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .card-header,
+  .card-footer {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .card-actions {
+    width: 100%;
+  }
+}
