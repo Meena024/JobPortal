@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { recruiterActions } from "../../../store/recruiterSlice";
 
 import CreateJob from "./CreateJob";
-import MyJobs from "./MyJobs";
+import MyJobs from "../../../features/recruiter/MyJobs/MyJobs";
+
 import RecruiterApplications from "./RecruiterApplications/RecruiterApplications";
 import RecruiterInterviews from "./RecruiterInterviews/RecruiterInterviews";
 

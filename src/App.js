@@ -12,6 +12,8 @@ import PrivateRoute from "./routes/PrivateRoute";
 import Layout from "./components/Layout/Layout";
 import JobSeekerDashboard from "./pages/Dashboard/JobSeekerDashboard/JobSeekerDashboard";
 
+import "./styles/global.css";
+
 function App() {
   const dispatch = useDispatch();
 
