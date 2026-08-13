@@ -9,7 +9,6 @@ import RecruiterDashboard from "./pages/Dashboard/RecruiterDashboard/RecruiterDa
 import AdminDashboard from "./pages/Dashboard/AdminDashboard/AdminDashboard";
 
 import PrivateRoute from "./routes/PrivateRoute";
-import Layout from "./components/Layout/Layout";
 import JobSeekerDashboard from "./pages/Dashboard/JobSeekerDashboard/JobSeekerDashboard";
 
 import "./styles/global.css";
@@ -22,52 +21,50 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Layout>
-      <Routes>
-        {/* PUBLIC ROUTES */}
+    <Routes>
+      {/* PUBLIC ROUTES */}
 
-        <Route path="/" element={<HomeRedirect />} />
+      <Route path="/" element={<HomeRedirect />} />
 
-        <Route path="/signup" element={<SignUp />} />
+      <Route path="/signup" element={<SignUp />} />
 
-        {/* JOB SEEKER ROUTES */}
+      {/* JOB SEEKER ROUTES */}
 
-        <Route
-          path="/jobseeker/dashboard"
-          element={
-            <PrivateRoute allowedRoles={["job_seeker"]}>
-              <JobSeekerDashboard />
-            </PrivateRoute>
-          }
-        />
+      <Route
+        path="/jobseeker/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["job_seeker"]}>
+            <JobSeekerDashboard />
+          </PrivateRoute>
+        }
+      />
 
-        {/* RECRUITER ROUTES */}
+      {/* RECRUITER ROUTES */}
 
-        <Route
-          path="/recruiter/dashboard"
-          element={
-            <PrivateRoute allowedRoles={["recruiter"]}>
-              <RecruiterDashboard />
-            </PrivateRoute>
-          }
-        />
+      <Route
+        path="/recruiter/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["recruiter"]}>
+            <RecruiterDashboard />
+          </PrivateRoute>
+        }
+      />
 
-        {/* ADMIN ROUTES */}
+      {/* ADMIN ROUTES */}
 
-        <Route
-          path="/admin/dashboard"
-          element={
-            <PrivateRoute allowedRoles={["admin"]}>
-              <AdminDashboard />
-            </PrivateRoute>
-          }
-        />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <PrivateRoute allowedRoles={["admin"]}>
+            <AdminDashboard />
+          </PrivateRoute>
+        }
+      />
 
-        {/* DEFAULT ROUTE */}
+      {/* DEFAULT ROUTE */}
 
-        <Route path="*" element={<div>Page not found</div>} />
-      </Routes>
-    </Layout>
+      <Route path="*" element={<div>Page not found</div>} />
+    </Routes>
   );
 }
 

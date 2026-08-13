@@ -141,10 +141,6 @@ const MyJobs = () => {
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>My Job Listings</h1>
-
-          <p className="text-muted">
-            View, edit and manage all your posted jobs.
-          </p>
         </div>
 
         <div className={styles.jobCount}>

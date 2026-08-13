@@ -1,0 +1,189 @@
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
+.sidebar {
+  flex: 0 0 220px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+
+  padding: 1.25rem 0.65rem;
+
+  background: var(--color-white);
+
+  border-right: var(--border);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.title {
+  margin: 0;
+
+  padding: 0 0.7rem 1rem;
+
+  color: var(--text-primary);
+
+  font-size: 1.1rem;
+
+  font-weight: var(--font-weight-semibold);
+
+  line-height: 1.3;
+}
+
+/* ==========================================================
+   NAVIGATION
+========================================================== */
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.45rem;
+
+  width: 100%;
+}
+
+/* ==========================================================
+   MENU ITEM
+========================================================== */
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 40px;
+
+  padding: 0.6rem 0.7rem;
+
+  border: none;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary);
+
+  color: var(--text-white);
+
+  font: inherit;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-medium);
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.menuItem:hover {
+  background: var(--color-primary-dark);
+
+  color: var(--text-white);
+}
+
+/* ==========================================================
+   ACTIVE ITEM
+========================================================== */
+
+.menuItem.active {
+  background: var(--color-primary-dark);
+
+  color: var(--text-white);
+
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+
+.menuItem.active:hover {
+  background: var(--color-primary-dark);
+
+  color: var(--text-white);
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.icon {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 0.35rem;
+
+  font-size: 0.85rem;
+
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.label {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+  .sidebar {
+    flex: none;
+
+    width: 100%;
+
+    padding: 0.7rem 1rem;
+
+    border-right: none;
+    border-bottom: var(--border);
+  }
+
+  .title {
+    padding: 0 0 0.65rem;
+
+    font-size: 1rem;
+  }
+
+  .navigation {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    gap: 0.4rem;
+  }
+
+  .menuItem {
+    flex: 1;
+
+    min-width: 130px;
+
+    width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .navigation {
+    flex-direction: column;
+  }
+
+  .menuItem {
+    width: 100%;
+  }
+}
