@@ -1,0 +1,338 @@
+/* ==========================================================
+   PAGE
+========================================================== */
+
+.page {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-4);
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--space-4);
+}
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+.search {
+  width: 280px;
+
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+.table {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: var(--border);
+
+  border-radius: var(--radius-lg);
+
+  background: var(--color-white);
+
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================
+   TABLE HEADER
+========================================================== */
+
+.tableHeader {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.8fr)
+    140px;
+
+  align-items: center;
+
+  min-height: 44px;
+
+  padding: 0 1.25rem;
+
+  background: var(--color-gray-50);
+
+  border-bottom: var(--border);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-muted);
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================
+   USER HEADER
+========================================================== */
+
+.userHeader {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+
+  min-width: 0;
+}
+
+.sortButton {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: var(--text-muted);
+
+  cursor: pointer;
+
+  transition: color var(--transition-fast);
+}
+
+.sortButton:hover {
+  color: var(--color-primary);
+}
+
+/* ==========================================================
+   ROLE HEADER
+========================================================== */
+
+.roleHeader {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 0.35rem;
+
+  min-width: 0;
+}
+
+.roleSelect {
+  width: auto;
+
+  min-height: 30px;
+
+  padding: 0.25rem 0.5rem;
+
+  font-size: var(--font-size-xs);
+}
+
+/* ==========================================================
+   USER ROW
+========================================================== */
+
+.userRow {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.8fr)
+    140px;
+
+  align-items: center;
+
+  min-height: 52px;
+
+  padding: 0 1.25rem;
+
+  border-bottom: var(--border);
+
+  transition: background-color var(--transition-fast);
+}
+
+.userRow:last-child {
+  border-bottom: none;
+}
+
+.userRow:hover {
+  background: var(--color-gray-50);
+}
+
+/* ==========================================================
+   USER CELL
+========================================================== */
+
+.userCell {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.6rem;
+}
+
+.email {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: var(--font-size-sm);
+
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   DELETE BUTTON
+========================================================== */
+
+.deleteButton {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: var(--radius-sm);
+
+  background: transparent;
+
+  color: var(--color-gray-400);
+
+  cursor: pointer;
+
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.deleteButton:hover {
+  color: var(--color-danger);
+
+  background: var(--color-danger-bg);
+}
+
+/* ==========================================================
+   ROLE
+========================================================== */
+
+.role {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-medium);
+
+  color: var(--text-secondary);
+
+  text-align: left;
+}
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.empty {
+  padding: var(--space-6);
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
+
+  text-align: center;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+  .header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .tableHeader,
+  .userRow {
+    grid-template-columns:
+      minmax(0, 1fr)
+      125px;
+
+    padding-left: 1rem;
+
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .tableHeader,
+  .userRow {
+    grid-template-columns:
+      minmax(0, 1fr)
+      110px;
+
+    padding-left: 0.75rem;
+
+    padding-right: 0.75rem;
+  }
+
+  .email,
+  .role {
+    font-size: var(--font-size-xs);
+  }
+
+  .deleteButton {
+    width: 26px;
+    height: 26px;
+  }
+
+  .roleSelect {
+    max-width: 80px;
+  }
+}

@@ -5,7 +5,7 @@ import { FaBriefcase, FaUsers, FaClipboardList, FaList } from "react-icons/fa";
 import DashboardLayout from "../../../components/Layout/DashBoardLayout/DashboardLayout";
 
 import PendingJobs from "./PendingJobs";
-import UsersList from "./UsersList";
+import ManageUsers from "../../../features/admin/ManageUsers/ManageUsers";
 import Applications from "./Applications";
 import AllJobs from "./AllJobs";
 
@@ -57,7 +57,7 @@ const AdminDashboard = () => {
   const renderPage = () => {
     switch (view) {
       case "users":
-        return <UsersList />;
+        return <ManageUsers />;
 
       case "allJobs":
         return <AllJobs />;
