@@ -1,0 +1,85 @@
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.actions {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  align-self: start;
+
+  gap: 0.5rem;
+}
+
+/* ==========================================================
+   ACTION BUTTONS
+========================================================== */
+
+.actions > .btn,
+.actions > a {
+  width: 100%;
+}
+
+/* ==========================================================
+   CLOSED MESSAGE
+========================================================== */
+
+.message {
+  margin: 0;
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.3;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   RESCHEDULE REQUEST
+========================================================== */
+
+.requestBox {
+  padding: 0.55rem 0;
+
+  border-top: var(--border);
+  border-bottom: var(--border);
+}
+
+.requestHeader {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.5rem;
+}
+
+.requestHeader strong {
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+.requestBox p {
+  margin: 0.35rem 0 0;
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.3;
+
+  color: var(--text-secondary);
+}
+
+.requestBox small {
+  display: block;
+
+  margin-top: 0.3rem;
+
+  font-size: 0.62rem;
+
+  color: var(--text-muted);
+}

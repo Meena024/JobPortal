@@ -9,7 +9,7 @@ import CreateJob from "../../../features/recruiter/CreateJob/CreateJob";
 import MyJobs from "../../../features/recruiter/MyJobs/MyJobs";
 
 import RecruiterApplications from "./RecruiterApplications/RecruiterApplications";
-import RecruiterInterviews from "./RecruiterInterviews/RecruiterInterviews";
+import RecruiterInterviews from "../../../features/recruiter/RecruiterInterviews/RecruiterInterviews";
 
 const RecruiterDashboard = () => {
   const dispatch = useDispatch();

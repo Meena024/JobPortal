@@ -1,0 +1,73 @@
+/* ==========================================================
+   INTERVIEW CARD
+========================================================== */
+
+.card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(250px, 0.8fr)
+    minmax(300px, 0.9fr)
+    minmax(300px, 1.1fr);
+
+  column-gap: 1rem;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 0.8rem 0.9rem;
+
+  background: var(--color-surface);
+
+  border: var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  align-items: start;
+
+  transition:
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+/* ==========================================================
+   HOVER
+========================================================== */
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+
+  transform: translateY(-1px);
+}
+
+/* ==========================================================
+   CLOSED RECRUITMENT
+========================================================== */
+
+.cardClosed {
+  border-left: 3px solid var(--color-danger);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1100px) {
+  .card {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 0.9fr);
+
+    column-gap: 1rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .card {
+    grid-template-columns: 1fr;
+
+    row-gap: 0.9rem;
+  }
+}

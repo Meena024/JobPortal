@@ -1,0 +1,76 @@
+/* ==========================================================
+   PAGE
+========================================================== */
+
+.page {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-3);
+}
+
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
+
+.pageHeader {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--space-3);
+}
+
+.count {
+  flex-shrink: 0;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-secondary);
+}
+
+/* ==========================================================
+   INTERVIEW LIST
+========================================================== */
+
+.grid {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.75rem;
+
+  width: 100%;
+}
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.emptyState {
+  max-width: 560px;
+
+  padding: var(--space-5);
+
+  text-align: center;
+
+  align-self: flex-start;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 560px) {
+  .pageHeader {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+}

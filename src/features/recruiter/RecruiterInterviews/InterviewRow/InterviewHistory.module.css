@@ -1,0 +1,140 @@
+/* ==========================================================
+   HISTORY
+========================================================== */
+
+.history {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.45rem;
+
+  align-self: start;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+
+  font-size: var(--font-size-md);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   COUNT
+========================================================== */
+
+.count {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 20px;
+  height: 20px;
+
+  padding: 0 5px;
+
+  border-radius: var(--radius-pill);
+
+  background: var(--color-primary-light);
+
+  color: var(--color-primary);
+
+  font-size: 0.68rem;
+
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================
+   EMPTY
+========================================================== */
+
+.empty {
+  margin: 0;
+
+  font-size: var(--font-size-xs);
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   HISTORY LIST
+========================================================== */
+
+.list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.3rem;
+
+  max-height: 100px;
+
+  overflow-y: auto;
+}
+
+/* ==========================================================
+   HISTORY ITEM
+========================================================== */
+
+.item {
+  padding: 0.4rem 0.5rem;
+
+  border-left: 2px solid var(--color-primary);
+
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+
+  background: var(--color-primary-light);
+}
+
+.item p {
+  margin: 0;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-medium);
+
+  line-height: 1.25;
+
+  color: var(--text-primary);
+}
+
+.item span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 0.68rem;
+
+  line-height: 1.25;
+
+  color: var(--text-secondary);
+}
+
+.item small {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 0.62rem;
+
+  color: var(--text-muted);
+}
