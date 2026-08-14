@@ -1,0 +1,180 @@
+/* ==========================================================
+   PAGE
+========================================================== */
+
+.page {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-3);
+}
+
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: var(--space-3);
+}
+
+.pageHeader p {
+  max-width: 700px;
+}
+
+/* ==========================================================
+   FORM CARD
+========================================================== */
+
+.formCard {
+  width: 100%;
+  max-width: 900px;
+
+  align-self: flex-start;
+
+  padding: var(--space-4);
+
+  gap: 0;
+}
+
+/* ==========================================================
+   FORM SECTION
+========================================================== */
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-3);
+}
+
+.formSection + .formSection {
+  margin-top: var(--space-4);
+
+  padding-top: var(--space-4);
+
+  border-top: var(--border);
+}
+
+/* ==========================================================
+   SECTION HEADER
+========================================================== */
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.15rem;
+}
+
+.sectionHeader .section-title {
+  font-size: var(--font-size-lg);
+}
+
+.sectionHeader .section-subtitle {
+  margin: 0;
+}
+
+/* ==========================================================
+   FORM GRID
+========================================================== */
+
+.formGrid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: var(--space-3);
+}
+
+/* ==========================================================
+   FORM CARD - COMPACT FORM CONTROLS
+========================================================== */
+
+.formCard .input,
+.formCard .select {
+  min-height: 40px;
+
+  padding: 0.6rem 0.8rem;
+}
+
+.formCard .textarea {
+  min-height: 100px;
+
+  padding: 0.7rem 0.8rem;
+}
+
+/* ==========================================================
+   FORM GROUP SPACING
+========================================================== */
+
+.formCard .form-group {
+  gap: var(--space-1);
+}
+
+.formCard .form-label {
+  margin: 0;
+
+  font-size: var(--font-size-sm);
+}
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.actions {
+  display: flex;
+
+  justify-content: flex-end;
+  align-items: center;
+
+  margin-top: var(--space-4);
+
+  padding-top: var(--space-3);
+
+  border-top: var(--border);
+}
+
+.actions .btn {
+  min-width: 120px;
+
+  min-height: 38px;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 768px) {
+  .formCard {
+    padding: var(--space-3);
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageHeader {
+    flex-direction: column;
+  }
+
+  .formCard {
+    padding: var(--space-3);
+  }
+}

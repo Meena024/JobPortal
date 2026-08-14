@@ -5,7 +5,7 @@ import DashboardLayout from "../../../components/Layout/DashBoardLayout/Dashboar
 
 import { recruiterActions } from "../../../store/recruiterSlice";
 
-import CreateJob from "./CreateJob";
+import CreateJob from "../../../features/recruiter/CreateJob/CreateJob";
 import MyJobs from "../../../features/recruiter/MyJobs/MyJobs";
 
 import RecruiterApplications from "./RecruiterApplications/RecruiterApplications";
