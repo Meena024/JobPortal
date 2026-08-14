@@ -1,64 +1,84 @@
 import { useState } from "react";
 
+import { FaBriefcase, FaUsers, FaClipboardList, FaList } from "react-icons/fa";
+
+import DashboardLayout from "../../../components/Layout/DashBoardLayout/DashboardLayout";
+
 import PendingJobs from "./PendingJobs";
 import UsersList from "./UsersList";
 import Applications from "./Applications";
-
-import classes from "../../../Styling/Pages/AdminDashboard/AdminDashboard.module.css";
-
 import AllJobs from "./AllJobs";
 
 const AdminDashboard = () => {
   const [view, setView] = useState("jobs");
 
+  /* =====================================================
+     SIDEBAR MENU
+  ===================================================== */
+
+  const menuItems = [
+    {
+      id: "jobs",
+      label: "Pending Jobs",
+      icon: <FaBriefcase />,
+      active: view === "jobs",
+      onClick: () => setView("jobs"),
+    },
+
+    {
+      id: "users",
+      label: "Manage Users",
+      icon: <FaUsers />,
+      active: view === "users",
+      onClick: () => setView("users"),
+    },
+
+    {
+      id: "allJobs",
+      label: "All Jobs",
+      icon: <FaList />,
+      active: view === "allJobs",
+      onClick: () => setView("allJobs"),
+    },
+
+    {
+      id: "applications",
+      label: "Applications",
+      icon: <FaClipboardList />,
+      active: view === "applications",
+      onClick: () => setView("applications"),
+    },
+  ];
+
+  /* =====================================================
+     PAGE CONTENT
+  ===================================================== */
+
+  const renderPage = () => {
+    switch (view) {
+      case "users":
+        return <UsersList />;
+
+      case "allJobs":
+        return <AllJobs />;
+
+      case "applications":
+        return <Applications />;
+
+      case "jobs":
+      default:
+        return <PendingJobs />;
+    }
+  };
+
+  /* =====================================================
+     RENDER
+  ===================================================== */
+
   return (
-    <div className={classes.dashboard}>
-      {/* SIDEBAR */}
-
-      <aside className={classes.sidebar}>
-        <h2>Admin Panel</h2>
-
-        <button
-          className={view === "jobs" ? classes.active : ""}
-          onClick={() => setView("jobs")}
-        >
-          Pending Jobs
-        </button>
-
-        <button
-          className={view === "users" ? classes.active : ""}
-          onClick={() => setView("users")}
-        >
-          Manage Users
-        </button>
-
-        <button
-          className={view === "AllJobs" ? classes.active : ""}
-          onClick={() => setView("AllJobs")}
-        >
-          All Jobs
-        </button>
-
-        <button
-          className={view === "applications" ? classes.active : ""}
-          onClick={() => setView("applications")}
-        >
-          Applications
-        </button>
-      </aside>
-
-      {/* CONTENT */}
-
-      <main className={classes.content}>
-        {view === "jobs" && <PendingJobs />}
-
-        {view === "users" && <UsersList />}
-
-        {view === "applications" && <Applications />}
-
-        {view === "AllJobs" && <AllJobs />}
-      </main>
-    </div>
+    <DashboardLayout sidebarTitle="Admin Panel" menuItems={menuItems}>
+      {renderPage()}
+    </DashboardLayout>
   );
 };
 
