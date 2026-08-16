@@ -4,7 +4,7 @@ import { FaBriefcase, FaUsers, FaClipboardList, FaList } from "react-icons/fa";
 
 import DashboardLayout from "../../../components/Layout/DashBoardLayout/DashboardLayout";
 
-import PendingJobs from "./PendingJobs";
+import JobApproval from "../../../features/admin/JobApproval/JobApproval";
 import ManageUsers from "../../../features/admin/ManageUsers/ManageUsers";
 import Applications from "./Applications";
 import AllJobs from "./AllJobs";
@@ -18,19 +18,19 @@ const AdminDashboard = () => {
 
   const menuItems = [
     {
-      id: "jobs",
-      label: "Pending Jobs",
-      icon: <FaBriefcase />,
-      active: view === "jobs",
-      onClick: () => setView("jobs"),
-    },
-
-    {
       id: "users",
       label: "Manage Users",
       icon: <FaUsers />,
       active: view === "users",
       onClick: () => setView("users"),
+    },
+
+    {
+      id: "jobs",
+      label: "Job Approval",
+      icon: <FaBriefcase />,
+      active: view === "jobs",
+      onClick: () => setView("jobs"),
     },
 
     {
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
 
       case "jobs":
       default:
-        return <PendingJobs />;
+        return <JobApproval />;
     }
   };
 
