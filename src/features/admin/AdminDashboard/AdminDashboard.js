@@ -4,10 +4,10 @@ import { FaBriefcase, FaUsers, FaClipboardList, FaList } from "react-icons/fa";
 
 import DashboardLayout from "../../../components/Layout/DashBoardLayout/DashboardLayout";
 
-import JobApproval from "../../../features/admin/JobApproval/JobApproval";
-import ManageUsers from "../../../features/admin/ManageUsers/ManageUsers";
-import Applications from "./Applications";
-import AllJobs from "../../../features/admin/AllJobs/AllJobs";
+import JobApproval from "../JobApproval/JobApproval";
+import ManageUsers from "../ManageUsers/ManageUsers";
+import Applications from "../Applications/Applications";
+import AllJobs from "../AllJobs/AllJobs";
 
 const AdminDashboard = () => {
   const [view, setView] = useState("jobs");

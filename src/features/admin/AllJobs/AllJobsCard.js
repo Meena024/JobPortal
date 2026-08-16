@@ -1,4 +1,4 @@
-import { FaBuilding, FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 import styles from "./AllJobsCard.module.css";
 

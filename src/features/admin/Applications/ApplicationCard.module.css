@@ -1,0 +1,227 @@
+/* ==========================================================
+   CARD
+========================================================== */
+
+.card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-3);
+
+  padding: var(--space-4);
+
+  background: var(--color-white);
+
+  border: var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-1px);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.statusContainer {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--space-2);
+
+  min-width: 0;
+}
+
+/* ==========================================================
+   STATUS BADGE
+========================================================== */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 24px;
+
+  padding: 0.25rem 0.6rem;
+
+  border-radius: var(--radius-pill);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  white-space: nowrap;
+
+  color: var(--color-info);
+
+  background: var(--color-info-bg);
+}
+
+.badgePending {
+  color: var(--color-warning);
+
+  background: var(--color-warning-bg);
+}
+
+.badgeReviewed {
+  color: var(--color-info);
+
+  background: var(--color-info-bg);
+}
+
+.badgeShortlisted {
+  color: var(--color-primary);
+
+  background: var(--color-primary-light);
+}
+
+.badgeSelected {
+  color: var(--color-success);
+
+  background: var(--color-success-bg);
+}
+
+.badgeRejected {
+  color: var(--color-danger);
+
+  background: var(--color-danger-bg);
+}
+
+/* ==========================================================
+   RECRUITMENT CLOSED
+========================================================== */
+
+.closedBadge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 24px;
+
+  padding: 0.25rem 0.6rem;
+
+  border-radius: var(--radius-pill);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--color-warning);
+
+  background: var(--color-warning-bg);
+
+  white-space: nowrap;
+}
+
+.cardClosed {
+  border-left: 3px solid var(--color-warning);
+}
+
+/* ==========================================================
+   INFORMATION
+========================================================== */
+
+.info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.45rem;
+
+  min-width: 0;
+}
+
+.infoRow {
+  display: grid;
+
+  grid-template-columns: 92px minmax(0, 1fr);
+
+  gap: var(--space-2);
+
+  min-width: 0;
+
+  align-items: start;
+}
+
+.label {
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-medium);
+
+  color: var(--text-muted);
+}
+
+.value {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-medium);
+
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   RESUME
+========================================================== */
+
+.resume {
+  margin-top: auto;
+
+  align-self: flex-start;
+
+  color: var(--color-primary);
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  text-decoration: none;
+
+  transition: color var(--transition-fast);
+}
+
+.resume:hover {
+  color: var(--color-primary-dark);
+
+  text-decoration: underline;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 520px) {
+  .infoRow {
+    grid-template-columns: 78px minmax(0, 1fr);
+  }
+
+  .statusContainer {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+}

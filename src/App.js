@@ -6,7 +6,7 @@ import HomeRedirect from "./pages/HomeRedirect";
 import SignUp from "./pages/SignUp";
 import Initializer from "./components/Initializer/Initializer";
 import RecruiterDashboard from "./pages/Dashboard/RecruiterDashboard/RecruiterDashboard";
-import AdminDashboard from "./pages/Dashboard/AdminDashboard/AdminDashboard";
+import AdminDashboard from "./features/admin/AdminDashboard/AdminDashboard";
 
 import PrivateRoute from "./routes/PrivateRoute";
 import JobSeekerDashboard from "./pages/Dashboard/JobSeekerDashboard/JobSeekerDashboard";
