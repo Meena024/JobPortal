@@ -7,7 +7,7 @@ import DashboardLayout from "../../../components/Layout/DashBoardLayout/Dashboar
 import JobApproval from "../../../features/admin/JobApproval/JobApproval";
 import ManageUsers from "../../../features/admin/ManageUsers/ManageUsers";
 import Applications from "./Applications";
-import AllJobs from "./AllJobs";
+import AllJobs from "../../../features/admin/AllJobs/AllJobs";
 
 const AdminDashboard = () => {
   const [view, setView] = useState("jobs");

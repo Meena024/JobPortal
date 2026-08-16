@@ -1,0 +1,338 @@
+/* ==========================================================
+   CARD
+========================================================== */
+
+.card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-3);
+
+  padding: var(--space-4);
+
+  background: var(--color-white);
+
+  border: var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-1px);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: var(--space-3);
+
+  min-width: 0;
+}
+
+.heading {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+
+  font-size: var(--font-size-lg);
+
+  font-weight: var(--font-weight-semibold);
+
+  line-height: 1.3;
+
+  color: var(--text-primary);
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.company {
+  margin: 0.15rem 0 0;
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.3;
+
+  color: var(--text-secondary);
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status {
+  flex-shrink: 0;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 24px;
+
+  padding: 0.25rem 0.6rem;
+
+  border-radius: var(--radius-pill);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  white-space: nowrap;
+}
+
+.approved {
+  color: var(--color-success);
+
+  background: var(--color-success-bg);
+}
+
+.closed {
+  color: var(--color-warning);
+
+  background: var(--color-warning-bg);
+}
+
+.rejected {
+  color: var(--color-danger);
+
+  background: var(--color-danger-bg);
+}
+
+/* ==========================================================
+   RECRUITER
+========================================================== */
+
+.recruiter {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.45rem;
+
+  min-width: 0;
+
+  padding-bottom: 0.5rem;
+
+  border-bottom: var(--border);
+}
+
+.recruiter span {
+  flex-shrink: 0;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-medium);
+
+  color: var(--text-muted);
+}
+
+.recruiter strong {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-medium);
+
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   META
+========================================================== */
+
+.meta {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: var(--space-4);
+
+  padding-bottom: var(--space-3);
+
+  border-bottom: var(--border);
+}
+
+.metaItem {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.metaItem span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.3rem;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-medium);
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.04em;
+
+  color: var(--text-muted);
+}
+
+.metaItem span svg {
+  font-size: 0.65rem;
+}
+
+.metaItem strong {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   SKILLS
+========================================================== */
+
+.skills {
+  padding: 0.55rem 0.7rem;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-gray-50);
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.35;
+
+  color: var(--text-secondary);
+
+  word-break: break-word;
+}
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.description {
+  margin: 0;
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.4;
+
+  color: var(--text-secondary);
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+/* ==========================================================
+   REJECTION
+========================================================== */
+
+.rejection {
+  padding: 0.6rem 0.7rem;
+
+  border: 1px solid var(--color-danger-bg);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-danger-bg);
+}
+
+.rejection span {
+  display: block;
+
+  margin-bottom: 0.2rem;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--color-danger);
+}
+
+.rejection p {
+  margin: 0;
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.35;
+
+  color: var(--text-secondary);
+
+  word-break: break-word;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 520px) {
+  .meta {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+}
