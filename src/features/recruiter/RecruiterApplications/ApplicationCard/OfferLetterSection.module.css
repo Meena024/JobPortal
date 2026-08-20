@@ -1,0 +1,147 @@
+/* ==========================================================
+   COMMON
+========================================================== */
+
+.editor,
+.preview {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.6rem;
+
+  padding: 0.55rem 0.65rem;
+
+  background: var(--color-gray-50);
+
+  border: var(--border);
+
+  border-radius: var(--radius-md);
+}
+
+/* ==========================================================
+   EDITOR
+========================================================== */
+
+.editor {
+  flex-wrap: wrap;
+}
+
+.label {
+  flex-shrink: 0;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-muted);
+}
+
+.editor > .input {
+  flex: 1;
+
+  min-width: 180px;
+
+  min-height: 36px;
+
+  padding: 0.4rem 0.55rem;
+}
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   PREVIEW
+========================================================== */
+
+.preview {
+  justify-content: space-between;
+}
+
+.preview > div:first-child {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 0.6rem;
+
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+.uploadedAt {
+  font-size: var(--font-size-xs);
+
+  color: var(--text-muted);
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 600px) {
+  .preview {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .preview .actions {
+    width: 100%;
+
+    justify-content: flex-start;
+  }
+
+  .editor {
+    align-items: stretch;
+  }
+
+  .editor > .input {
+    width: 100%;
+  }
+
+  .editor .actions {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 420px) {
+  .editor .actions,
+  .preview .actions {
+    width: 100%;
+  }
+
+  .editor .actions .btn,
+  .preview .actions .btn {
+    flex: 1;
+  }
+}

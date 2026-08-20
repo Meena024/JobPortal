@@ -1,0 +1,107 @@
+/* ==========================================================
+   APPLICATION CARD
+========================================================== */
+
+.card {
+  min-width: 0;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.7rem;
+
+  padding: 0.85rem 1rem;
+
+  background: var(--color-white);
+
+  border: var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-1px);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================
+   APPLICATION STATUS ACCENTS
+========================================================== */
+
+.pending {
+  border-left: 3px solid var(--color-warning);
+}
+
+.reviewed {
+  border-left: 3px solid var(--color-reviewed);
+}
+
+.shortlisted {
+  border-left: 3px solid var(--color-primary);
+}
+
+.selected {
+  border-left: 3px solid var(--color-success);
+}
+
+.rejected {
+  border-left: 3px solid var(--color-danger);
+}
+
+/* ==========================================================
+   CLOSED RECRUITMENT
+========================================================== */
+
+.closedRecruitment {
+  border-left: 3px solid var(--color-gray-400);
+
+  background: var(--color-gray-50);
+}
+
+/* ==========================================================
+   CLOSED MESSAGE
+========================================================== */
+
+.closedMessage {
+  margin-top: 0.1rem;
+
+  padding: 0.5rem 0.65rem;
+
+  border: var(--border);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-gray-50);
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.35;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 700px) {
+  .card {
+    padding: 0.75rem 0.85rem;
+
+    gap: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.7rem 0.75rem;
+  }
+}

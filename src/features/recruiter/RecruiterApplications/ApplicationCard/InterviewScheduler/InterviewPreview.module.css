@@ -1,0 +1,437 @@
+/* ==========================================================
+   INTERVIEW PREVIEW
+========================================================== */
+
+.preview {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(170px, 0.85fr);
+
+  gap: 0.7rem;
+
+  padding: 0.65rem 0.7rem;
+
+  background: var(--color-gray-50);
+
+  border: var(--border);
+
+  border-radius: var(--radius-md);
+}
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.left {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.3rem;
+}
+
+.title {
+  margin: 0;
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  line-height: 1.25;
+
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   META
+========================================================== */
+
+.meta {
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 0.35rem;
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.3;
+
+  color: var(--text-secondary);
+}
+
+.meta strong {
+  color: var(--text-primary);
+
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================
+   NORMAL INTERVIEW ACTIONS
+========================================================== */
+
+.actionRow {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+
+  margin-top: 0.25rem;
+
+  flex-wrap: wrap;
+}
+
+.actionRow > .btn {
+  min-height: 32px;
+
+  padding: 0.3rem 0.6rem;
+
+  font-size: var(--font-size-xs);
+}
+
+/* ==========================================================
+   FEEDBACK SECTION
+========================================================== */
+
+.feedbackSection {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  align-items: end;
+
+  column-gap: 0.6rem;
+
+  row-gap: 0.3rem;
+
+  margin-top: 0.25rem;
+
+  width: 100%;
+}
+
+.feedbackLabel {
+  grid-column: 1 / -1;
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-muted);
+}
+
+.feedbackTextarea {
+  grid-column: 1;
+
+  width: 100%;
+
+  height: 56px;
+
+  min-height: 56px;
+
+  padding: 0.45rem 0.6rem;
+
+  resize: vertical;
+}
+
+.feedbackActions {
+  grid-column: 2;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: flex-end;
+
+  gap: 0.4rem;
+
+  flex-wrap: wrap;
+}
+
+.feedbackActions > .btn {
+  min-height: 32px;
+
+  padding: 0.3rem 0.65rem;
+
+  font-size: var(--font-size-xs);
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   PAST INTERVIEW MESSAGE
+========================================================== */
+
+.pendingReview {
+  margin-top: 0.15rem;
+
+  padding: 0.4rem 0.5rem;
+
+  border: var(--border);
+
+  border-radius: var(--radius-sm);
+
+  background: var(--color-gray-50);
+
+  color: var(--text-muted);
+
+  font-size: 0.68rem;
+
+  line-height: 1.3;
+}
+
+/* ==========================================================
+   RIGHT SIDE
+========================================================== */
+
+.right {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: stretch;
+
+  gap: 0.4rem;
+}
+
+/* ==========================================================
+   JOIN MEETING
+========================================================== */
+
+.join {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 32px;
+
+  padding: 0.35rem 0.6rem;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary);
+
+  color: var(--text-white);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.join:hover {
+  background: var(--color-primary-dark);
+
+  transform: translateY(-1px);
+}
+
+/* ==========================================================
+   JOIN DISABLED
+========================================================== */
+
+.joinDisabled {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 32px;
+
+  padding: 0.35rem 0.6rem;
+
+  border: var(--border);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-gray-100);
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   INSTRUCTIONS
+========================================================== */
+
+.instructions {
+  min-width: 0;
+
+  padding: 0.4rem 0.5rem;
+
+  border: var(--border);
+
+  border-radius: var(--radius-sm);
+
+  background: var(--color-white);
+
+  color: var(--text-secondary);
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.3;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: 2;
+
+  line-clamp: 2;
+}
+
+/* ==========================================================
+   RESCHEDULE REQUEST
+========================================================== */
+
+.pendingRequest {
+  padding: 0.4rem 0.5rem;
+
+  border-radius: var(--radius-sm);
+
+  background: var(--color-warning-bg);
+
+  color: var(--color-warning);
+
+  font-size: 0.68rem;
+
+  font-weight: var(--font-weight-semibold);
+
+  line-height: 1.3;
+}
+
+/* ==========================================================
+   COMPLETED FEEDBACK
+========================================================== */
+
+.feedbackBox {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.2rem;
+
+  margin-top: 0.2rem;
+
+  padding: 0.5rem 0.6rem;
+
+  background: var(--color-white);
+
+  border: var(--border);
+
+  border-radius: var(--radius-md);
+}
+
+.feedbackBox strong {
+  font-size: var(--font-size-xs);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+.feedbackText {
+  margin: 0;
+
+  font-size: var(--font-size-xs);
+
+  line-height: 1.35;
+
+  color: var(--text-secondary);
+
+  word-break: break-word;
+}
+
+.feedbackDate {
+  font-size: 0.65rem;
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   EXPIRED / FEEDBACK STATE
+   Make the left section occupy the whole preview.
+========================================================== */
+
+.left:has(.feedbackSection) {
+  grid-column: 1 / -1;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 600px) {
+  .preview {
+    grid-template-columns: 1fr;
+
+    gap: 0.6rem;
+  }
+
+  .left:has(.feedbackSection) {
+    grid-column: auto;
+  }
+
+  .feedbackSection {
+    grid-template-columns: 1fr;
+  }
+
+  .feedbackTextarea {
+    grid-column: 1;
+  }
+
+  .feedbackActions {
+    grid-column: 1;
+
+    justify-content: flex-start;
+  }
+
+  .right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .feedbackActions,
+  .actionRow {
+    width: 100%;
+  }
+
+  .feedbackActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .feedbackActions > .btn,
+  .actionRow > .btn {
+    width: 100%;
+  }
+}

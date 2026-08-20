@@ -37,16 +37,19 @@
   /* Status */
 
   --color-success: #178841;
-  --color-success-bg: #e8f7ee;
+  --color-success-bg: #d0f2de;
 
   --color-danger: #c23636;
-  --color-danger-bg: #feecec;
+  --color-danger-bg: #f8dada;
 
   --color-warning: #d97706;
-  --color-warning-bg: #fff8e5;
+  --color-warning-bg: #f3ebd2;
 
   --color-info: #2563eb;
-  --color-info-bg: #edf4ff;
+  --color-info-bg: #cee1ff;
+
+  --color-reviewed: #873394;
+  --color-reviewed-bg: #e6d9f8;
 
   /* Text */
 
