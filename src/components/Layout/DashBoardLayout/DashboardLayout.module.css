@@ -39,6 +39,8 @@
   padding: 1.25rem 1.25rem 1.5rem;
 
   overflow-x: hidden;
+
+  background-color: var(--color-surface);
 }
 
 /* ==========================================================

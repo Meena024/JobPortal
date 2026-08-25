@@ -199,27 +199,72 @@
    ========================================================== */
 
 .deleteButton {
-  width: 32px;
-  height: 32px;
+  appearance: none;
+  -webkit-appearance: none;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
+  width: 24px;
+  height: 24px;
+
   padding: 0;
+  margin: 0;
 
-  flex-shrink: 0;
+  border: none !important;
+  outline: none;
 
-  font-size: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  color: var(--text-muted);
+
+  cursor: pointer;
+
+  transition: color var(--transition-fast);
 }
 
-.deleteButton::before {
-  content: "🗑";
+.deleteButton svg {
+  width: 20px;
+  height: 20px;
 
-  font-size: 14px;
+  display: block;
 
-  line-height: 1;
+  fill: currentColor;
+}
+
+/* Only the icon changes color */
+.deleteButton:hover {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  color: var(--color-danger);
+}
+
+/* Keep background transparent while clicking */
+.deleteButton:active {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  color: var(--color-danger);
+}
+
+/* Keyboard accessibility */
+.deleteButton:focus {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none;
+}
+
+.deleteButton:focus-visible {
+  background: transparent !important;
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 /* ==========================================================

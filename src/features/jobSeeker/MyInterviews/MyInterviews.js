@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { rescheduleRequest } from "../../../store/jobSeekerActions";
 
-import classes from "../../../Styling/Pages/JobSeekerDashboard/MyInterviews.module.css";
+import classes from "./MyInterviews.module.css";
 
 const MyInterviews = () => {
   const dispatch = useDispatch();
@@ -112,15 +112,20 @@ const MyInterviews = () => {
               </div>
 
               <div>
+                <strong>Company:</strong> {item.company}
+              </div>
+              {console.log(item, "hey")}
+              <div>
                 <strong>Recruiter:</strong> {item.recruiterEmail}
               </div>
 
               <div>
-                <strong>Date:</strong> {interview.interviewDate}
+                <strong>Date:</strong>{" "}
+                {new Date(interview.interviewDate).toLocaleDateString()}
               </div>
 
               <div>
-                <strong>Time:</strong> {interview.interviewTime}
+                <strong>Time: </strong> {interview.interviewTime}
               </div>
 
               {interview.interviewInstructions && (
@@ -145,9 +150,11 @@ const MyInterviews = () => {
                   <div className={classes.history}>
                     {[...rescheduleHistory].reverse().map((history, index) => (
                       <div key={index} className={classes.historyItem}>
-                        <div>Previous Date: {history.previousDate}</div>
-
-                        <div>Previous Time: {history.previousTime}</div>
+                        <div>
+                          Previous Time:{" "}
+                          {new Date(history.previousDate).toLocaleDateString()},{" "}
+                          {history.previousTime}
+                        </div>
 
                         {history.reason && (
                           <div className={classes.reason}>{history.reason}</div>

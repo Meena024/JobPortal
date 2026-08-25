@@ -13,7 +13,7 @@
 
   padding: 0.85rem 1rem;
 
-  background: var(--color-white);
+  background: var(--color-primary-light);
 
   border: var(--border);
 
@@ -38,22 +38,27 @@
 
 .pending {
   border-left: 3px solid var(--color-warning);
+  background-color: var(--color-warning-card);
 }
 
 .reviewed {
   border-left: 3px solid var(--color-reviewed);
+  background-color: var(--color-reviewed-card);
 }
 
 .shortlisted {
-  border-left: 3px solid var(--color-primary);
+  border-left: 3px solid var(--color-info);
+  background-color: var(--color-info-card);
 }
 
 .selected {
   border-left: 3px solid var(--color-success);
+  background-color: var(--color-success-card);
 }
 
 .rejected {
   border-left: 3px solid var(--color-danger);
+  background-color: var(--color-danger-card);
 }
 
 /* ==========================================================

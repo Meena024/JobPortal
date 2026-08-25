@@ -51,7 +51,7 @@ const InterviewEditor = ({
 
   if (!showForm) {
     return (
-      <button type="button" className="btn btn--success" onClick={openForm}>
+      <button type="button" className="btn btn--primary" onClick={openForm}>
         Schedule Interview
       </button>
     );
@@ -116,7 +116,7 @@ const InterviewEditor = ({
         <div className={styles.actions}>
           <button
             type="button"
-            className="btn btn--success"
+            className="btn btn--primary"
             onClick={saveHandler}
           >
             Schedule

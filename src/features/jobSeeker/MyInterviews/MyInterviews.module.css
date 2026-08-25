@@ -1,5 +1,5 @@
 /* ==========================================================
-PAGE
+   PAGE
 ========================================================== */
 
 .container {
@@ -13,7 +13,7 @@ PAGE
 }
 
 /* ==========================================================
-PAGE TITLE
+   PAGE TITLE
 ========================================================== */
 
 .container h2 {
@@ -28,18 +28,19 @@ PAGE TITLE
 }
 
 /* ==========================================================
-EMPTY STATE
+   EMPTY STATE
 ========================================================== */
 
 .empty {
   margin: 0;
 
   color: var(--text-muted);
+
   font-size: var(--font-size-sm);
 }
 
 /* ==========================================================
-INTERVIEW CARD
+   INTERVIEW CARD
 ========================================================== */
 
 .row {
@@ -62,7 +63,7 @@ INTERVIEW CARD
 }
 
 /* ==========================================================
-COMPLETED / EXPIRED
+   COMPLETED / EXPIRED
 ========================================================== */
 
 .expired {
@@ -74,7 +75,7 @@ COMPLETED / EXPIRED
 }
 
 /* ==========================================================
-LEFT COLUMN
+   LEFT COLUMN
 ========================================================== */
 
 .col1 {
@@ -88,6 +89,7 @@ LEFT COLUMN
   color: var(--text-primary);
 
   font-size: var(--font-size-sm);
+
   line-height: 1.4;
 }
 
@@ -96,7 +98,7 @@ LEFT COLUMN
 }
 
 /* ==========================================================
-HISTORY COLUMN
+   HISTORY COLUMN
 ========================================================== */
 
 .col2 {
@@ -108,14 +110,17 @@ HISTORY COLUMN
 }
 
 /* ==========================================================
-HISTORY HEADER
+   HISTORY HEADER
 ========================================================== */
 
 .historyHeader {
+  width: 100%;
+
   display: flex;
+
   align-items: center;
 
-  width: 100%;
+  justify-content: space-between;
 
   margin-bottom: var(--space-2);
 }
@@ -129,7 +134,7 @@ HISTORY HEADER
 }
 
 /* ==========================================================
-HISTORY COUNT BADGE
+   HISTORY COUNT
 ========================================================== */
 
 .historyCount {
@@ -141,22 +146,25 @@ HISTORY COUNT BADGE
   min-width: 24px;
   height: 24px;
 
-  margin-left: auto;
   padding: 0 var(--space-1);
+
+  box-sizing: border-box;
 
   border-radius: var(--radius-full);
 
   background: var(--color-primary-light);
+
   color: var(--color-primary);
 
   font-size: var(--font-size-xs);
+
   font-weight: var(--font-weight-semibold);
 
   line-height: 1;
 }
 
 /* ==========================================================
-HISTORY LIST
+   HISTORY LIST
 ========================================================== */
 
 .history {
@@ -167,6 +175,7 @@ HISTORY LIST
   padding-right: var(--space-2);
 
   display: flex;
+
   flex-direction: column;
 
   gap: var(--space-2);
@@ -175,7 +184,7 @@ HISTORY LIST
 }
 
 /* ==========================================================
-HISTORY ITEM
+   HISTORY ITEM
 ========================================================== */
 
 .historyItem {
@@ -185,7 +194,7 @@ HISTORY ITEM
 
   border-radius: var(--radius-md);
 
-  background: var(--color-primary-light);
+  background: var(--color-surface);
 
   color: var(--text-primary);
 
@@ -197,15 +206,17 @@ HISTORY ITEM
 }
 
 /* ==========================================================
-HISTORY REASON
+   HISTORY REASON
 ========================================================== */
 
 .reason {
   color: var(--text-muted);
+
+  overflow-wrap: anywhere;
 }
 
 /* ==========================================================
-HISTORY / REQUEST TIME
+   HISTORY / REQUEST TIME
 ========================================================== */
 
 .requestTime {
@@ -215,13 +226,14 @@ HISTORY / REQUEST TIME
 }
 
 /* ==========================================================
-RIGHT COLUMN
+   RIGHT COLUMN
 ========================================================== */
 
 .col3 {
   min-width: 0;
 
   display: flex;
+
   flex-direction: column;
 
   align-items: stretch;
@@ -230,7 +242,7 @@ RIGHT COLUMN
 }
 
 /* ==========================================================
-JOIN MEETING
+   JOIN MEETING
 ========================================================== */
 
 .joinBtn {
@@ -238,13 +250,15 @@ JOIN MEETING
 
   width: 100%;
 
+  box-sizing: border-box;
+
   text-align: center;
 
   text-decoration: none;
 }
 
 /* ==========================================================
-DISABLED / COMPLETED
+   DISABLED / COMPLETED
 ========================================================== */
 
 .disabled {
@@ -255,13 +269,14 @@ DISABLED / COMPLETED
   color: var(--text-muted);
 
   font-size: var(--font-size-sm);
+
   font-weight: var(--font-weight-semibold);
 
   text-align: center;
 }
 
 /* ==========================================================
-CLOSED
+   CLOSED
 ========================================================== */
 
 .closedBadge {
@@ -272,26 +287,28 @@ CLOSED
   color: var(--text-muted);
 
   font-size: var(--font-size-sm);
+
   font-weight: var(--font-weight-semibold);
 
   text-align: center;
 }
 
 /* ==========================================================
-RESCHEDULE FORM
+   RESCHEDULE FORM
 ========================================================== */
 
 .rescheduleBox {
+  width: 100%;
+
   display: flex;
+
   flex-direction: column;
 
   gap: var(--space-2);
-
-  width: 100%;
 }
 
 /* ==========================================================
-RESCHEDULE TEXTAREA
+   RESCHEDULE TEXTAREA
 ========================================================== */
 
 .rescheduleBox textarea {
@@ -333,7 +350,7 @@ RESCHEDULE TEXTAREA
 }
 
 /* ==========================================================
-RESCHEDULE BUTTON
+   RESCHEDULE BUTTON
 ========================================================== */
 
 .rescheduleBtn {
@@ -343,7 +360,7 @@ RESCHEDULE BUTTON
 }
 
 /* ==========================================================
-RESCHEDULE REQUESTED
+   RESCHEDULE REQUESTED
 ========================================================== */
 
 .requestBox {
@@ -371,7 +388,7 @@ RESCHEDULE REQUESTED
 }
 
 /* ==========================================================
-REQUEST REASON
+   REQUEST REASON
 ========================================================== */
 
 .requestReason {
@@ -381,7 +398,7 @@ REQUEST REASON
 }
 
 /* ==========================================================
-REQUEST TIME
+   REQUEST TIME
 ========================================================== */
 
 .requestBox .requestTime {
@@ -389,7 +406,7 @@ REQUEST TIME
 }
 
 /* ==========================================================
-RESPONSIVE
+   RESPONSIVE
 ========================================================== */
 
 @media (max-width: 1100px) {
@@ -402,6 +419,10 @@ RESPONSIVE
     gap: var(--space-4);
   }
 }
+
+/* ==========================================================
+   TABLET
+========================================================== */
 
 @media (max-width: 850px) {
   .row {
@@ -418,6 +439,10 @@ RESPONSIVE
     align-items: start;
   }
 }
+
+/* ==========================================================
+   MOBILE
+========================================================== */
 
 @media (max-width: 600px) {
   .row {

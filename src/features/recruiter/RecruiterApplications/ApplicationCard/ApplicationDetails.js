@@ -112,41 +112,58 @@ const ApplicationDetails = ({
         </div>
 
         {app.resumeUrl && (
-          <a
-            href={app.resumeUrl}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
             className={styles.resumeLink}
+            onClick={() =>
+              window.open(app.resumeUrl, "_blank", "noopener,noreferrer")
+            }
           >
             View Resume
-          </a>
+          </button>
         )}
       </div>
+
+      {/* =================================================
+         REASON IF REJECTED
+      ================================================= */}
+
+      {app.status === "rejected" && (
+        <div className={styles.rejectionReason}>
+          <span className={styles.rejectionReasonLabel}>
+            Reason for rejection:
+          </span>
+
+          <p>{app.reason}</p>
+        </div>
+      )}
 
       {/* =================================================
           NOTES + ACTIONS
       ================================================= */}
 
-      <div className={styles.notesActionsRow}>
-        <div className={styles.notesSection}>
-          <label htmlFor={`notes-${app.id}`} className={styles.notesLabel}>
-            Recruiter Notes
-          </label>
+      {app.status !== "rejected" && (
+        <div className={styles.notesActionsRow}>
+          <div className={styles.notesSection}>
+            <label htmlFor={`notes-${app.id}`} className={styles.notesLabel}>
+              Recruiter Notes
+            </label>
 
-          <textarea
-            id={`notes-${app.id}`}
-            className={`${styles.notes} textarea`}
-            placeholder="Add private notes about this applicant..."
-            value={app.recruiterNotes || ""}
-            disabled={disabled}
-            onChange={(event) => notesChangeHandler(event.target.value)}
-          />
+            <textarea
+              id={`notes-${app.id}`}
+              className={`${styles.notes} textarea`}
+              placeholder="Add private notes about this applicant..."
+              value={app.recruiterNotes || ""}
+              disabled={disabled}
+              onChange={(event) => notesChangeHandler(event.target.value)}
+            />
+          </div>
+
+          {!disabled && actions && (
+            <div className={styles.actions}>{actions}</div>
+          )}
         </div>
-
-        {!disabled && actions && (
-          <div className={styles.actions}>{actions}</div>
-        )}
-      </div>
+      )}
     </section>
   );
 };

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { MdEdit } from "react-icons/md";
 
 import { saveOfferLetter } from "../../../../store/recruiterActions";
 
@@ -110,31 +111,28 @@ const OfferLetterSection = ({ app }) => {
   return (
     <section className={styles.preview}>
       <div>
-        <h4 className={styles.title}>Offer Letter</h4>
+        <button
+          type="button"
+          className="btn btn--secondary"
+          onClick={() => setEditing(true)}
+          title="Click to edit"
+        >
+          <MdEdit />
+        </button>
+        <button
+          type="button"
+          className={styles.title}
+          onClick={viewOfferLetter}
+          title="Click to view"
+        >
+          Offer Letter
+        </button>
 
         {offerLetter.uploadedAt && (
           <small className={styles.uploadedAt}>
             Uploaded on {new Date(offerLetter.uploadedAt).toLocaleDateString()}
           </small>
         )}
-      </div>
-
-      <div className={styles.actions}>
-        <button
-          type="button"
-          className="btn btn--primary"
-          onClick={viewOfferLetter}
-        >
-          View
-        </button>
-
-        <button
-          type="button"
-          className="btn btn--secondary"
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
       </div>
     </section>
   );

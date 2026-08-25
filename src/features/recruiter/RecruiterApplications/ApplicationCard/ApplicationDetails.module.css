@@ -94,6 +94,7 @@
 
 .reviewed {
   color: var(--color-reviewed);
+
   background: var(--color-reviewed-bg);
 }
 
@@ -144,7 +145,6 @@
 
   grid-template-columns:
     minmax(0, 1fr)
-    minmax(110px, 0.75fr)
     auto;
 
   align-items: center;
@@ -199,21 +199,45 @@
 .resumeLink {
   justify-self: end;
 
-  font-size: var(--font-size-sm);
+  padding: 0;
 
-  font-weight: var(--font-weight-semibold);
+  margin: 0;
+
+  border: 0;
+
+  background: transparent;
 
   color: var(--color-primary);
 
+  font: inherit;
+
+  font-weight: var(--font-weight-semibold);
+
+  cursor: pointer;
+
+  text-decoration: none;
+
   white-space: nowrap;
+
+  appearance: none;
 
   transition: color var(--transition-fast);
 }
 
 .resumeLink:hover {
-  color: var(--color-primary-dark);
+  background: transparent;
+
+  color: var(--color-primary);
 
   text-decoration: underline;
+}
+
+.resumeLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+
+  outline-offset: 3px;
+
+  border-radius: var(--radius-sm);
 }
 
 /* ==========================================================
@@ -288,13 +312,13 @@
   .applicantSection {
     grid-template-columns:
       minmax(0, 1fr)
-      minmax(90px, 0.6fr);
+      auto;
   }
 
   .resumeLink {
-    grid-column: 1 / -1;
+    grid-column: 2;
 
-    justify-self: start;
+    justify-self: end;
   }
 
   .notesActionsRow {
@@ -309,6 +333,10 @@
     width: auto;
   }
 }
+
+/* ==========================================================
+   RESPONSIVE — MOBILE
+========================================================== */
 
 @media (max-width: 420px) {
   .header {
@@ -326,4 +354,45 @@
   .applicantSection {
     grid-template-columns: 1fr;
   }
+
+  .resumeLink {
+    grid-column: 1;
+
+    justify-self: start;
+  }
+}
+
+/* ==========================================================
+   REJECTION REASON
+========================================================== */
+
+.rejectionReason {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+
+  padding: 0.35rem 0;
+
+  min-width: 0;
+}
+
+.rejectionReasonLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-muted);
+
+  white-space: nowrap;
+}
+
+.rejectionReason p {
+  margin: 0;
+
+  min-width: 0;
+
+  font-size: var(--font-size-md);
+
+  color: var(--color-danger);
+
+  overflow-wrap: anywhere;
 }

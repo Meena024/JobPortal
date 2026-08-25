@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
-import Badge from "../../../ui/Badge/Badge";
-
 import styles from "./AppliedJobs.module.css";
 
 const AppliedJobs = () => {
@@ -234,7 +232,11 @@ const AppliedJobs = () => {
                   </div>
 
                   <div className={styles.status}>
-                    <Badge status={app.status} />
+                    <span
+                      className={`${styles.statusBadge} ${styles[app.status] || ""}`}
+                    >
+                      {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                    </span>
                   </div>
                 </div>
 
@@ -272,8 +274,10 @@ const AppliedJobs = () => {
                 {/* =================================================
                     DESCRIPTION
                 ================================================= */}
-
-                <div className={styles.description}>{app.description}</div>
+                <div>
+                  <span className={styles.metaLabel}>DESCRIPTION: </span>
+                  <span className={styles.description}>{app.description}</span>
+                </div>
 
                 {/* =================================================
                     UPCOMING INTERVIEW

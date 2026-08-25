@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { MdOutlineDelete } from "react-icons/md";
 
 import { addResume, removeResume } from "../../../store/jobSeekerActions";
 
@@ -143,11 +144,11 @@ const MyResumes = () => {
 
               <button
                 type="button"
-                className={`${classes.deleteButton} btn btn--danger btn--small`}
+                className={classes.deleteButton}
                 onClick={() => deleteResumeHandler(resume.id)}
                 aria-label={`Delete ${resume.title}`}
               >
-                Delete
+                <MdOutlineDelete />
               </button>
             </div>
           ))}

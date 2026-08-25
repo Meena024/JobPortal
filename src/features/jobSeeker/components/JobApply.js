@@ -4,7 +4,13 @@ import { apply } from "../../../store/jobSeekerActions";
 
 import classes from "../../../Styling/Pages/JobSeekerDashboard/JobApply.module.css";
 
-const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
+const JobApply = ({
+  jobId,
+  recruiterId,
+  recruiterEmail,
+  recruiterCompany,
+  jobTitle,
+}) => {
   const dispatch = useDispatch();
 
   const userId = useSelector((state) => state.auth.userId);
@@ -54,6 +60,7 @@ const JobApply = ({ jobId, recruiterId, recruiterEmail, jobTitle }) => {
         jobId,
         recruiterId,
         recruiterEmail,
+        recruiterCompany,
         jobTitle,
         applicantId: userId,
         applicantEmail: userEmail,

@@ -6,6 +6,7 @@
 .preview {
   width: 100%;
   min-width: 0;
+  max-width: 400px;
 
   display: flex;
 
@@ -85,13 +86,24 @@
 }
 
 .title {
+  padding: 0;
   margin: 0;
 
-  font-size: var(--font-size-sm);
+  border: 0;
+  background: transparent;
 
+  color: var(--color-primary);
+
+  font: inherit;
   font-weight: var(--font-weight-semibold);
 
-  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.title:hover {
+  color: var(--color-primary);
+  background: transparent;
+  text-decoration: underline;
 }
 
 .uploadedAt {

@@ -206,6 +206,7 @@ const AvailableJobs = () => {
                 jobId={job.id}
                 recruiterId={job.userId}
                 recruiterEmail={job.recruiterEmail}
+                recruiterCompany={job.companyName}
                 jobTitle={job.title}
               />
             </div>
