@@ -5,11 +5,11 @@ import { useEffect } from "react";
 import HomeRedirect from "./pages/HomeRedirect";
 import SignUp from "./pages/SignUp";
 import Initializer from "./components/Initializer/Initializer";
-import RecruiterDashboard from "./features/recruiter/RecruiterDashboard/RecruiterDashboard";
-import AdminDashboard from "./features/admin/AdminDashboard/AdminDashboard";
+import RecruiterDashboard from "./features/recruiter/RecruiterDashboard";
+import AdminDashboard from "./features/admin/AdminDashboard";
 
 import PrivateRoute from "./routes/PrivateRoute";
-import JobSeekerDashboard from "./pages/Dashboard/JobSeekerDashboard/JobSeekerDashboard";
+import JobSeekerDashboard from "./features/jobSeeker/JobSeekerDashboard";
 
 import "./styles/global.css";
 

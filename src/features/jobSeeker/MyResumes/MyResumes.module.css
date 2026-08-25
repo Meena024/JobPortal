@@ -1,0 +1,287 @@
+/* ==========================================================
+   PAGE
+   ========================================================== */
+
+.wrapper {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-3);
+}
+
+/* ==========================================================
+   PAGE HEADER
+   ========================================================== */
+
+.header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--space-3);
+}
+
+.header h1 {
+  margin: 0;
+}
+
+/* ==========================================================
+   ADD FORM
+   ========================================================== */
+
+.addSection {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--color-primary-light);
+  box-sizing: border-box;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1.4fr)
+    auto;
+
+  align-items: center;
+
+  gap: var(--space-2);
+
+  padding: var(--space-3);
+}
+
+.addSection input {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+}
+
+.addSection button {
+  width: auto;
+  min-width: 70px;
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   LIMIT MESSAGE
+   ========================================================== */
+
+.limitMessage {
+  width: 100%;
+  max-width: 600px;
+
+  margin: 0;
+
+  padding: var(--space-2) var(--space-3);
+
+  box-sizing: border-box;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+/* ==========================================================
+   EMPTY STATE
+   ========================================================== */
+
+.emptyMessage {
+  margin: 0;
+}
+
+/* ==========================================================
+   RESUME LIST
+
+   ONE GLOBAL CARD containing all resumes.
+   ========================================================== */
+
+.resumeList {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--color-primary-light);
+  padding: 0;
+
+  overflow: hidden;
+}
+
+/* ==========================================================
+   RESUME ROW
+   ========================================================== */
+
+.resumeRow {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  align-items: center;
+
+  gap: var(--space-4);
+
+  padding: var(--space-3) var(--space-4);
+
+  border-bottom: var(--border);
+}
+
+/* ==========================================================
+   LAST ROW
+
+   Remove the separator from the final resume.
+   ========================================================== */
+
+.lastRow {
+  border-bottom: 0;
+}
+
+/* ==========================================================
+   RESUME INFORMATION
+   ========================================================== */
+
+.resumeInfo {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(160px, 0.8fr)
+    minmax(220px, 1fr);
+
+  align-items: center;
+
+  gap: var(--space-4);
+
+  color: inherit;
+
+  text-decoration: none;
+}
+
+/* ==========================================================
+   RESUME TITLE
+   ========================================================== */
+
+.resumeTitle {
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: var(--text-primary);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+
+  line-height: 1.35;
+}
+
+/* ==========================================================
+   RESUME DATE
+   ========================================================== */
+
+.resumeDate {
+  min-width: 0;
+
+  color: var(--text-muted);
+
+  line-height: 1.35;
+}
+
+/* ==========================================================
+   DELETE BUTTON
+   ========================================================== */
+
+.deleteButton {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  flex-shrink: 0;
+
+  font-size: 0;
+}
+
+.deleteButton::before {
+  content: "🗑";
+
+  font-size: 14px;
+
+  line-height: 1;
+}
+
+/* ==========================================================
+   TABLET / SMALL DESKTOP
+   ========================================================== */
+
+@media (max-width: 700px) {
+  .addSection {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+  }
+
+  .addSection button {
+    grid-column: 1 / -1;
+
+    width: 100%;
+  }
+
+  .resumeInfo {
+    grid-template-columns:
+      minmax(120px, 0.8fr)
+      minmax(160px, 1fr);
+
+    gap: var(--space-3);
+  }
+
+  .resumeRow {
+    padding: var(--space-3);
+  }
+}
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 480px) {
+  .header {
+    align-items: flex-start;
+  }
+
+  .addSection {
+    grid-template-columns: 1fr;
+  }
+
+  .addSection button {
+    grid-column: auto;
+
+    width: 100%;
+  }
+
+  .resumeRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    gap: var(--space-2);
+
+    padding: var(--space-3);
+  }
+
+  .resumeInfo {
+    grid-template-columns: 1fr;
+
+    gap: 2px;
+  }
+}
