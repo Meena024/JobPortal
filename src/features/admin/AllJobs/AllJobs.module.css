@@ -62,15 +62,15 @@
 ========================================================== */
 
 .jobGrid {
+  width: 100%;
+
   display: grid;
 
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: var(--space-4);
 
-  width: 100%;
-
-  align-items: start;
+  align-items: stretch;
 }
 
 /* ==========================================================
@@ -150,4 +150,16 @@
   .jobGrid {
     grid-template-columns: 1fr;
   }
+}
+
+.loadMoreTrigger {
+  width: 100%;
+
+  padding: var(--space-3);
+
+  text-align: center;
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
 }
