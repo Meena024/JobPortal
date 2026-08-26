@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { markNotificationRead } from "../../../store/jobSeekerActions";
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
-import classes from "../../../Styling/Pages/JobSeekerDashboard/Notifications.module.css";
+import classes from "./Notifications.module.css";
 
 const Notifications = () => {
   const dispatch = useDispatch();

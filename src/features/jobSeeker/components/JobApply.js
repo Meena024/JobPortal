@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { apply } from "../../../store/jobSeekerActions";
 
-import classes from "../../../Styling/Pages/JobSeekerDashboard/JobApply.module.css";
+import classes from "./JobApply.module.css";
 
 const JobApply = ({
   jobId,
