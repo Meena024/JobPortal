@@ -1,0 +1,320 @@
+/* ==========================================================
+   LOGIN PAGE
+========================================================== */
+
+.page {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--space-6);
+
+  background: var(--color-background);
+}
+
+/* ==========================================================
+   BRAND
+========================================================== */
+
+.brand {
+  margin-bottom: var(--space-5);
+
+  text-align: center;
+}
+
+.logo {
+  margin: 0;
+
+  font-size: 2rem;
+
+  font-weight: var(--font-weight-bold);
+
+  line-height: 1.2;
+
+  color: var(--color-primary);
+}
+
+.tagline {
+  margin: 0.35rem 0 0;
+
+  font-size: var(--font-size-sm);
+
+  color: var(--text-secondary);
+}
+
+/* ==========================================================
+   LOGIN CARD
+========================================================== */
+
+.form {
+  width: 100%;
+
+  max-width: 430px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--space-4);
+
+  padding: var(--space-6);
+
+  background: var(--color-white);
+
+  border: var(--border);
+
+  border-radius: var(--radius-xl);
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================
+   FORM HEADER
+========================================================== */
+
+.formHeader {
+  margin-bottom: var(--space-1);
+
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+
+  font-size: var(--font-size-2xl);
+
+  font-weight: var(--font-weight-bold);
+
+  line-height: 1.2;
+
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.45;
+
+  color: var(--text-secondary);
+}
+
+/* ==========================================================
+   FORM FIELD
+========================================================== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  color: var(--text-primary);
+}
+
+.field input {
+  width: 100%;
+
+  min-height: 44px;
+
+  padding: 0.65rem 0.8rem;
+
+  border: var(--border);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-white);
+
+  color: var(--text-primary);
+
+  font-size: var(--font-size-sm);
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.field input::placeholder {
+  color: var(--text-light);
+}
+
+.field input:hover {
+  border-color: var(--color-gray-400);
+}
+
+.field input:focus {
+  outline: none;
+
+  border-color: var(--color-primary);
+
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.14);
+}
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.error {
+  margin: 0;
+
+  padding: 0.65rem 0.75rem;
+
+  border: 1px solid var(--color-danger-bg);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-danger-card);
+
+  color: var(--color-danger);
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.4;
+}
+
+/* ==========================================================
+   LOGIN BUTTON
+========================================================== */
+
+.loginButton {
+  width: 100%;
+
+  min-height: 44px;
+
+  padding: 0.65rem 1rem;
+
+  border: 1px solid var(--color-primary);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary);
+
+  color: var(--text-white);
+
+  font-size: var(--font-size-sm);
+
+  font-weight: var(--font-weight-semibold);
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.loginButton:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+
+  border-color: var(--color-primary-dark);
+
+  box-shadow: var(--shadow-sm);
+
+  transform: translateY(-1px);
+}
+
+.loginButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.loginButton:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+}
+
+/* ==========================================================
+   SIGN UP
+========================================================== */
+
+.signup {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.3rem;
+
+  padding-top: var(--space-1);
+
+  font-size: var(--font-size-sm);
+
+  color: var(--text-secondary);
+}
+
+.signup a {
+  color: var(--color-primary);
+
+  font-weight: var(--font-weight-semibold);
+
+  text-decoration: none;
+
+  transition: color var(--transition-fast);
+}
+
+.signup a:hover {
+  color: var(--color-primary-dark);
+
+  text-decoration: underline;
+}
+
+/* ==========================================================
+   FOOTER MESSAGE
+========================================================== */
+
+.footerText {
+  margin: var(--space-5) 0 0;
+
+  text-align: center;
+
+  font-size: var(--font-size-xs);
+
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 520px) {
+  .page {
+    padding: var(--space-4);
+  }
+
+  .brand {
+    margin-bottom: var(--space-4);
+  }
+
+  .logo {
+    font-size: var(--font-size-xl);
+  }
+
+  .form {
+    max-width: 100%;
+
+    padding: var(--space-5);
+
+    border-radius: var(--radius-lg);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .signup {
+    flex-direction: column;
+
+    gap: 0.15rem;
+  }
+}

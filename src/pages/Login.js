@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../services/authApi";
 import Initializer from "../components/Initializer/Initializer";
-import classes from "./../Styling/Auth/Login.module.css";
+
+import classes from "./Login.module.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,37 +36,103 @@ const Login = () => {
   };
 
   return (
-    <div className={classes.container}>
+    <main className={classes.page}>
+      {/* =================================================
+          BRAND
+      ================================================= */}
+
+      <header className={classes.brand}>
+        <h1 className={classes.logo}>JobPortal</h1>
+
+        <p className={classes.tagline}>Your career. Your next opportunity.</p>
+      </header>
+
+      {/* =================================================
+          LOGIN CARD
+      ================================================= */}
+
       <form className={classes.form} onSubmit={loginHandler}>
-        <h2 className={classes.title}>Login</h2>
+        <div className={classes.formHeader}>
+          <h2 className={classes.title}>Welcome </h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <p className={classes.subtitle}>
+            Sign in to continue to your JobPortal account.
+          </p>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        {/* =================================================
+            EMAIL
+        ================================================= */}
 
-        {error && <p className={classes.error}>{error}</p>}
+        <div className={classes.field}>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+        </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+        {/* =================================================
+            PASSWORD
+        ================================================= */}
+
+        <div className={classes.field}>
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+        </div>
+
+        {/* =================================================
+            ERROR
+        ================================================= */}
+
+        {error && (
+          <p className={classes.error} role="alert">
+            {error}
+          </p>
+        )}
+
+        {/* =================================================
+            LOGIN
+        ================================================= */}
+
+        <button
+          type="submit"
+          className={classes.loginButton}
+          disabled={loading}
+        >
+          {loading ? "Signing in..." : "Sign In"}
         </button>
 
-        <Link to="/signup" className={classes.signupBtn}>
-          Create Account
-        </Link>
+        {/* =================================================
+            SIGN UP
+        ================================================= */}
+
+        <div className={classes.signup}>
+          <span>Don't have an account?</span>
+
+          <Link to="/signup">Create an account</Link>
+        </div>
       </form>
-    </div>
+
+      {/* =================================================
+          FOOTER MESSAGE
+      ================================================= */}
+
+      <p className={classes.footerText}>
+        Find opportunities. Build careers. Grow together.
+      </p>
+    </main>
   );
 };
 
