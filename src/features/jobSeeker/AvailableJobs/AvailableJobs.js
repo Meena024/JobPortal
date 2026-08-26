@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { saveJob, unsaveJob } from "../../../store/jobSeekerActions";
@@ -8,14 +8,36 @@ import JobApply from "../components/JobApply";
 
 import classes from "./AvailableJobs.module.css";
 
+const DISPLAY_BATCH_SIZE = 25;
+
 const AvailableJobs = () => {
   const dispatch = useDispatch();
 
-  const [filteredJobs, setFilteredJobs] = useState([]);
+  /* =====================================================
+     FILTER STATE
+  ===================================================== */
 
   const [locationFilter, setLocationFilter] = useState("all");
 
   const [salaryFilter, setSalaryFilter] = useState("all");
+
+  /* =====================================================
+     INFINITE SCROLL STATE
+  ===================================================== */
+
+  const [visibleCount, setVisibleCount] = useState(DISPLAY_BATCH_SIZE);
+
+  /*
+    This element will sit below the job list.
+
+    When it becomes visible, IntersectionObserver
+    will load the next batch of jobs.
+  */
+  const observerRef = useRef(null);
+
+  /* =====================================================
+     REDUX DATA
+  ===================================================== */
 
   const jobs = useSelector((state) => state.jobs?.availableJobs || []);
 
@@ -27,7 +49,7 @@ const AvailableJobs = () => {
      APPLY FILTERS
   ===================================================== */
 
-  useEffect(() => {
+  const filteredJobs = useMemo(() => {
     let updatedJobs = [...jobs];
 
     if (locationFilter !== "all") {
@@ -56,8 +78,106 @@ const AvailableJobs = () => {
       });
     }
 
-    setFilteredJobs(updatedJobs);
+    return updatedJobs;
   }, [jobs, locationFilter, salaryFilter]);
+
+  /* =====================================================
+     RESET VISIBLE COUNT WHEN FILTER CHANGES
+  ===================================================== */
+
+  useEffect(() => {
+    setVisibleCount(DISPLAY_BATCH_SIZE);
+  }, [locationFilter, salaryFilter]);
+
+  /* =====================================================
+     VISIBLE JOBS
+  ===================================================== */
+
+  const visibleJobs = useMemo(() => {
+    return filteredJobs.slice(0, visibleCount);
+  }, [filteredJobs, visibleCount]);
+
+  /* =====================================================
+     CHECK WHETHER MORE JOBS EXIST
+  ===================================================== */
+
+  const hasMoreJobs = visibleCount < filteredJobs.length;
+
+  /* =====================================================
+     INFINITE SCROLL
+  ===================================================== */
+
+  useEffect(() => {
+    /*
+      If all filtered jobs are already visible,
+      there is nothing left to observe.
+    */
+
+    if (!hasMoreJobs) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        /*
+          Reveal the next 25 jobs.
+
+          Math.min() prevents visibleCount from
+          becoming larger than the number of jobs.
+        */
+
+        setVisibleCount((previousCount) =>
+          Math.min(previousCount + DISPLAY_BATCH_SIZE, filteredJobs.length),
+        );
+      },
+      {
+        /*
+          Start loading before the user reaches
+          the absolute bottom.
+        */
+        root: null,
+
+        rootMargin: "300px",
+
+        threshold: 0,
+      },
+    );
+
+    /*
+      Save the current DOM element.
+    */
+
+    const currentElement = observerRef.current;
+
+    /*
+      Start observing the sentinel.
+    */
+
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    /*
+      Cleanup.
+
+      This is important because the component may
+      re-render and create a new observer.
+    */
+
+    return () => {
+      if (currentElement) {
+        observer.unobserve(currentElement);
+      }
+
+      observer.disconnect();
+    };
+  }, [hasMoreJobs, filteredJobs.length]);
 
   /* =====================================================
      UNIQUE LOCATIONS
@@ -141,78 +261,99 @@ const AvailableJobs = () => {
           JOB GRID
       ================================================= */}
 
-      <div className={`grid-3 ${classes.grid}`}>
-        {filteredJobs.map((job) => (
-          <article key={job.id} className={`card card-body-sm ${classes.card}`}>
-            {/* =================================================
-                TITLE + BOOKMARK
-            ================================================= */}
+      {filteredJobs.length > 0 && (
+        <div className={`grid-3 ${classes.grid}`}>
+          {visibleJobs.map((job) => (
+            <article
+              key={job.id}
+              className={`card card-body-sm ${classes.card}`}
+            >
+              {/* =================================================
+                  TITLE + BOOKMARK
+              ================================================= */}
 
-            <div className={classes.titleRow}>
-              <h3 className="card-title">{job.title}</h3>
+              <div className={classes.titleRow}>
+                <h3 className="card-title">{job.title}</h3>
 
-              <button
-                type="button"
-                className={classes.bookmarkButton}
-                onClick={() => toggleSaveJob(job.id)}
-                aria-label={
-                  savedJobs[job.id] ? "Remove job from saved jobs" : "Save job"
-                }
-              >
-                {savedJobs[job.id] ? "★" : "☆"}
-              </button>
-            </div>
+                <button
+                  type="button"
+                  className={classes.bookmarkButton}
+                  onClick={() => toggleSaveJob(job.id)}
+                  aria-label={
+                    savedJobs[job.id]
+                      ? "Remove job from saved jobs"
+                      : "Save job"
+                  }
+                >
+                  {savedJobs[job.id] ? "★" : "☆"}
+                </button>
+              </div>
 
-            {/* =================================================
-                COMPANY
-            ================================================= */}
+              {/* =================================================
+                  COMPANY
+              ================================================= */}
 
-            <div className={classes.metaRow}>
-              <span className={classes.metaLabel}>Company:</span>
+              <div className={classes.metaRow}>
+                <span className={classes.metaLabel}>Company:</span>
 
-              <span className={classes.metaValue}>{job.companyName}</span>
-            </div>
+                <span className={classes.metaValue}>{job.companyName}</span>
+              </div>
 
-            {/* =================================================
-                LOCATION
-            ================================================= */}
+              {/* =================================================
+                  LOCATION
+              ================================================= */}
 
-            <div className={classes.metaRow}>
-              <span className={classes.metaLabel}>Location:</span>
+              <div className={classes.metaRow}>
+                <span className={classes.metaLabel}>Location:</span>
 
-              <span className={classes.metaValue}>{job.location}</span>
-            </div>
+                <span className={classes.metaValue}>{job.location}</span>
+              </div>
 
-            {/* =================================================
-                DESCRIPTION
-            ================================================= */}
+              {/* =================================================
+                  DESCRIPTION
+              ================================================= */}
 
-            <p className={`${classes.description} text-small`}>
-              {job.description}
-            </p>
+              <p className={`${classes.description} text-small`}>
+                {job.description}
+              </p>
 
-            {/* =================================================
-                SALARY
-            ================================================= */}
+              {/* =================================================
+                  SALARY
+              ================================================= */}
 
-            <div className={classes.salary}>₹ {job.salary} / Year</div>
+              <div className={classes.salary}>₹ {job.salary} / Year</div>
 
-            {/* =================================================
-                APPLY
-            ================================================= */}
+              {/* =================================================
+                  APPLY
+              ================================================= */}
 
-            <div className={classes.apply}>
-              <JobApply
-                jobId={job.id}
-                recruiterId={job.userId}
-                recruiterEmail={job.recruiterEmail}
-                recruiterCompany={job.companyName}
-                jobTitle={job.title}
-              />
-            </div>
-          </article>
-        ))}
-      </div>
+              <div className={classes.apply}>
+                <JobApply
+                  jobId={job.id}
+                  recruiterId={job.userId}
+                  recruiterEmail={job.recruiterEmail}
+                  recruiterCompany={job.companyName}
+                  jobTitle={job.title}
+                />
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {/* =================================================
+          INFINITE SCROLL SENTINEL
+      ================================================= */}
+
+      {hasMoreJobs && (
+        <div
+          ref={observerRef}
+          className={classes.loadMoreTrigger}
+          aria-hidden="true"
+        >
+          Loading more jobs...
+        </div>
+      )}
     </div>
   );
 };
