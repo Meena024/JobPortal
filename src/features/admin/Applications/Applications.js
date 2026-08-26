@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { getUniqueValues } from "../../../utils/filterUtils";
@@ -6,6 +6,8 @@ import { getUniqueValues } from "../../../utils/filterUtils";
 import ApplicationCard from "./ApplicationCard";
 
 import styles from "./Applications.module.css";
+
+const DISPLAY_BATCH_SIZE = 25;
 
 const Applications = () => {
   const allApplications = useSelector(
@@ -29,12 +31,29 @@ const Applications = () => {
   const [search, setSearch] = useState("");
 
   /* =====================================================
+     INFINITE SCROLL STATE
+  ===================================================== */
+
+  const [visibleCount, setVisibleCount] = useState(DISPLAY_BATCH_SIZE);
+
+  /*
+    Sentinel placed below the application grid.
+
+    IntersectionObserver watches this element.
+    When it becomes visible, the next batch
+    of applications is displayed.
+  */
+
+  const observerRef = useRef(null);
+
+  /* =====================================================
      JOB LOOKUP
   ===================================================== */
 
   const jobsMap = useMemo(() => {
     return allJobs.reduce((map, job) => {
       map[job.id] = job;
+
       return map;
     }, {});
   }, [allJobs]);
@@ -110,6 +129,79 @@ const Applications = () => {
     statusFilter,
     search,
   ]);
+
+  /* =====================================================
+     RESET PAGINATION WHEN FILTER CHANGES
+  ===================================================== */
+
+  useEffect(() => {
+    setVisibleCount(DISPLAY_BATCH_SIZE);
+  }, [applicantFilter, recruiterFilter, jobFilter, statusFilter, search]);
+
+  /* =====================================================
+     VISIBLE APPLICATIONS
+  ===================================================== */
+
+  const visibleApplications = useMemo(() => {
+    return filteredApplications.slice(0, visibleCount);
+  }, [filteredApplications, visibleCount]);
+
+  /* =====================================================
+     CHECK WHETHER MORE APPLICATIONS EXIST
+  ===================================================== */
+
+  const hasMoreApplications = visibleCount < filteredApplications.length;
+
+  /* =====================================================
+     INFINITE SCROLL
+  ===================================================== */
+
+  useEffect(() => {
+    if (!hasMoreApplications) {
+      return;
+    }
+
+    const currentElement = observerRef.current;
+
+    if (!currentElement) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        setVisibleCount((previousCount) =>
+          Math.min(
+            previousCount + DISPLAY_BATCH_SIZE,
+            filteredApplications.length,
+          ),
+        );
+      },
+      {
+        root: null,
+
+        /*
+          Start loading slightly before
+          the user reaches the bottom.
+        */
+
+        rootMargin: "300px",
+
+        threshold: 0,
+      },
+    );
+
+    observer.observe(currentElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasMoreApplications, filteredApplications.length]);
 
   /* =====================================================
      RENDER
@@ -223,7 +315,7 @@ const Applications = () => {
 
       {filteredApplications.length > 0 && (
         <div className={styles.applicationGrid}>
-          {filteredApplications.map((application) => {
+          {visibleApplications.map((application) => {
             const relatedJob = jobsMap[application.jobId];
 
             const recruitmentClosed = relatedJob?.jobOpeningStatus === "closed";
@@ -236,6 +328,20 @@ const Applications = () => {
               />
             );
           })}
+        </div>
+      )}
+
+      {/* =================================================
+          INFINITE SCROLL SENTINEL
+      ================================================= */}
+
+      {hasMoreApplications && (
+        <div
+          ref={observerRef}
+          className={styles.loadMoreTrigger}
+          aria-hidden="true"
+        >
+          Loading more applications...
         </div>
       )}
     </section>

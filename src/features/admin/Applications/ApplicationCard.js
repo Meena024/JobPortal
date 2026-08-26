@@ -1,6 +1,14 @@
 import styles from "./ApplicationCard.module.css";
 
 const STATUS_CLASS_MAP = {
+  pending: styles.pending,
+  reviewed: styles.reviewed,
+  shortlisted: styles.shortlisted,
+  selected: styles.selected,
+  rejected: styles.rejected,
+};
+
+const BADGE_CLASS_MAP = {
   pending: styles.badgePending,
   reviewed: styles.badgeReviewed,
   shortlisted: styles.badgeShortlisted,
@@ -21,18 +29,22 @@ const ApplicationCard = ({ application, recruitmentClosed }) => {
 
   const statusLabel = capitalize(status);
 
-  const statusClass = STATUS_CLASS_MAP[status] || styles.status;
+  const statusClass = STATUS_CLASS_MAP[status] || "";
+
+  const badgeClass = BADGE_CLASS_MAP[status] || styles.status;
 
   return (
     <article
-      className={`${styles.card} ${recruitmentClosed ? styles.cardClosed : ""}`}
+      className={`${styles.card} ${
+        recruitmentClosed ? styles.cardClosed : statusClass
+      }`}
     >
       {/* =================================================
           STATUS
       ================================================= */}
 
       <div className={styles.statusContainer}>
-        <span className={`${styles.status} ${statusClass}`}>
+        <span className={`${styles.status} ${badgeClass}`}>
           {statusLabel || "Unknown"}
         </span>
 

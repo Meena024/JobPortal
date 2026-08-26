@@ -12,7 +12,7 @@
 
   padding: var(--space-4);
 
-  background: var(--color-white);
+  background: var(--color-primary-light);
 
   border: var(--border);
 
@@ -32,18 +32,54 @@
 }
 
 /* ==========================================================
-   STATUS
+   STATUS-BASED CARD COLORS
+========================================================== */
+
+.pending {
+  border-left: 3px solid var(--color-warning);
+
+  background-color: var(--color-warning-card);
+}
+
+.reviewed {
+  border-left: 3px solid var(--color-reviewed);
+
+  background-color: var(--color-reviewed-card);
+}
+
+.shortlisted {
+  border-left: 3px solid var(--color-info);
+
+  background-color: var(--color-info-card);
+}
+
+.selected {
+  border-left: 3px solid var(--color-success);
+
+  background-color: var(--color-success-card);
+}
+
+.rejected {
+  border-left: 3px solid var(--color-danger);
+
+  background-color: var(--color-danger-card);
+}
+
+/* ==========================================================
+   STATUS CONTAINER
 ========================================================== */
 
 .statusContainer {
   display: flex;
 
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-end;
 
   gap: var(--space-2);
 
   min-width: 0;
+
+  width: 100%;
 }
 
 /* ==========================================================
@@ -80,15 +116,15 @@
 }
 
 .badgeReviewed {
-  color: var(--color-info);
+  color: var(--color-reviewed);
 
-  background: var(--color-info-bg);
+  background: var(--color-reviewed-bg);
 }
 
 .badgeShortlisted {
-  color: var(--color-primary);
+  color: var(--color-info);
 
-  background: var(--color-primary-light);
+  background: var(--color-info-bg);
 }
 
 .badgeSelected {
@@ -132,6 +168,8 @@
 
 .cardClosed {
   border-left: 3px solid var(--color-warning);
+
+  background: var(--color-gray-50);
 }
 
 /* ==========================================================
@@ -220,8 +258,10 @@
   }
 
   .statusContainer {
-    align-items: flex-start;
+    align-items: flex-end;
 
-    flex-direction: column;
+    flex-direction: row;
+
+    justify-content: flex-end;
   }
 }
