@@ -117,6 +117,12 @@ const AvailableJobs = () => {
       return;
     }
 
+    const currentElement = observerRef.current;
+
+    if (!currentElement) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
@@ -149,19 +155,7 @@ const AvailableJobs = () => {
       },
     );
 
-    /*
-      Save the current DOM element.
-    */
-
-    const currentElement = observerRef.current;
-
-    /*
-      Start observing the sentinel.
-    */
-
-    if (currentElement) {
-      observer.observe(currentElement);
-    }
+    observer.observe(currentElement);
 
     /*
       Cleanup.
@@ -171,10 +165,6 @@ const AvailableJobs = () => {
     */
 
     return () => {
-      if (currentElement) {
-        observer.unobserve(currentElement);
-      }
-
       observer.disconnect();
     };
   }, [hasMoreJobs, filteredJobs.length]);
@@ -202,6 +192,20 @@ const AvailableJobs = () => {
   };
 
   /* =====================================================
+     FILTER HANDLERS
+  ===================================================== */
+
+  const locationFilterHandler = (event) => {
+    setLocationFilter(event.target.value);
+    setVisibleCount(DISPLAY_BATCH_SIZE);
+  };
+
+  const salaryFilterHandler = (event) => {
+    setSalaryFilter(event.target.value);
+    setVisibleCount(DISPLAY_BATCH_SIZE);
+  };
+
+  /* =====================================================
      RENDER
   ===================================================== */
 
@@ -220,7 +224,7 @@ const AvailableJobs = () => {
           <select
             className="input"
             value={locationFilter}
-            onChange={(event) => setLocationFilter(event.target.value)}
+            onChange={locationFilterHandler}
           >
             <option value="all">All Locations</option>
 
@@ -236,7 +240,7 @@ const AvailableJobs = () => {
           <select
             className="input"
             value={salaryFilter}
-            onChange={(event) => setSalaryFilter(event.target.value)}
+            onChange={salaryFilterHandler}
           >
             <option value="all">All Salaries</option>
 
