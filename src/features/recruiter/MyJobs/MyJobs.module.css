@@ -233,3 +233,15 @@
     flex-direction: column;
   }
 }
+
+.loadMoreTrigger {
+  width: 100%;
+
+  padding: var(--space-4);
+
+  text-align: center;
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
+}

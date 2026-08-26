@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { rescheduleInterview } from "../../../store/recruiterActions";
@@ -7,8 +7,14 @@ import InterviewRow from "./InterviewRow/InterviewRow";
 
 import styles from "./RecruiterInterviews.module.css";
 
+const DISPLAY_BATCH_SIZE = 25;
+
 const RecruiterInterviews = () => {
   const dispatch = useDispatch();
+
+  /* =====================================================
+     REDUX DATA
+  ===================================================== */
 
   const recruiterApplications = useSelector(
     (state) => state.recruiter.recruiterApplications || [],
@@ -19,12 +25,29 @@ const RecruiterInterviews = () => {
   );
 
   /* =====================================================
+     INFINITE SCROLL STATE
+  ===================================================== */
+
+  const [visibleCount, setVisibleCount] = useState(DISPLAY_BATCH_SIZE);
+
+  /*
+    Sentinel element placed below the interview grid.
+
+    IntersectionObserver watches this element.
+    When it enters the viewport, the next batch
+    of interviews is displayed.
+  */
+
+  const observerRef = useRef(null);
+
+  /* =====================================================
      JOB LOOKUP
   ===================================================== */
 
   const jobsMap = useMemo(() => {
     return recruiterJobs.reduce((map, job) => {
       map[job.id] = job;
+
       return map;
     }, {});
   }, [recruiterJobs]);
@@ -60,6 +83,81 @@ const RecruiterInterviews = () => {
         return dateB - dateA;
       });
   }, [recruiterApplications, jobsMap]);
+
+  /* =====================================================
+     RESET PAGINATION
+  ===================================================== */
+
+  useEffect(() => {
+    /*
+      If the underlying interview data changes,
+      start displaying from the first batch again.
+    */
+
+    setVisibleCount(DISPLAY_BATCH_SIZE);
+  }, [recruiterApplications]);
+
+  /* =====================================================
+     VISIBLE INTERVIEWS
+  ===================================================== */
+
+  const visibleInterviews = useMemo(() => {
+    return interviews.slice(0, visibleCount);
+  }, [interviews, visibleCount]);
+
+  /* =====================================================
+     CHECK WHETHER MORE INTERVIEWS EXIST
+  ===================================================== */
+
+  const hasMoreInterviews = visibleCount < interviews.length;
+
+  /* =====================================================
+     INFINITE SCROLL
+  ===================================================== */
+
+  useEffect(() => {
+    if (!hasMoreInterviews) {
+      return;
+    }
+
+    const currentElement = observerRef.current;
+
+    if (!currentElement) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        setVisibleCount((previousCount) =>
+          Math.min(previousCount + DISPLAY_BATCH_SIZE, interviews.length),
+        );
+      },
+      {
+        root: null,
+
+        /*
+          Start loading the next batch
+          before the user reaches the bottom.
+        */
+
+        rootMargin: "300px",
+
+        threshold: 0,
+      },
+    );
+
+    observer.observe(currentElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasMoreInterviews, interviews.length]);
 
   /* =====================================================
      RESCHEDULE
@@ -103,16 +201,36 @@ const RecruiterInterviews = () => {
           </p>
         </div>
       ) : (
-        <div className={styles.grid}>
-          {interviews.map((interview) => (
-            <InterviewRow
-              key={interview.id}
-              interview={interview}
-              recruitmentClosed={interview.recruitmentClosed}
-              onReschedule={handleReschedule}
-            />
-          ))}
-        </div>
+        <>
+          {/* =================================================
+              INTERVIEW GRID
+          ================================================= */}
+
+          <div className={styles.grid}>
+            {visibleInterviews.map((interview) => (
+              <InterviewRow
+                key={interview.id}
+                interview={interview}
+                recruitmentClosed={interview.recruitmentClosed}
+                onReschedule={handleReschedule}
+              />
+            ))}
+          </div>
+
+          {/* =================================================
+              INFINITE SCROLL SENTINEL
+          ================================================= */}
+
+          {hasMoreInterviews && (
+            <div
+              ref={observerRef}
+              className={styles.loadMoreTrigger}
+              aria-hidden="true"
+            >
+              Loading more interviews...
+            </div>
+          )}
+        </>
       )}
     </section>
   );

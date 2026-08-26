@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -14,6 +14,8 @@ import JobFilters from "./components/JobFilters";
 import JobCard from "./components/JobCard";
 
 import styles from "./MyJobs.module.css";
+
+const DISPLAY_BATCH_SIZE = 25;
 
 const DEFAULT_FILTERS = {
   title: "all",
@@ -36,6 +38,22 @@ const MyJobs = () => {
   } = useSelector((state) => state.recruiter);
 
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
+  /* ======================================================
+      INFINITE SCROLL STATE
+  ====================================================== */
+
+  const [visibleCount, setVisibleCount] = useState(DISPLAY_BATCH_SIZE);
+
+  /*
+    Sentinel placed below the job grid.
+
+    IntersectionObserver watches this element.
+    When it enters the viewport, the next batch
+    of jobs is displayed.
+  */
+
+  const observerRef = useRef(null);
 
   /* ======================================================
       FILTER OPTIONS
@@ -105,6 +123,76 @@ const MyJobs = () => {
   }, [jobs, filters]);
 
   /* ======================================================
+      RESET PAGINATION WHEN FILTER CHANGES
+  ====================================================== */
+
+  useEffect(() => {
+    setVisibleCount(DISPLAY_BATCH_SIZE);
+  }, [filters]);
+
+  /* ======================================================
+      VISIBLE JOBS
+  ====================================================== */
+
+  const visibleJobs = useMemo(() => {
+    return filteredJobs.slice(0, visibleCount);
+  }, [filteredJobs, visibleCount]);
+
+  /* ======================================================
+      CHECK WHETHER MORE JOBS EXIST
+  ====================================================== */
+
+  const hasMoreJobs = visibleCount < filteredJobs.length;
+
+  /* ======================================================
+      INFINITE SCROLL
+  ====================================================== */
+
+  useEffect(() => {
+    if (!hasMoreJobs) {
+      return;
+    }
+
+    const currentElement = observerRef.current;
+
+    if (!currentElement) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        setVisibleCount((previousCount) =>
+          Math.min(previousCount + DISPLAY_BATCH_SIZE, filteredJobs.length),
+        );
+      },
+      {
+        root: null,
+
+        /*
+          Start loading the next batch
+          before the user reaches the bottom.
+        */
+
+        rootMargin: "300px",
+
+        threshold: 0,
+      },
+    );
+
+    observer.observe(currentElement);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasMoreJobs, filteredJobs.length]);
+
+  /* ======================================================
       FILTER HANDLER
   ====================================================== */
 
@@ -121,6 +209,7 @@ const MyJobs = () => {
 
   const handleEdit = (job) => {
     dispatch(recruiterActions.setEditingJob(job));
+
     dispatch(recruiterActions.setActiveView("create"));
   };
 
@@ -138,6 +227,10 @@ const MyJobs = () => {
 
   return (
     <section className={styles.page}>
+      {/* =================================================
+          PAGE HEADER
+      ================================================= */}
+
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>My Job Listings</h1>
@@ -149,15 +242,31 @@ const MyJobs = () => {
         </div>
       </header>
 
+      {/* =================================================
+          FILTERS
+      ================================================= */}
+
       <JobFilters
         filters={filters}
         options={filterOptions}
         onFilterChange={handleFilterChange}
       />
 
+      {/* =================================================
+          LOADING
+      ================================================= */}
+
       {loading && <div className="text-center text-muted">Loading jobs...</div>}
 
+      {/* =================================================
+          ERROR
+      ================================================= */}
+
       {error && <div className="text-danger">{error}</div>}
+
+      {/* =================================================
+          EMPTY STATE
+      ================================================= */}
 
       {!loading && !error && filteredJobs.length === 0 && (
         <div className="text-center text-muted">
@@ -165,9 +274,13 @@ const MyJobs = () => {
         </div>
       )}
 
-      {!loading && filteredJobs.length > 0 && (
+      {/* =================================================
+          JOB GRID
+      ================================================= */}
+
+      {!loading && !error && filteredJobs.length > 0 && (
         <div className={styles.jobGrid}>
-          {filteredJobs.map((job) => (
+          {visibleJobs.map((job) => (
             <JobCard key={job.id} job={job}>
               {job.status === "approved" &&
                 job.jobOpeningStatus !== "closed" && (
@@ -198,6 +311,20 @@ const MyJobs = () => {
               )}
             </JobCard>
           ))}
+        </div>
+      )}
+
+      {/* =================================================
+          INFINITE SCROLL SENTINEL
+      ================================================= */}
+
+      {hasMoreJobs && (
+        <div
+          ref={observerRef}
+          className={styles.loadMoreTrigger}
+          aria-hidden="true"
+        >
+          Loading more jobs...
         </div>
       )}
     </section>
