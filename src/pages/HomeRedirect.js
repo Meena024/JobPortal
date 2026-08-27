@@ -6,15 +6,15 @@ const HomeRedirect = () => {
   const role = useSelector((state) => state.auth.role);
 
   if (role === "recruiter") {
-    return <Navigate to="/recruiter/dashboard" replace />;
+    return <Navigate to="/recruiter" replace />;
   }
 
   if (role === "admin") {
-    return <Navigate to="/admin/dashboard" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   if (role === "job_seeker") {
-    return <Navigate to="/jobseeker/dashboard" replace />;
+    return <Navigate to="/jobseeker" replace />;
   }
 
   return <Login />;

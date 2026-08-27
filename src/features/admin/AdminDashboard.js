@@ -1,16 +1,12 @@
-import { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { FaBriefcase, FaUsers, FaClipboardList, FaList } from "react-icons/fa";
 
 import DashboardLayout from "./../../components/Layout/DashBoardLayout/DashboardLayout";
 
-import JobApproval from "./JobApproval/JobApproval";
-import ManageUsers from "./ManageUsers/ManageUsers";
-import Applications from "./Applications/Applications";
-import AllJobs from "./AllJobs/AllJobs";
-
 const AdminDashboard = () => {
-  const [view, setView] = useState("jobs");
+  const navigate = useNavigate();
+  const location = useLocation();
 
   /* =====================================================
      SIDEBAR MENU
@@ -20,64 +16,54 @@ const AdminDashboard = () => {
     {
       id: "users",
       label: "Manage Users",
+      path: "/admin/users",
       icon: <FaUsers />,
-      active: view === "users",
-      onClick: () => setView("users"),
     },
 
     {
       id: "jobs",
       label: "Job Approval",
+      path: "/admin/jobs",
       icon: <FaBriefcase />,
-      active: view === "jobs",
-      onClick: () => setView("jobs"),
     },
 
     {
       id: "allJobs",
       label: "All Jobs",
+      path: "/admin/all-jobs",
       icon: <FaList />,
-      active: view === "allJobs",
-      onClick: () => setView("allJobs"),
     },
 
     {
       id: "applications",
       label: "Applications",
+      path: "/admin/applications",
       icon: <FaClipboardList />,
-      active: view === "applications",
-      onClick: () => setView("applications"),
     },
   ];
 
   /* =====================================================
-     PAGE CONTENT
+     ADD ACTIVE STATE
   ===================================================== */
 
-  const renderPage = () => {
-    switch (view) {
-      case "users":
-        return <ManageUsers />;
+  const menuItemsWithActiveState = menuItems.map((item) => ({
+    ...item,
 
-      case "allJobs":
-        return <AllJobs />;
+    active: location.pathname === item.path,
 
-      case "applications":
-        return <Applications />;
-
-      case "jobs":
-      default:
-        return <JobApproval />;
-    }
-  };
+    onClick: () => navigate(item.path),
+  }));
 
   /* =====================================================
      RENDER
   ===================================================== */
 
   return (
-    <DashboardLayout sidebarTitle="Admin Panel" menuItems={menuItems}>
-      {renderPage()}
+    <DashboardLayout
+      sidebarTitle="Admin Panel"
+      menuItems={menuItemsWithActiveState}
+    >
+      <Outlet />
     </DashboardLayout>
   );
 };

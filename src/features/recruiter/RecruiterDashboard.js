@@ -15,28 +15,28 @@ const RecruiterDashboard = () => {
     {
       id: "create",
       label: "Create Job",
-      path: "/recruiter/dashboard/create",
+      path: "/recruiter/create",
       icon: <FaPlus />,
     },
 
     {
       id: "jobs",
       label: "My Jobs",
-      path: "/recruiter/dashboard/jobs",
+      path: "/recruiter/jobs",
       icon: <FaBriefcase />,
     },
 
     {
       id: "applications",
       label: "Applications",
-      path: "/recruiter/dashboard/applications",
+      path: "/recruiter/applications",
       icon: <FaUsers />,
     },
 
     {
       id: "interviews",
       label: "Interviews",
-      path: "/recruiter/dashboard/interviews",
+      path: "/recruiter/interviews",
       icon: <FaCalendarAlt />,
     },
   ];

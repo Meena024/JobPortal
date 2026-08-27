@@ -129,7 +129,7 @@ const CreateJob = () => {
 
       dispatch(recruiterActions.setEditingJob(null));
 
-      navigate("/recruiter/dashboard/jobs");
+      navigate("/recruiter/jobs");
     } catch (error) {
       console.error("Create/Update Job Error:", error);
     } finally {

@@ -260,7 +260,7 @@ const MyJobs = () => {
   const handleEdit = (job) => {
     dispatch(recruiterActions.setEditingJob(job));
 
-    navigate("/recruiter/dashboard/create");
+    navigate("/recruiter/create");
   };
 
   const handleDelete = async (jobId) => {
