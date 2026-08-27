@@ -3,9 +3,11 @@ import { markNotificationRead } from "../../../store/jobSeekerActions";
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
 
 import classes from "./Notifications.module.css";
+import { useNavigate } from "react-router-dom";
 
 const Notifications = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userId = useSelector((state) => state.auth.userId);
   const notifications = useSelector((state) => state.jobs?.notifications || []);
@@ -18,7 +20,7 @@ const Notifications = () => {
     try {
       await dispatch(markNotificationRead(userId, note.id));
 
-      dispatch(jobSeekerActions.setActiveView("applied"));
+      navigate("/jobseeker/applied");
 
       if (note.applicationId) {
         dispatch(

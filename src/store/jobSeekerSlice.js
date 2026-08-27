@@ -8,7 +8,6 @@ const initialState = {
   savedJobs: {},
   notifications: [],
   highlightedApplicationId: null,
-  activeView: "available",
 };
 
 const jobSeekerSlice = createSlice({
@@ -89,14 +88,6 @@ const jobSeekerSlice = createSlice({
 
     removeSavedJob(state, action) {
       delete state.savedJobs[action.payload];
-    },
-
-    /*
-      VIEW
-    */
-
-    setActiveView(state, action) {
-      state.activeView = action.payload;
     },
 
     /*

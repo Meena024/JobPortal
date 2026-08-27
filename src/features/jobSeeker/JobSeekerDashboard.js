@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { Outlet } from "react-router-dom";
 
 import {
   FaBriefcase,
@@ -6,31 +6,11 @@ import {
   FaBookmark,
   FaCalendarAlt,
   FaFileAlt,
-  FaBell,
 } from "react-icons/fa";
 
 import DashboardLayout from "../../components/Layout/DashBoardLayout/DashboardLayout";
 
-import { jobSeekerActions } from "../../store/jobSeekerSlice";
-
-import AvailableJobs from "./AvailableJobs/AvailableJobs";
-import AppliedJobs from "./AppliedJobs/AppliedJobs";
-import MyResumes from "./MyResumes/MyResumes";
-import SavedJobs from "./SavedJobs/SavedJobs";
-import Notifications from "./Notifications/Notifications";
-import MyInterviews from "./MyInterviews/MyInterviews";
-
 const JobSeekerDashboard = () => {
-  const dispatch = useDispatch();
-
-  const activeView = useSelector((state) => state.jobs.activeView);
-
-  const notifications = useSelector((state) => state.jobs.notifications || []);
-
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read,
-  ).length;
-
   /* =====================================================
      SIDEBAR MENU
   ===================================================== */
@@ -40,77 +20,37 @@ const JobSeekerDashboard = () => {
       id: "available",
       label: "Available Jobs",
       icon: <FaBriefcase />,
-      active: activeView === "available",
-      onClick: () => dispatch(jobSeekerActions.setActiveView("available")),
+      path: "/jobseeker/available",
     },
 
     {
       id: "applied",
       label: "Applied Jobs",
       icon: <FaClipboardList />,
-      active: activeView === "applied",
-      onClick: () => dispatch(jobSeekerActions.setActiveView("applied")),
+      path: "/jobseeker/applied",
     },
 
     {
       id: "saved",
       label: "Saved Jobs",
       icon: <FaBookmark />,
-      active: activeView === "saved",
-      onClick: () => dispatch(jobSeekerActions.setActiveView("saved")),
+      path: "/jobseeker/saved",
     },
 
     {
       id: "interviews",
       label: "My Interviews",
       icon: <FaCalendarAlt />,
-      active: activeView === "interviews",
-      onClick: () => dispatch(jobSeekerActions.setActiveView("interviews")),
+      path: "/jobseeker/interviews",
     },
 
     {
       id: "resumes",
       label: "My Resumes",
       icon: <FaFileAlt />,
-      active: activeView === "resumes",
-      onClick: () => dispatch(jobSeekerActions.setActiveView("resumes")),
-    },
-
-    {
-      id: "notifications",
-      label: `Notifications${unreadCount > 0 ? ` (${unreadCount})` : ""}`,
-      icon: <FaBell />,
-      active: activeView === "notifications",
-      onClick: () => dispatch(jobSeekerActions.setActiveView("notifications")),
+      path: "/jobseeker/resumes",
     },
   ];
-
-  /* =====================================================
-     PAGE CONTENT
-  ===================================================== */
-
-  const renderPage = () => {
-    switch (activeView) {
-      case "applied":
-        return <AppliedJobs />;
-
-      case "saved":
-        return <SavedJobs />;
-
-      case "interviews":
-        return <MyInterviews />;
-
-      case "resumes":
-        return <MyResumes />;
-
-      case "notifications":
-        return <Notifications />;
-
-      case "available":
-      default:
-        return <AvailableJobs />;
-    }
-  };
 
   /* =====================================================
      RENDER
@@ -118,7 +58,7 @@ const JobSeekerDashboard = () => {
 
   return (
     <DashboardLayout sidebarTitle="Job Seeker Panel" menuItems={menuItems}>
-      {renderPage()}
+      <Outlet />
     </DashboardLayout>
   );
 };

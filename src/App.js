@@ -11,6 +11,13 @@ import AdminDashboard from "./features/admin/AdminDashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 import JobSeekerDashboard from "./features/jobSeeker/JobSeekerDashboard";
 
+import AvailableJobs from "./features/jobSeeker/AvailableJobs/AvailableJobs";
+import AppliedJobs from "./features/jobSeeker/AppliedJobs/AppliedJobs";
+import SavedJobs from "./features/jobSeeker/SavedJobs/SavedJobs";
+import MyInterviews from "./features/jobSeeker/MyInterviews/MyInterviews";
+import MyResumes from "./features/jobSeeker/MyResumes/MyResumes";
+import Notifications from "./features/jobSeeker/Notifications/Notifications";
+
 import "./styles/global.css";
 
 function App() {
@@ -31,13 +38,21 @@ function App() {
       {/* JOB SEEKER ROUTES */}
 
       <Route
-        path="/jobseeker/dashboard"
+        path="/jobseeker"
         element={
           <PrivateRoute allowedRoles={["job_seeker"]}>
             <JobSeekerDashboard />
           </PrivateRoute>
         }
-      />
+      >
+        <Route index element={<AvailableJobs />} />
+        <Route path="available" element={<AvailableJobs />} />
+        <Route path="applied" element={<AppliedJobs />} />
+        <Route path="saved" element={<SavedJobs />} />
+        <Route path="interviews" element={<MyInterviews />} />
+        <Route path="resumes" element={<MyResumes />} />
+        <Route path="notifications" element={<Notifications />} />
+      </Route>
 
       {/* RECRUITER ROUTES */}
 
