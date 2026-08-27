@@ -18,6 +18,8 @@ const AllJobs = () => {
 
   const [openingFilter, setOpeningFilter] = useState("all");
 
+  const [packageFilter, setPackageFilter] = useState("all");
+
   const [search, setSearch] = useState("");
 
   /* =====================================================
@@ -70,9 +72,40 @@ const AllJobs = () => {
           return openingStatus === openingFilter;
         })
 
-        /*
-          SEARCH
-        */
+        // Package
+        .filter((job) => {
+          if (packageFilter === "all") {
+            return true;
+          }
+
+          const packageText = job.package || "";
+
+          const numbers = packageText.match(/\d+(?:\.\d+)?/g);
+
+          if (!numbers || numbers.length === 0) {
+            return false;
+          }
+
+          const minPackage = Number(numbers[0]);
+          const maxPackage =
+            numbers.length > 1 ? Number(numbers[1]) : minPackage;
+
+          switch (packageFilter) {
+            case "0-5":
+              return minPackage <= 5;
+
+            case "5-10":
+              return maxPackage > 5 && minPackage <= 10;
+
+            case "10+":
+              return maxPackage > 10;
+
+            default:
+              return true;
+          }
+        })
+
+        // Search
         .filter((job) => {
           if (!query) {
             return true;
@@ -83,7 +116,7 @@ const AllJobs = () => {
             job.recruiterEmail,
             job.companyName,
             job.location,
-            job.salary,
+            job.package,
             job.skillsRequired,
             job.description,
           ]
@@ -94,7 +127,7 @@ const AllJobs = () => {
           return searchableText.includes(query);
         })
     );
-  }, [allJobs, statusFilter, openingFilter, search]);
+  }, [allJobs, statusFilter, openingFilter, packageFilter, search]);
 
   /* =====================================================
      RESET PAGINATION WHEN FILTERS CHANGE
@@ -102,7 +135,7 @@ const AllJobs = () => {
 
   useEffect(() => {
     setVisibleCount(DISPLAY_BATCH_SIZE);
-  }, [statusFilter, openingFilter, search]);
+  }, [statusFilter, openingFilter, packageFilter, search]);
 
   /* =====================================================
      VISIBLE JOBS
@@ -242,6 +275,21 @@ const AllJobs = () => {
           <option value="open">Open</option>
 
           <option value="closed">Closed</option>
+        </select>
+
+        <select
+          className={`select ${styles.filterSelect}`}
+          value={packageFilter}
+          onChange={(event) => {
+            setPackageFilter(event.target.value);
+            setVisibleCount(DISPLAY_BATCH_SIZE);
+          }}
+          aria-label="Filter by package"
+        >
+          <option value="all">All Packages</option>
+          <option value="0-5">0 – 5 LPA</option>
+          <option value="5-10">5 – 10 LPA</option>
+          <option value="10+">10+ LPA</option>
         </select>
 
         <input

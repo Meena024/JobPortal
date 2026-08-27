@@ -31,7 +31,7 @@ const SavedJobs = () => {
 
   const [locationFilter, setLocationFilter] = useState("all");
 
-  const [salaryFilter, setSalaryFilter] = useState("all");
+  const [packageFilter, setPackageFilter] = useState("all");
 
   /* =====================================================
      SAVED JOBS
@@ -50,7 +50,7 @@ const SavedJobs = () => {
         companyName: job.companyName,
         location: job.location,
         description: job.description,
-        salary: job.salary,
+        package: job.package,
 
         jobExists: true,
       }));
@@ -98,23 +98,31 @@ const SavedJobs = () => {
     }
 
     /* -------------------------------------------------
-       SALARY
+       PACKAGE
     ------------------------------------------------- */
 
-    if (salaryFilter !== "all") {
+    if (packageFilter !== "all") {
       updated = updated.filter((job) => {
-        const salary = Number(job.salary);
+        const packageValue = job.package || "";
 
-        if (salaryFilter === "0-5") {
-          return salary <= 500000;
+        const match = packageValue.match(/\d+(\.\d+)?/);
+
+        if (!match) {
+          return false;
         }
 
-        if (salaryFilter === "5-10") {
-          return salary > 500000 && salary <= 1000000;
+        const minPackage = Number(match[0]);
+
+        if (packageFilter === "0-5") {
+          return minPackage < 5;
         }
 
-        if (salaryFilter === "10+") {
-          return salary > 1000000;
+        if (packageFilter === "5-10") {
+          return minPackage >= 5 && minPackage < 10;
+        }
+
+        if (packageFilter === "10+") {
+          return minPackage >= 10;
         }
 
         return true;
@@ -122,7 +130,13 @@ const SavedJobs = () => {
     }
 
     return updated;
-  }, [savedJobsList, titleFilter, companyFilter, locationFilter, salaryFilter]);
+  }, [
+    savedJobsList,
+    titleFilter,
+    companyFilter,
+    locationFilter,
+    packageFilter,
+  ]);
 
   /* =====================================================
      REMOVE SAVED JOB
@@ -198,14 +212,14 @@ const SavedJobs = () => {
             ))}
           </select>
 
-          {/* SALARY */}
+          {/* PACKAGE */}
 
           <select
             className="input"
-            value={salaryFilter}
-            onChange={(event) => setSalaryFilter(event.target.value)}
+            value={packageFilter}
+            onChange={(event) => setPackageFilter(event.target.value)}
           >
-            <option value="all">All Salaries</option>
+            <option value="all">All Packages</option>
 
             <option value="0-5">0 – 5 LPA</option>
 
@@ -280,10 +294,16 @@ const SavedJobs = () => {
             </p>
 
             {/* =================================================
-                SALARY
+                PACKAGE
             ================================================= */}
 
-            <div className={classes.salary}>₹ {job.salary} / Year</div>
+            <div className={classes.metaRow}>
+              <span className={classes.metaLabel}>Package:</span>
+
+              <span className={classes.salary}>
+                {job.package || "Package not specified"}
+              </span>
+            </div>
 
             {/* =================================================
                 APPLY

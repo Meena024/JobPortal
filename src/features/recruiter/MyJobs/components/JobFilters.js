@@ -18,20 +18,44 @@ const JobFilters = ({ filters, options, onFilterChange }) => {
       options: options.locations,
     },
     {
-      key: "salary",
-      label: "All Salaries",
+      key: "package",
+      label: "All Packages",
       options: [
         {
-          value: "0-5",
-          label: "0 - 5 LPA",
+          value: "0 - 2 LPA",
+          label: "0 - 2 LPA",
         },
         {
-          value: "5-10",
-          label: "5 - 10 LPA",
+          value: "2 - 4 LPA",
+          label: "2 - 4 LPA",
         },
         {
-          value: "10+",
-          label: "10+ LPA",
+          value: "4 - 6 LPA",
+          label: "4 - 6 LPA",
+        },
+        {
+          value: "6 - 8 LPA",
+          label: "6 - 8 LPA",
+        },
+        {
+          value: "8 - 10 LPA",
+          label: "8 - 10 LPA",
+        },
+        {
+          value: "10 - 12 LPA",
+          label: "10 - 12 LPA",
+        },
+        {
+          value: "12 - 15 LPA",
+          label: "12 - 15 LPA",
+        },
+        {
+          value: "15 - 20 LPA",
+          label: "15 - 20 LPA",
+        },
+        {
+          value: "20+ LPA",
+          label: "20+ LPA",
         },
       ],
     },
@@ -76,7 +100,7 @@ const JobFilters = ({ filters, options, onFilterChange }) => {
           key={filter.key}
           className="select"
           value={filters[filter.key]}
-          onChange={(e) => onFilterChange(filter.key, e.target.value)}
+          onChange={(event) => onFilterChange(filter.key, event.target.value)}
         >
           <option value="all">{filter.label}</option>
 

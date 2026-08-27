@@ -21,7 +21,7 @@ const DEFAULT_FILTERS = {
   title: "all",
   company: "all",
   location: "all",
-  salary: "all",
+  package: "all",
   status: "all",
   openingStatus: "all",
 };
@@ -40,7 +40,7 @@ const MyJobs = () => {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   /* ======================================================
-      INFINITE SCROLL STATE
+     INFINITE SCROLL STATE
   ====================================================== */
 
   const [visibleCount, setVisibleCount] = useState(DISPLAY_BATCH_SIZE);
@@ -56,7 +56,7 @@ const MyJobs = () => {
   const observerRef = useRef(null);
 
   /* ======================================================
-      FILTER OPTIONS
+     FILTER OPTIONS
   ====================================================== */
 
   const filterOptions = useMemo(
@@ -69,7 +69,7 @@ const MyJobs = () => {
   );
 
   /* ======================================================
-      FILTERED JOBS
+     FILTERED JOBS
   ====================================================== */
 
   const filteredJobs = useMemo(() => {
@@ -86,25 +86,8 @@ const MyJobs = () => {
         return false;
       }
 
-      if (filters.salary !== "all") {
-        const salary = Number(job.salary);
-
-        switch (filters.salary) {
-          case "0-5":
-            if (salary > 500000) return false;
-            break;
-
-          case "5-10":
-            if (salary <= 500000 || salary > 1000000) return false;
-            break;
-
-          case "10+":
-            if (salary <= 1000000) return false;
-            break;
-
-          default:
-            break;
-        }
+      if (filters.package !== "all" && job.package !== filters.package) {
+        return false;
       }
 
       if (filters.status !== "all" && job.status !== filters.status) {
@@ -123,7 +106,7 @@ const MyJobs = () => {
   }, [jobs, filters]);
 
   /* ======================================================
-      RESET PAGINATION WHEN FILTER CHANGES
+     RESET PAGINATION WHEN FILTER CHANGES
   ====================================================== */
 
   useEffect(() => {
@@ -131,7 +114,7 @@ const MyJobs = () => {
   }, [filters]);
 
   /* ======================================================
-      VISIBLE JOBS
+     VISIBLE JOBS
   ====================================================== */
 
   const visibleJobs = useMemo(() => {
@@ -139,13 +122,13 @@ const MyJobs = () => {
   }, [filteredJobs, visibleCount]);
 
   /* ======================================================
-      CHECK WHETHER MORE JOBS EXIST
+     CHECK WHETHER MORE JOBS EXIST
   ====================================================== */
 
   const hasMoreJobs = visibleCount < filteredJobs.length;
 
   /* ======================================================
-      INFINITE SCROLL
+     INFINITE SCROLL
   ====================================================== */
 
   useEffect(() => {
@@ -193,18 +176,18 @@ const MyJobs = () => {
   }, [hasMoreJobs, filteredJobs.length]);
 
   /* ======================================================
-      FILTER HANDLER
+     FILTER HANDLER
   ====================================================== */
 
   const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({
-      ...prev,
+    setFilters((previousFilters) => ({
+      ...previousFilters,
       [name]: value,
     }));
   };
 
   /* ======================================================
-      ACTIONS
+     ACTIONS
   ====================================================== */
 
   const handleEdit = (job) => {
@@ -214,15 +197,23 @@ const MyJobs = () => {
   };
 
   const handleDelete = async (jobId) => {
-    await dispatch(deleteRecruiterJob(userId, jobId));
+    try {
+      await dispatch(deleteRecruiterJob(userId, jobId));
+    } catch (error) {
+      console.error("Unable to delete job:", error);
+    }
   };
 
   const handleCloseRecruitment = async (jobId) => {
-    await dispatch(closeRecruiterJob(userId, jobId));
+    try {
+      await dispatch(closeRecruiterJob(userId, jobId));
+    } catch (error) {
+      console.error("Unable to close recruitment:", error);
+    }
   };
 
   /* ======================================================
-      RENDER
+     RENDER
   ====================================================== */
 
   return (
@@ -285,6 +276,7 @@ const MyJobs = () => {
               {job.status === "approved" &&
                 job.jobOpeningStatus !== "closed" && (
                   <button
+                    type="button"
                     className="btn btn--danger"
                     onClick={() => handleCloseRecruitment(job.id)}
                   >
@@ -295,6 +287,7 @@ const MyJobs = () => {
               {job.status !== "approved" && job.status !== "rejected" && (
                 <>
                   <button
+                    type="button"
                     className="btn btn--primary"
                     onClick={() => handleEdit(job)}
                   >
@@ -302,6 +295,7 @@ const MyJobs = () => {
                   </button>
 
                   <button
+                    type="button"
                     className="btn btn--danger"
                     onClick={() => handleDelete(job.id)}
                   >

@@ -19,7 +19,7 @@ const AvailableJobs = () => {
 
   const [locationFilter, setLocationFilter] = useState("all");
 
-  const [salaryFilter, setSalaryFilter] = useState("all");
+  const [packageFilter, setPackageFilter] = useState("all");
 
   /* =====================================================
      INFINITE SCROLL STATE
@@ -58,20 +58,30 @@ const AvailableJobs = () => {
       );
     }
 
-    if (salaryFilter !== "all") {
+    /* PACKAGE */
+
+    if (packageFilter !== "all") {
       updatedJobs = updatedJobs.filter((job) => {
-        const salary = Number(job.salary);
+        const packageValue = job.package || "";
 
-        if (salaryFilter === "0-5") {
-          return salary <= 500000;
+        const match = packageValue.match(/\d+(\.\d+)?/);
+
+        if (!match) {
+          return false;
         }
 
-        if (salaryFilter === "5-10") {
-          return salary > 500000 && salary <= 1000000;
+        const minPackage = Number(match[0]);
+
+        if (packageFilter === "0-5") {
+          return minPackage < 5;
         }
 
-        if (salaryFilter === "10+") {
-          return salary > 1000000;
+        if (packageFilter === "5-10") {
+          return minPackage >= 5 && minPackage < 10;
+        }
+
+        if (packageFilter === "10+") {
+          return minPackage >= 10;
         }
 
         return true;
@@ -79,7 +89,7 @@ const AvailableJobs = () => {
     }
 
     return updatedJobs;
-  }, [jobs, locationFilter, salaryFilter]);
+  }, [jobs, locationFilter, packageFilter]);
 
   /* =====================================================
      RESET VISIBLE COUNT WHEN FILTER CHANGES
@@ -87,7 +97,7 @@ const AvailableJobs = () => {
 
   useEffect(() => {
     setVisibleCount(DISPLAY_BATCH_SIZE);
-  }, [locationFilter, salaryFilter]);
+  }, [locationFilter, packageFilter]);
 
   /* =====================================================
      VISIBLE JOBS
@@ -143,11 +153,12 @@ const AvailableJobs = () => {
         );
       },
       {
+        root: null,
+
         /*
           Start loading before the user reaches
           the absolute bottom.
         */
-        root: null,
 
         rootMargin: "300px",
 
@@ -200,8 +211,8 @@ const AvailableJobs = () => {
     setVisibleCount(DISPLAY_BATCH_SIZE);
   };
 
-  const salaryFilterHandler = (event) => {
-    setSalaryFilter(event.target.value);
+  const packageFilterHandler = (event) => {
+    setPackageFilter(event.target.value);
     setVisibleCount(DISPLAY_BATCH_SIZE);
   };
 
@@ -235,14 +246,14 @@ const AvailableJobs = () => {
             ))}
           </select>
 
-          {/* SALARY */}
+          {/* PACKAGE */}
 
           <select
             className="input"
-            value={salaryFilter}
-            onChange={salaryFilterHandler}
+            value={packageFilter}
+            onChange={packageFilterHandler}
           >
-            <option value="all">All Salaries</option>
+            <option value="all">All Packages</option>
 
             <option value="0-5">0 – 5 LPA</option>
 
@@ -322,10 +333,16 @@ const AvailableJobs = () => {
               </p>
 
               {/* =================================================
-                  SALARY
+                  PACKAGE
               ================================================= */}
 
-              <div className={classes.salary}>₹ {job.salary} / Year</div>
+              <div className={classes.metaRow}>
+                <span className={classes.metaLabel}>Package:</span>
+
+                <span className={classes.salary}>
+                  {job.package || "Package not specified"}
+                </span>
+              </div>
 
               {/* =================================================
                   APPLY

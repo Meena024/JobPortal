@@ -53,6 +53,12 @@ const MyResumes = () => {
     }
   };
 
+  const resumeTitleChangeHandler = (event) => {
+    const value = event.target.value;
+
+    setResumeTitle(value.charAt(0).toUpperCase() + value.slice(1));
+  };
+
   const limitReached = resumes.length >= MAX_RESUMES;
 
   return (
@@ -81,7 +87,7 @@ const MyResumes = () => {
             type="text"
             placeholder="Resume Title"
             value={resumeTitle}
-            onChange={(e) => setResumeTitle(e.target.value)}
+            onChange={resumeTitleChangeHandler}
           />
 
           <input

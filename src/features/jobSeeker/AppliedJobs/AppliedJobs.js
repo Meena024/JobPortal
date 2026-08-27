@@ -53,7 +53,7 @@ const AppliedJobs = () => {
 
         description: job?.description || "This job is no longer available.",
 
-        salary: job?.salary || "-",
+        package: job?.package || "-",
 
         location: job?.location || "-",
 
@@ -69,6 +69,12 @@ const AppliedJobs = () => {
   ===================================================== */
 
   const filteredApplications = useMemo(() => {
+    /*
+      When an application is highlighted,
+      show all applications so the highlighted
+      application can always be located.
+    */
+
     if (highlightedApplicationId) {
       return enrichedApplications;
     }
@@ -233,7 +239,9 @@ const AppliedJobs = () => {
 
                   <div className={styles.status}>
                     <span
-                      className={`${styles.statusBadge} ${styles[app.status] || ""}`}
+                      className={`${styles.statusBadge} ${
+                        styles[app.status] || ""
+                      }`}
                     >
                       {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
                     </span>
@@ -252,10 +260,10 @@ const AppliedJobs = () => {
                   </div>
 
                   <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Salary</span>
+                    <span className={styles.metaLabel}>Package</span>
 
                     <span className={styles.metaValue}>
-                      {app.salary !== "-" ? `₹ ${app.salary}` : "-"}
+                      <strong>{app.package !== "-" ? app.package : "-"}</strong>
                     </span>
                   </div>
 
@@ -310,7 +318,7 @@ const AppliedJobs = () => {
                     OFFER LETTER
                 ================================================= */}
 
-                {app.status === "selected" && app.offerLetter.url && (
+                {app.status === "selected" && app.offerLetter?.url && (
                   <button
                     type="button"
                     className={styles.offerLetter}

@@ -60,7 +60,7 @@ const ApprovalJobCard = ({ job }) => {
         <div className={styles.metaBlock}>
           <span>Package</span>
 
-          <p>{job.salary || "Not specified"}</p>
+          <p>{job.package || "Not specified"}</p>
         </div>
       </div>
 

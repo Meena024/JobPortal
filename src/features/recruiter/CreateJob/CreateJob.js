@@ -13,7 +13,7 @@ import styles from "./CreateJob.module.css";
 const INITIAL_FORM = {
   title: "",
   companyName: "",
-  salary: "",
+  package: "",
   location: "",
   skillsRequired: "",
   description: "",
@@ -54,7 +54,7 @@ const CreateJob = () => {
       setForm({
         title: editingJob.title || "",
         companyName: editingJob.companyName || "",
-        salary: editingJob.salary || "",
+        package: editingJob.package || "",
         location: editingJob.location || "",
         skillsRequired: editingJob.skillsRequired || "",
         description: editingJob.description || "",
@@ -73,9 +73,11 @@ const CreateJob = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
+    const formattedValue = value.charAt(0).toUpperCase() + value.slice(1);
+
     setForm((previousForm) => ({
       ...previousForm,
-      [name]: value,
+      [name]: formattedValue,
     }));
   };
 
@@ -194,23 +196,40 @@ const CreateJob = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="salary" className="form-label">
-                Salary
+              <label htmlFor="package" className="form-label">
+                Package
                 <span className="form-required">*</span>
               </label>
 
-              <input
-                id="salary"
-                name="salary"
-                type="number"
-                min="0"
-                className="input"
-                placeholder="e.g. 600000"
-                value={form.salary}
+              <select
+                id="package"
+                name="package"
+                className="select"
+                value={form.package}
                 onChange={handleChange}
                 disabled={submitting}
                 required
-              />
+              >
+                <option value="">Select package range</option>
+
+                <option value="0 - 2 LPA">0 - 2 LPA</option>
+
+                <option value="2 - 4 LPA">2 - 4 LPA</option>
+
+                <option value="4 - 6 LPA">4 - 6 LPA</option>
+
+                <option value="6 - 8 LPA">6 - 8 LPA</option>
+
+                <option value="8 - 10 LPA">8 - 10 LPA</option>
+
+                <option value="10 - 12 LPA">10 - 12 LPA</option>
+
+                <option value="12 - 15 LPA">12 - 15 LPA</option>
+
+                <option value="15 - 20 LPA">15 - 20 LPA</option>
+
+                <option value="20+ LPA">20+ LPA</option>
+              </select>
             </div>
 
             <div className="form-group">

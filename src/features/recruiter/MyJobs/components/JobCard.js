@@ -21,8 +21,8 @@ const JobCard = ({ job, children }) => {
         </div>
 
         <div>
-          <span>Salary</span>
-          <strong>₹ {Number(job.salary).toLocaleString()}</strong>
+          <span>Package</span>
+          <strong>{job.package || "Not specified"}</strong>
         </div>
 
         <div>

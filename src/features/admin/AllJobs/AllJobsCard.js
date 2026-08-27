@@ -64,7 +64,7 @@ const AllJobsCard = ({ job }) => {
         <div className={styles.metaItem}>
           <span>Package</span>
 
-          <strong>₹{job.salary || "Not specified"}</strong>
+          <strong>₹{job.package || "Not specified"}</strong>
         </div>
       </div>
 
