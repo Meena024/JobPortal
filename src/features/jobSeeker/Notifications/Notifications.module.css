@@ -65,3 +65,11 @@
   font-size: 14px;
   color: #888;
 }
+
+.loadMoreTrigger {
+  width: 100%;
+  padding: var(--space-3);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
