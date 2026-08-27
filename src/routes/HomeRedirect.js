@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Login from "./Login";
+import Login from "../features/auth/Login/Login";
 
 const HomeRedirect = () => {
   const role = useSelector((state) => state.auth.role);

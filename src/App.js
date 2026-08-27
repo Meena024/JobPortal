@@ -2,8 +2,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
-import HomeRedirect from "./pages/HomeRedirect";
-import SignUp from "./pages/SignUp";
+import HomeRedirect from "./routes/HomeRedirect";
+import SignUp from "./features/auth/SignUp/SignUp";
 import Initializer from "./components/Initializer/Initializer";
 
 import PrivateRoute from "./routes/PrivateRoute";

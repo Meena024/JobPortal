@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../services/authApi";
-import Initializer from "../components/Initializer/Initializer";
+import { loginUser } from "../../../services/authApi";
+import Initializer from "../../../components/Initializer/Initializer";
 
 import classes from "./Login.module.css";
 

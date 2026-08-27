@@ -4,8 +4,8 @@ import { useDispatch } from "react-redux";
 
 import classes from "./SignUp.module.css";
 
-import { signUpUser } from "../services/authApi";
-import { setRoleDb } from "../store/authActions";
+import { signUpUser } from "../../../services/authApi";
+import { setRoleDb } from "../../../store/authActions";
 
 const SignUp = () => {
   const navigate = useNavigate();
