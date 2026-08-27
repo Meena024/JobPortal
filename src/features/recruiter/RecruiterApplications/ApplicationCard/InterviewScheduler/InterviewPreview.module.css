@@ -435,3 +435,10 @@
     width: 100%;
   }
 }
+
+.join {
+  border: 0;
+  background: var(--color-primary);
+  font: inherit;
+  cursor: pointer;
+}

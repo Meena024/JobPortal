@@ -176,14 +176,19 @@ const MyInterviews = () => {
               {recruitmentClosed ? (
                 <span className={classes.closedBadge}>Recruitment Ended</span>
               ) : !expired ? (
-                <a
-                  href={interview.interviewLink}
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
                   className={classes.joinBtn}
+                  onClick={() =>
+                    window.open(
+                      interview.interviewLink,
+                      "_blank",
+                      "noopener,noreferrer",
+                    )
+                  }
                 >
                   Join Meeting
-                </a>
+                </button>
               ) : (
                 <span className={classes.disabled}>Interview Completed</span>
               )}

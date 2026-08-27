@@ -120,40 +120,37 @@ const MyResumes = () => {
 
       {/* ALL RESUMES — SINGLE CARD */}
 
-      {resumes.length > 0 && (
-        <div className={`${classes.resumeList} card`}>
-          {resumes.map((resume, index) => (
-            <div
-              key={resume.id}
-              className={`${classes.resumeRow} ${
-                index === resumes.length - 1 ? classes.lastRow : ""
-              }`}
-            >
-              <a
-                href={resume.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className={classes.resumeInfo}
-              >
-                <span className={classes.resumeTitle}>{resume.title}</span>
+      {resumes.map((resume, index) => (
+        <div
+          key={resume.id}
+          className={`${classes.resumeRow} ${
+            index === resumes.length - 1 ? classes.lastRow : ""
+          }`}
+        >
+          <button
+            type="button"
+            className={classes.resumeInfo}
+            onClick={() =>
+              window.open(resume.resumeUrl, "_blank", "noopener,noreferrer")
+            }
+          >
+            <span className={classes.resumeTitle}>{resume.title}</span>
 
-                <span className={`${classes.resumeDate} text-small`}>
-                  Added on {new Date(resume.createdAt).toLocaleDateString()}
-                </span>
-              </a>
+            <span className={`${classes.resumeDate} text-small`}>
+              Added on {new Date(resume.createdAt).toLocaleDateString()}
+            </span>
+          </button>
 
-              <button
-                type="button"
-                className={classes.deleteButton}
-                onClick={() => deleteResumeHandler(resume.id)}
-                aria-label={`Delete ${resume.title}`}
-              >
-                <MdOutlineDelete />
-              </button>
-            </div>
-          ))}
+          <button
+            type="button"
+            className={classes.deleteButton}
+            onClick={() => deleteResumeHandler(resume.id)}
+            aria-label={`Delete ${resume.title}`}
+          >
+            <MdOutlineDelete />
+          </button>
         </div>
-      )}
+      ))}
     </div>
   );
 };

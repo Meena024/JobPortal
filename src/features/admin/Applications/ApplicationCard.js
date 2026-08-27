@@ -98,14 +98,15 @@ const ApplicationCard = ({ application, recruitmentClosed }) => {
       ================================================= */}
 
       {application.resumeUrl && (
-        <a
-          href={application.resumeUrl}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          type="button"
           className={styles.resume}
+          onClick={() =>
+            window.open(application.resumeUrl, "_blank", "noopener,noreferrer")
+          }
         >
           View Resume
-        </a>
+        </button>
       )}
     </article>
   );

@@ -116,14 +116,19 @@ const InterviewActions = ({
       )}
 
       {!expired && (
-        <a
-          href={interviewData.interviewLink}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          type="button"
           className="btn btn--primary"
+          onClick={() =>
+            window.open(
+              interviewData.interviewLink,
+              "_blank",
+              "noopener,noreferrer",
+            )
+          }
         >
           Join Meeting
-        </a>
+        </button>
       )}
 
       {expired && (

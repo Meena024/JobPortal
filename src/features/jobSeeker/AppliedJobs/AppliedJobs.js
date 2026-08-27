@@ -260,14 +260,19 @@ const AppliedJobs = () => {
                   </div>
 
                   {app.resumeUrl && (
-                    <a
-                      href={app.resumeUrl}
-                      target="_blank"
-                      rel="noreferrer"
+                    <button
+                      type="button"
                       className={styles.resumeLink}
+                      onClick={() =>
+                        window.open(
+                          app.resumeUrl,
+                          "_blank",
+                          "noopener,noreferrer",
+                        )
+                      }
                     >
                       View Resume
-                    </a>
+                    </button>
                   )}
                 </div>
 
@@ -305,15 +310,20 @@ const AppliedJobs = () => {
                     OFFER LETTER
                 ================================================= */}
 
-                {app.status === "selected" && app.offerLetterUrl && (
-                  <a
-                    href={app.offerLetterUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                {app.status === "selected" && app.offerLetter.url && (
+                  <button
+                    type="button"
                     className={styles.offerLetter}
+                    onClick={() =>
+                      window.open(
+                        app.offerLetter.url,
+                        "_blank",
+                        "noopener,noreferrer",
+                      )
+                    }
                   >
                     View Offer Letter
-                  </a>
+                  </button>
                 )}
 
                 {/* =================================================

@@ -106,14 +106,15 @@ const InterviewPreview = ({ app, setEditing }) => {
         {!interviewCompleted &&
           interviewLink &&
           (joinEnabled ? (
-            <a
-              href={interviewLink}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              type="button"
               className={styles.join}
+              onClick={() =>
+                window.open(interviewLink, "_blank", "noopener,noreferrer")
+              }
             >
               Join Meeting
-            </a>
+            </button>
           ) : (
             <span className={styles.joinDisabled}>Interview window closed</span>
           ))}
