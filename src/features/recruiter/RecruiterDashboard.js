@@ -1,19 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaPlus, FaBriefcase, FaUsers, FaCalendarAlt } from "react-icons/fa";
 
 import DashboardLayout from "./../../components/Layout/DashBoardLayout/DashboardLayout";
 
-import { recruiterActions } from "./../../store/recruiterSlice";
-
-import CreateJob from "./CreateJob/CreateJob";
-import MyJobs from "./MyJobs/MyJobs";
-import RecruiterApplications from "./RecruiterApplications/RecruiterApplications";
-import RecruiterInterviews from "./RecruiterInterviews/RecruiterInterviews";
-
 const RecruiterDashboard = () => {
-  const dispatch = useDispatch();
-
-  const activeView = useSelector((state) => state.recruiter.activeView);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   /* =====================================================
      SIDEBAR MENU
@@ -23,65 +15,45 @@ const RecruiterDashboard = () => {
     {
       id: "create",
       label: "Create Job",
+      path: "/recruiter/dashboard/create",
       icon: <FaPlus />,
-      active: activeView === "create",
-      onClick: () => dispatch(recruiterActions.setActiveView("create")),
     },
 
     {
       id: "jobs",
       label: "My Jobs",
+      path: "/recruiter/dashboard/jobs",
       icon: <FaBriefcase />,
-      active: activeView === "jobs",
-      onClick: () => dispatch(recruiterActions.setActiveView("jobs")),
     },
 
     {
       id: "applications",
       label: "Applications",
+      path: "/recruiter/dashboard/applications",
       icon: <FaUsers />,
-      active: activeView === "applications",
-      onClick: () => dispatch(recruiterActions.setActiveView("applications")),
     },
 
     {
       id: "interviews",
       label: "Interviews",
+      path: "/recruiter/dashboard/interviews",
       icon: <FaCalendarAlt />,
-      active: activeView === "interviews",
-      onClick: () => dispatch(recruiterActions.setActiveView("interviews")),
     },
   ];
-
-  /* =====================================================
-     PAGE CONTENT
-  ===================================================== */
-
-  const renderPage = () => {
-    switch (activeView) {
-      case "create":
-        return <CreateJob />;
-
-      case "applications":
-        return <RecruiterApplications />;
-
-      case "interviews":
-        return <RecruiterInterviews />;
-
-      case "jobs":
-      default:
-        return <MyJobs />;
-    }
-  };
 
   /* =====================================================
      RENDER
   ===================================================== */
 
   return (
-    <DashboardLayout sidebarTitle="Recruiter Panel" menuItems={menuItems}>
-      {renderPage()}
-    </DashboardLayout>
+    <DashboardLayout
+      sidebarTitle="Recruiter Panel"
+      menuItems={menuItems.map((item) => ({
+        ...item,
+        active: location.pathname === item.path,
+        onClick: () => navigate(item.path),
+      }))}
+    ></DashboardLayout>
   );
 };
 

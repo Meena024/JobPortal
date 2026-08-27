@@ -5,7 +5,6 @@ const initialState = {
   recruiterApplications: [],
   loading: false,
   error: null,
-  activeView: "jobs",
   editingJob: null,
 };
 
@@ -126,10 +125,6 @@ const recruiterSlice = createSlice({
     /*
       UI
     */
-
-    setActiveView(state, action) {
-      state.activeView = action.payload;
-    },
 
     setEditingJob(state, action) {
       state.editingJob = action.payload;

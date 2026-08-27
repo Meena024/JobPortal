@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   deleteRecruiterJob,
@@ -28,6 +29,7 @@ const DEFAULT_FILTERS = {
 
 const MyJobs = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userId = useSelector((state) => state.auth.userId);
 
@@ -40,7 +42,7 @@ const MyJobs = () => {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   /* ======================================================
-     INFINITE SCROLL STATE
+      INFINITE SCROLL STATE
   ====================================================== */
 
   const [visibleCount, setVisibleCount] = useState(DISPLAY_BATCH_SIZE);
@@ -56,7 +58,7 @@ const MyJobs = () => {
   const observerRef = useRef(null);
 
   /* ======================================================
-     FILTER OPTIONS
+      FILTER OPTIONS
   ====================================================== */
 
   const filterOptions = useMemo(
@@ -69,7 +71,7 @@ const MyJobs = () => {
   );
 
   /* ======================================================
-     FILTERED JOBS
+      FILTERED JOBS
   ====================================================== */
 
   const filteredJobs = useMemo(() => {
@@ -86,8 +88,73 @@ const MyJobs = () => {
         return false;
       }
 
-      if (filters.package !== "all" && job.package !== filters.package) {
-        return false;
+      if (filters.package !== "all") {
+        const packageText = job.package || "";
+
+        const numbers = packageText.match(/\d+(?:\.\d+)?/g);
+
+        if (!numbers || numbers.length === 0) {
+          return false;
+        }
+
+        const minPackage = Number(numbers[0]);
+
+        const maxPackage = numbers.length > 1 ? Number(numbers[1]) : minPackage;
+
+        switch (filters.package) {
+          case "0 - 2 LPA":
+            if (minPackage > 2) return false;
+            break;
+
+          case "2 - 4 LPA":
+            if (maxPackage <= 2 || minPackage > 4) {
+              return false;
+            }
+            break;
+
+          case "4 - 6 LPA":
+            if (maxPackage <= 4 || minPackage > 6) {
+              return false;
+            }
+            break;
+
+          case "6 - 8 LPA":
+            if (maxPackage <= 6 || minPackage > 8) {
+              return false;
+            }
+            break;
+
+          case "8 - 10 LPA":
+            if (maxPackage <= 8 || minPackage > 10) {
+              return false;
+            }
+            break;
+
+          case "10 - 12 LPA":
+            if (maxPackage <= 10 || minPackage > 12) {
+              return false;
+            }
+            break;
+
+          case "12 - 15 LPA":
+            if (maxPackage <= 12 || minPackage > 15) {
+              return false;
+            }
+            break;
+
+          case "15 - 20 LPA":
+            if (maxPackage <= 15 || minPackage > 20) {
+              return false;
+            }
+            break;
+
+          case "20+ LPA":
+            if (maxPackage <= 20) return false;
+            break;
+
+          default:
+            break;
+        }
       }
 
       if (filters.status !== "all" && job.status !== filters.status) {
@@ -106,7 +173,7 @@ const MyJobs = () => {
   }, [jobs, filters]);
 
   /* ======================================================
-     RESET PAGINATION WHEN FILTER CHANGES
+      RESET PAGINATION WHEN FILTER CHANGES
   ====================================================== */
 
   useEffect(() => {
@@ -114,7 +181,7 @@ const MyJobs = () => {
   }, [filters]);
 
   /* ======================================================
-     VISIBLE JOBS
+      VISIBLE JOBS
   ====================================================== */
 
   const visibleJobs = useMemo(() => {
@@ -122,13 +189,13 @@ const MyJobs = () => {
   }, [filteredJobs, visibleCount]);
 
   /* ======================================================
-     CHECK WHETHER MORE JOBS EXIST
+      CHECK WHETHER MORE JOBS EXIST
   ====================================================== */
 
   const hasMoreJobs = visibleCount < filteredJobs.length;
 
   /* ======================================================
-     INFINITE SCROLL
+      INFINITE SCROLL
   ====================================================== */
 
   useEffect(() => {
@@ -176,7 +243,7 @@ const MyJobs = () => {
   }, [hasMoreJobs, filteredJobs.length]);
 
   /* ======================================================
-     FILTER HANDLER
+      FILTER HANDLER
   ====================================================== */
 
   const handleFilterChange = (name, value) => {
@@ -187,13 +254,13 @@ const MyJobs = () => {
   };
 
   /* ======================================================
-     ACTIONS
+      ACTIONS
   ====================================================== */
 
   const handleEdit = (job) => {
     dispatch(recruiterActions.setEditingJob(job));
 
-    dispatch(recruiterActions.setActiveView("create"));
+    navigate("/recruiter/dashboard/create");
   };
 
   const handleDelete = async (jobId) => {
@@ -213,7 +280,7 @@ const MyJobs = () => {
   };
 
   /* ======================================================
-     RENDER
+      RENDER
   ====================================================== */
 
   return (

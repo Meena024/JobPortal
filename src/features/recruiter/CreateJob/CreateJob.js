@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   createRecruiterJob,
@@ -19,8 +20,21 @@ const INITIAL_FORM = {
   description: "",
 };
 
+const PACKAGE_OPTIONS = [
+  "0 - 2 LPA",
+  "2 - 4 LPA",
+  "4 - 6 LPA",
+  "6 - 8 LPA",
+  "8 - 10 LPA",
+  "10 - 12 LPA",
+  "12 - 15 LPA",
+  "15 - 20 LPA",
+  "20+ LPA",
+];
+
 const CreateJob = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   /* =====================================================
      AUTH
@@ -73,7 +87,10 @@ const CreateJob = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    const formattedValue = value.charAt(0).toUpperCase() + value.slice(1);
+    const formattedValue =
+      name === "package"
+        ? value
+        : value.charAt(0).toUpperCase() + value.slice(1);
 
     setForm((previousForm) => ({
       ...previousForm,
@@ -112,7 +129,7 @@ const CreateJob = () => {
 
       dispatch(recruiterActions.setEditingJob(null));
 
-      dispatch(recruiterActions.setActiveView("jobs"));
+      navigate("/recruiter/dashboard/jobs");
     } catch (error) {
       console.error("Create/Update Job Error:", error);
     } finally {
@@ -157,6 +174,8 @@ const CreateJob = () => {
           </div>
 
           <div className={styles.formGrid}>
+            {/* JOB TITLE */}
+
             <div className="form-group">
               <label htmlFor="title" className="form-label">
                 Job Title
@@ -175,6 +194,8 @@ const CreateJob = () => {
                 required
               />
             </div>
+
+            {/* COMPANY */}
 
             <div className="form-group">
               <label htmlFor="companyName" className="form-label">
@@ -195,6 +216,8 @@ const CreateJob = () => {
               />
             </div>
 
+            {/* PACKAGE */}
+
             <div className="form-group">
               <label htmlFor="package" className="form-label">
                 Package
@@ -210,27 +233,17 @@ const CreateJob = () => {
                 disabled={submitting}
                 required
               >
-                <option value="">Select package range</option>
+                <option value="">Select package</option>
 
-                <option value="0 - 2 LPA">0 - 2 LPA</option>
-
-                <option value="2 - 4 LPA">2 - 4 LPA</option>
-
-                <option value="4 - 6 LPA">4 - 6 LPA</option>
-
-                <option value="6 - 8 LPA">6 - 8 LPA</option>
-
-                <option value="8 - 10 LPA">8 - 10 LPA</option>
-
-                <option value="10 - 12 LPA">10 - 12 LPA</option>
-
-                <option value="12 - 15 LPA">12 - 15 LPA</option>
-
-                <option value="15 - 20 LPA">15 - 20 LPA</option>
-
-                <option value="20+ LPA">20+ LPA</option>
+                {PACKAGE_OPTIONS.map((packageOption) => (
+                  <option key={packageOption} value={packageOption}>
+                    {packageOption}
+                  </option>
+                ))}
               </select>
             </div>
+
+            {/* LOCATION */}
 
             <div className="form-group">
               <label htmlFor="location" className="form-label">

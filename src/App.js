@@ -11,12 +11,25 @@ import AdminDashboard from "./features/admin/AdminDashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 import JobSeekerDashboard from "./features/jobSeeker/JobSeekerDashboard";
 
+/* =====================================================
+   JOB SEEKER
+===================================================== */
+
 import AvailableJobs from "./features/jobSeeker/AvailableJobs/AvailableJobs";
 import AppliedJobs from "./features/jobSeeker/AppliedJobs/AppliedJobs";
 import SavedJobs from "./features/jobSeeker/SavedJobs/SavedJobs";
 import MyInterviews from "./features/jobSeeker/MyInterviews/MyInterviews";
 import MyResumes from "./features/jobSeeker/MyResumes/MyResumes";
 import Notifications from "./features/jobSeeker/Notifications/Notifications";
+
+/* =====================================================
+   RECRUITER
+===================================================== */
+
+import CreateJob from "./features/recruiter/CreateJob/CreateJob";
+import MyJobs from "./features/recruiter/MyJobs/MyJobs";
+import RecruiterApplications from "./features/recruiter/RecruiterApplications/RecruiterApplications";
+import RecruiterInterviews from "./features/recruiter/RecruiterInterviews/RecruiterInterviews";
 
 import "./styles/global.css";
 
@@ -63,7 +76,13 @@ function App() {
             <RecruiterDashboard />
           </PrivateRoute>
         }
-      />
+      >
+        <Route index element={<MyJobs />} />
+        <Route path="create" element={<CreateJob />} />
+        <Route path="jobs" element={<MyJobs />} />
+        <Route path="applications" element={<RecruiterApplications />} />
+        <Route path="interviews" element={<RecruiterInterviews />} />
+      </Route>
 
       {/* ADMIN ROUTES */}
 
