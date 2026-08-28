@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import { getUniqueValues } from "../../../utils/filterUtils";
 
+import ApplicationProcess from "../../components/ApplicationProcess/ApplicationProcess";
 import ApplicationCard from "./ApplicationCard/ApplicationCard";
 
 import styles from "./RecruiterApplications.module.css";
@@ -243,6 +244,7 @@ const RecruiterApplications = () => {
           </select>
         </div>
       </header>
+      <ApplicationProcess />
 
       {/* =================================================
           EMPTY STATE

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
+import ApplicationProcess from "../../components/ApplicationProcess/ApplicationProcess";
 
 import styles from "./AppliedJobs.module.css";
 
@@ -183,6 +184,7 @@ const AppliedJobs = () => {
           </select>
         </div>
       </header>
+      <ApplicationProcess />
 
       {/* =================================================
           EMPTY STATE
