@@ -1,0 +1,338 @@
+/* ==========================================================
+   CARD
+========================================================== */
+
+.card {
+  position: relative;
+
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: var(--space-3);
+
+  overflow: hidden;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: var(--space-3);
+
+  min-width: 0;
+
+  padding-right: var(--space-4);
+
+  padding-bottom: var(--space-3);
+
+  border-bottom: 1px solid #d9dee8;
+}
+
+.heading {
+  min-width: 0;
+
+  flex: 1;
+}
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.title {
+  margin: 0;
+
+  min-width: 0;
+
+  color: var(--text-primary);
+
+  font-size: 1.2rem;
+
+  font-weight: var(--font-weight-bold);
+
+  line-height: 1.25;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   COMPANY
+========================================================== */
+
+.company {
+  margin: 0.3rem 0 0;
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.3;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   BOOKMARK
+========================================================== */
+
+.bookmarkButton {
+  position: absolute;
+
+  top: var(--space-3);
+
+  right: var(--space-3);
+
+  width: 32px;
+
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: var(--radius-md);
+
+  background: transparent;
+
+  color: var(--color-primary);
+
+  font-size: 1.3rem;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.bookmarkButton:hover {
+  background: var(--color-primary-light);
+
+  color: var(--color-primary-dark);
+
+  transform: scale(1.08);
+}
+
+.bookmarkButton:active {
+  transform: scale(0.95);
+}
+
+.bookmarkButton:focus-visible {
+  outline: 3px solid rgba(67, 97, 238, 0.2);
+
+  outline-offset: 2px;
+}
+
+/* ==========================================================
+   META GRID
+========================================================== */
+
+.metaGrid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: var(--space-9);
+
+  width: 100%;
+
+  padding-top: var(--space-1);
+}
+
+/* ==========================================================
+   META ITEM
+========================================================== */
+
+.metaItem {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.3rem;
+
+  min-width: 0;
+}
+
+.metaLabel {
+  color: var(--text-muted);
+
+  font-size: 0.7rem;
+
+  font-weight: var(--font-weight-semibold);
+
+  letter-spacing: 0.05em;
+
+  line-height: 1.2;
+}
+
+.metaValue {
+  min-width: 0;
+
+  color: var(--text-primary);
+
+  font-size: 0.98rem;
+
+  font-weight: var(--font-weight-semibold);
+
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================
+   PACKAGE
+========================================================== */
+
+.package {
+  min-width: 0;
+
+  color: var(--color-primary);
+
+  font-size: 1rem;
+
+  font-weight: var(--font-weight-bold);
+
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================
+   SKILLS
+========================================================== */
+
+.skillsSection {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.45rem;
+
+  width: 100%;
+}
+
+.sectionLabel {
+  color: var(--text-muted);
+
+  font-size: 0.7rem;
+
+  font-weight: var(--font-weight-semibold);
+
+  letter-spacing: 0.05em;
+
+  line-height: 1.2;
+}
+
+.skills {
+  width: 100%;
+
+  min-height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 0.7rem 0.8rem;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-background);
+
+  color: var(--text-primary);
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.description {
+  height: calc(1.45em * 3);
+
+  margin: 0;
+
+  overflow-y: auto;
+
+  padding-right: var(--space-1);
+
+  color: var(--text-muted);
+
+  font-size: var(--font-size-sm);
+
+  line-height: 1.45;
+
+  scrollbar-width: thin;
+}
+
+/* ==========================================================
+   APPLY
+========================================================== */
+
+.apply {
+  width: 100%;
+
+  margin-top: auto;
+}
+
+.apply :global(.btn) {
+  width: 100%;
+}
+
+.apply :global(.btn) {
+  width: 100%;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 1100px) {
+  .title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .metaGrid {
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+}
