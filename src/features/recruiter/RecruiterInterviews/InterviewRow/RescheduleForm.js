@@ -11,16 +11,44 @@ const RescheduleForm = ({ interview, onSave, onCancel }) => {
 
   const [reason, setReason] = useState("");
 
+  const [saving, setSaving] = useState(false);
+
   const saveHandler = async () => {
+    if (saving) {
+      return;
+    }
+
     if (!date || !time) {
       window.alert("Please select a new interview date and time.");
 
       return;
     }
 
-    await onSave(date, time, reason);
+    if (!reason.trim()) {
+      window.alert("Please provide a reason for rescheduling.");
 
-    setReason("");
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      await onSave(date, time, reason.trim());
+
+      setReason("");
+    } catch (error) {
+      console.error("Reschedule error:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const cancelHandler = () => {
+    if (saving) {
+      return;
+    }
+
+    onCancel();
   };
 
   return (
@@ -31,6 +59,7 @@ const RescheduleForm = ({ interview, onSave, onCancel }) => {
           className={`${styles.dateInput} input`}
           value={date}
           onChange={(event) => setDate(event.target.value)}
+          disabled={saving}
         />
 
         <input
@@ -38,6 +67,7 @@ const RescheduleForm = ({ interview, onSave, onCancel }) => {
           className={`${styles.timeInput} input`}
           value={time}
           onChange={(event) => setTime(event.target.value)}
+          disabled={saving}
         />
       </div>
 
@@ -46,6 +76,7 @@ const RescheduleForm = ({ interview, onSave, onCancel }) => {
         placeholder="Reason for reschedule"
         value={reason}
         onChange={(event) => setReason(event.target.value)}
+        disabled={saving}
       />
 
       <div className={styles.buttons}>
@@ -53,11 +84,17 @@ const RescheduleForm = ({ interview, onSave, onCancel }) => {
           type="button"
           className="btn btn--primary"
           onClick={saveHandler}
+          disabled={saving}
         >
-          Save
+          {saving ? "Saving..." : "Save"}
         </button>
 
-        <button type="button" className="btn btn--secondary" onClick={onCancel}>
+        <button
+          type="button"
+          className="btn btn--secondary"
+          onClick={cancelHandler}
+          disabled={saving}
+        >
           Cancel
         </button>
       </div>
