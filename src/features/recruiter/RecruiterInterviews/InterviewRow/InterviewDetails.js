@@ -35,12 +35,12 @@ const InterviewDetails = ({
       <div className={styles.meta}>
         <div className={styles.metaItem}>
           <span>Date</span>
-          <strong>{interviewDate}</strong>
+          <strong>{new Date(interviewDate).toLocaleDateString()}</strong>
         </div>
 
         <div className={styles.metaItem}>
-          <span>Time</span>
-          <strong>{interviewTime}</strong>
+          <span>Time [24 hrs clock]</span>
+          <strong>{interviewTime} IST</strong>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 
 import { recruiterActions } from "../../../../store/recruiterSlice";
 import { updateRecruiterNotes } from "../../../../store/recruiterActions";
+import { capitalizeFirstLetter } from "../../../../utils/capitalizeUtils";
 
 import styles from "./ApplicationDetails.module.css";
 
@@ -155,7 +156,9 @@ const ApplicationDetails = ({
               placeholder="Add private notes about this applicant..."
               value={app.recruiterNotes || ""}
               disabled={disabled}
-              onChange={(event) => notesChangeHandler(event.target.value)}
+              onChange={(event) =>
+                notesChangeHandler(capitalizeFirstLetter(event.target.value))
+              }
             />
           </div>
 

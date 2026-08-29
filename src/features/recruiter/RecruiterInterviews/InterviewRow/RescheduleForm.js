@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { capitalizeFirstLetter } from "../../../../utils/capitalizeUtils";
 
 import styles from "./RescheduleForm.module.css";
 
@@ -75,7 +76,9 @@ const RescheduleForm = ({ interview, onSave, onCancel }) => {
         className={`${styles.reasonTextarea} textarea`}
         placeholder="Reason for reschedule"
         value={reason}
-        onChange={(event) => setReason(event.target.value)}
+        onChange={(event) =>
+          setReason(capitalizeFirstLetter(event.target.value))
+        }
         disabled={saving}
       />
 

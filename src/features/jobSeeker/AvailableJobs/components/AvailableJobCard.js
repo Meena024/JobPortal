@@ -1,4 +1,6 @@
 import JobApply from "../../components/JobApply";
+import { FaBookmark } from "react-icons/fa";
+import { FaRegBookmark } from "react-icons/fa6";
 
 import classes from "./AvailableJobCard.module.css";
 
@@ -22,7 +24,7 @@ const AvailableJobCard = ({ job, isSaved, onToggleSave }) => {
           onClick={() => onToggleSave(job.id)}
           aria-label={isSaved ? "Remove job from saved jobs" : "Save job"}
         >
-          {isSaved ? "★" : "☆"}
+          {isSaved ? <FaBookmark /> : <FaRegBookmark />}
         </button>
       </header>
 

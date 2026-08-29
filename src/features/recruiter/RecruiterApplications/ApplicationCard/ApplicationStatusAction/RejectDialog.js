@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { capitalizeFirstLetter } from "../../../../../utils/capitalizeUtils";
 
 import styles from "./RejectDialog.module.css";
 
@@ -59,7 +60,9 @@ const RejectDialog = ({ open, onCancel, onConfirm }) => {
           className="textarea"
           placeholder="Enter the reason for rejection..."
           value={reason}
-          onChange={(event) => setReason(event.target.value)}
+          onChange={(event) =>
+            setReason(capitalizeFirstLetter(event.target.value))
+          }
           autoFocus
         />
 

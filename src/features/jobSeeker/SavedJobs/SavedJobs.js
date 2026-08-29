@@ -6,6 +6,7 @@ import { getUniqueValues } from "../../../utils/filterUtils";
 
 import JobApply from "../components/JobApply";
 
+import { FaBookmark } from "react-icons/fa";
 import classes from "./SavedJobs.module.css";
 
 const SavedJobs = () => {
@@ -261,7 +262,7 @@ const SavedJobs = () => {
                 onClick={() => removeSavedJobHandler(job.jobId)}
                 aria-label="Remove job from saved jobs"
               >
-                ★
+                <FaBookmark />
               </button>
             </div>
 

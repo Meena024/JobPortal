@@ -90,7 +90,7 @@ const AllJobsCard = ({ job }) => {
 
       {isRejected && job.rejectionReason && (
         <div className={styles.rejection}>
-          <span>Rejection Reason</span>
+          <span>Reason for rejection:</span>
 
           <p>{job.rejectionReason}</p>
         </div>

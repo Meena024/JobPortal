@@ -44,9 +44,7 @@ const ApplicationStatusActions = ({ app, disabled = false }) => {
       await dispatch(
         statusChangeHandler(app, "rejected", {
           rejectedAt: new Date().toISOString(),
-
           rejectedBy: app.recruiterId,
-
           reason,
         }),
       );
@@ -61,22 +59,13 @@ const ApplicationStatusActions = ({ app, disabled = false }) => {
      SELECT
   ===================================================== */
 
-  const selectHandler = async ({ sendOfferNow }) => {
+  const selectHandler = async () => {
     if (disabled) {
       return;
     }
 
     try {
       await dispatch(statusChangeHandler(app, "selected"));
-
-      /*
-        Offer-letter handling will be connected
-        separately through OfferLetterSection.
-      */
-
-      if (sendOfferNow) {
-        // Reserved for offer-letter integration.
-      }
 
       setShowSelectDialog(false);
     } catch (error) {

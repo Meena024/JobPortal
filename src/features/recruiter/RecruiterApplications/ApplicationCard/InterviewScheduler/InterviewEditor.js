@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { capitalizeFirstLetter } from "../../../../../utils/capitalizeUtils";
 
 import styles from "./InterviewEditor.module.css";
 
@@ -109,7 +110,10 @@ const InterviewEditor = ({
           placeholder="Instructions for candidate..."
           value={form.interviewInstructions}
           onChange={(event) =>
-            changeHandler("interviewInstructions", event.target.value)
+            changeHandler(
+              "interviewInstructions",
+              capitalizeFirstLetter(event.target.value),
+            )
           }
         />
 

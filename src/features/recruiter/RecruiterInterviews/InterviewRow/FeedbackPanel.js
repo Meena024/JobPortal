@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { capitalizeFirstLetter } from "../../../../utils/capitalizeUtils";
 
 import styles from "./FeedbackPanel.module.css";
 
@@ -64,7 +65,9 @@ const FeedbackPanel = ({ mode, feedback = "", submittedAt, onSubmit }) => {
         className={`${styles.feedbackTextarea} textarea`}
         placeholder="Enter candidate performance..."
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) =>
+          setValue(capitalizeFirstLetter(event.target.value))
+        }
       />
     </div>
   );

@@ -24,7 +24,8 @@ const InterviewHistory = ({ history = [] }) => {
                 className={styles.item}
               >
                 <p>
-                  {item.previousDate} at {item.previousTime}
+                  {new Date(item.previousDate).toLocaleDateString()} at{" "}
+                  {item.previousTime} [24 hrs clock]
                 </p>
 
                 {item.reason && <span>{item.reason}</span>}

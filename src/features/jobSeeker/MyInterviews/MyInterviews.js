@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { rescheduleRequest } from "../../../store/jobSeekerActions";
+import { capitalizeFirstLetter } from "../../../utils/capitalizeUtils";
 
 import classes from "./MyInterviews.module.css";
 
@@ -112,9 +113,9 @@ const MyInterviews = () => {
               </div>
 
               <div>
-                <strong>Company:</strong> {item.company}
+                <strong>Company:</strong> {item.recruiterCompany}
               </div>
-              {console.log(item, "hey")}
+
               <div>
                 <strong>Recruiter:</strong> {item.recruiterEmail}
               </div>
@@ -221,10 +222,12 @@ const MyInterviews = () => {
                       <textarea
                         placeholder="Reason for reschedule"
                         value={requestInputs[item.id] || ""}
-                        onChange={(e) =>
+                        onChange={(event) =>
                           setRequestInputs((prev) => ({
                             ...prev,
-                            [item.id]: e.target.value,
+                            [item.id]: capitalizeFirstLetter(
+                              event.target.value,
+                            ),
                           }))
                         }
                       />

@@ -8,6 +8,7 @@ import {
 } from "../../../store/recruiterActions";
 
 import { recruiterActions } from "../../../store/recruiterSlice";
+import { capitalizeFirstLetter } from "../../../utils/capitalizeUtils";
 
 import styles from "./CreateJob.module.css";
 
@@ -88,9 +89,7 @@ const CreateJob = () => {
     const { name, value } = event.target;
 
     const formattedValue =
-      name === "package"
-        ? value
-        : value.charAt(0).toUpperCase() + value.slice(1);
+      name === "description" ? capitalizeFirstLetter(value) : value;
 
     setForm((previousForm) => ({
       ...previousForm,

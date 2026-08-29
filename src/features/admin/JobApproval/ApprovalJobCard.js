@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { approveOrRejectJob } from "../../../store/adminActions";
+import { capitalizeFirstLetter } from "../../../utils/capitalizeUtils";
 
 import styles from "./ApprovalJobCard.module.css";
 
@@ -88,7 +89,9 @@ const ApprovalJobCard = ({ job }) => {
         className={`${styles.rejectionInput} textarea`}
         placeholder="Add a reason if rejecting this job recruitment..."
         value={rejectionReason}
-        onChange={(event) => setRejectionReason(event.target.value)}
+        onChange={(event) =>
+          setRejectionReason(capitalizeFirstLetter(event.target.value))
+        }
       />
 
       {/* =================================================
