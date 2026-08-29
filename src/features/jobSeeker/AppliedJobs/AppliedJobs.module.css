@@ -139,13 +139,7 @@
 }
 
 /* ==========================================================
-   STATUS CARD COLORS
-
-   Card background:
-   --color-*-card
-
-   Card accent:
-   --color-*
+   APPLICATION CARD STATUS
 ========================================================== */
 
 .card.pending {
@@ -230,10 +224,15 @@
 }
 
 /* ==========================================================
-   STATUS BADGE
-========================================================== */
-/* ==========================================================
    STATUS
+========================================================== */
+
+.status {
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   STATUS BADGE
 ========================================================== */
 
 .statusBadge {
@@ -255,35 +254,40 @@
   white-space: nowrap;
 }
 
-.pending {
+/* ==========================================================
+   STATUS BADGE COLORS
+========================================================== */
+
+.statusPending {
   color: var(--color-warning);
 
   background: var(--color-warning-bg);
 }
 
-.reviewed {
+.statusReviewed {
   color: var(--color-reviewed);
 
   background: var(--color-reviewed-bg);
 }
 
-.shortlisted {
+.statusShortlisted {
   color: var(--color-info);
 
   background: var(--color-info-bg);
 }
 
-.selected {
+.statusSelected {
   color: var(--color-success);
 
   background: var(--color-success-bg);
 }
 
-.rejected {
+.statusRejected {
   color: var(--color-danger);
 
   background: var(--color-danger-bg);
 }
+
 /* ==========================================================
    META ROW
 ========================================================== */
@@ -561,9 +565,33 @@
 ========================================================== */
 
 .highlightCard {
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.16),
-    var(--shadow-md);
+  animation: applicationHighlight 1.2s ease-in-out 3;
+}
+
+@keyframes applicationHighlight {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(37, 99, 235, 0),
+      var(--shadow-sm);
+  }
+
+  35% {
+    box-shadow:
+      0 0 0 4px rgba(37, 99, 235, 0.28),
+      var(--shadow-md);
+  }
+
+  70% {
+    box-shadow:
+      0 0 0 2px rgba(37, 99, 235, 0.14),
+      var(--shadow-md);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(37, 99, 235, 0),
+      var(--shadow-sm);
+  }
 }
 
 /* ==========================================================

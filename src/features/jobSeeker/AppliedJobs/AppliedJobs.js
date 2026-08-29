@@ -2,7 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { jobSeekerActions } from "../../../store/jobSeekerSlice";
+
 import ApplicationProcess from "../../components/ApplicationProcess/ApplicationProcess";
+
+import ApplicationFilters from "./components/ApplicationFilters";
+import ApplicationCard from "./components/ApplicationCard";
 
 import styles from "./AppliedJobs.module.css";
 
@@ -72,27 +76,28 @@ const AppliedJobs = () => {
   const filteredApplications = useMemo(() => {
     /*
       When an application is highlighted,
-      show all applications so the highlighted
-      application can always be located.
+      temporarily show all applications so
+      the highlighted application can be located.
     */
 
     if (highlightedApplicationId) {
       return enrichedApplications;
     }
 
-    let updated = [...enrichedApplications];
+    return enrichedApplications.filter((app) => {
+      if (statusFilter !== "all" && app.status !== statusFilter) {
+        return false;
+      }
 
-    if (statusFilter !== "all") {
-      updated = updated.filter((app) => app.status === statusFilter);
-    }
+      if (
+        openingStatusFilter !== "all" &&
+        app.jobOpeningStatus !== openingStatusFilter
+      ) {
+        return false;
+      }
 
-    if (openingStatusFilter !== "all") {
-      updated = updated.filter(
-        (app) => app.jobOpeningStatus === openingStatusFilter,
-      );
-    }
-
-    return updated;
+      return true;
+    });
   }, [
     enrichedApplications,
     statusFilter,
@@ -141,215 +146,33 @@ const AppliedJobs = () => {
 
   return (
     <section className={styles.wrapper}>
-      {/* =================================================
-          HEADER
-      ================================================= */}
-
       <header className={styles.headerRow}>
         <h1 className={styles.title}>Applied Jobs</h1>
 
-        <div className={styles.filters}>
-          {/* STATUS */}
-
-          <select
-            className={styles.filterDropdown}
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
-          >
-            <option value="all">All Statuses</option>
-
-            <option value="pending">Pending</option>
-
-            <option value="reviewed">Reviewed</option>
-
-            <option value="shortlisted">Shortlisted</option>
-
-            <option value="selected">Selected</option>
-
-            <option value="rejected">Rejected</option>
-          </select>
-
-          {/* OPENING STATUS */}
-
-          <select
-            className={styles.filterDropdown}
-            value={openingStatusFilter}
-            onChange={(event) => setOpeningStatusFilter(event.target.value)}
-          >
-            <option value="all">All Openings</option>
-
-            <option value="open">Open</option>
-
-            <option value="closed">Closed</option>
-          </select>
-        </div>
+        <ApplicationFilters
+          statusFilter={statusFilter}
+          openingStatusFilter={openingStatusFilter}
+          onStatusChange={setStatusFilter}
+          onOpeningStatusChange={setOpeningStatusFilter}
+        />
       </header>
-      <ApplicationProcess />
 
-      {/* =================================================
-          EMPTY STATE
-      ================================================= */}
+      <ApplicationProcess />
 
       {filteredApplications.length === 0 ? (
         <p className={styles.infoMessage}>No applications found.</p>
       ) : (
         <div className={styles.list}>
           {filteredApplications.map((app) => {
-            const interview = app.interviewData;
-
-            const hasUpcomingInterview =
-              app.jobOpeningStatus !== "closed" &&
-              interview?.interviewScheduled;
-
-            let upcomingInterview = false;
-
-            if (hasUpcomingInterview) {
-              const interviewDateTime = new Date(
-                `${interview.interviewDate}T${interview.interviewTime}`,
-              );
-
-              upcomingInterview =
-                !Number.isNaN(interviewDateTime.getTime()) &&
-                interviewDateTime.getTime() > Date.now();
-            }
-
             const isHighlighted = highlightedApplicationId === app.id;
 
             return (
-              <article
+              <ApplicationCard
                 key={app.id}
-                ref={isHighlighted ? highlightedRef : null}
-                className={[
-                  styles.card,
-                  styles[app.status],
-                  app.jobOpeningStatus === "closed" ? styles.closed : "",
-                  isHighlighted ? styles.highlightCard : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {/* =================================================
-                    HEADER
-                ================================================= */}
-
-                <div className={styles.cardHeader}>
-                  <div className={styles.heading}>
-                    <h3 className={styles.jobTitle}>{app.jobTitle}</h3>
-
-                    <p className={styles.companyName}>{app.companyName}</p>
-                  </div>
-
-                  <div className={styles.status}>
-                    <span
-                      className={`${styles.statusBadge} ${
-                        styles[app.status] || ""
-                      }`}
-                    >
-                      {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* =================================================
-                    META
-                ================================================= */}
-
-                <div className={styles.metaRow}>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Location</span>
-
-                    <span className={styles.metaValue}>{app.location}</span>
-                  </div>
-
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Package</span>
-
-                    <span className={styles.metaValue}>
-                      <strong>{app.package !== "-" ? app.package : "-"}</strong>
-                    </span>
-                  </div>
-
-                  {app.resumeUrl && (
-                    <button
-                      type="button"
-                      className={styles.resumeLink}
-                      onClick={() =>
-                        window.open(
-                          app.resumeUrl,
-                          "_blank",
-                          "noopener,noreferrer",
-                        )
-                      }
-                    >
-                      View Resume
-                    </button>
-                  )}
-                </div>
-
-                {/* =================================================
-                    DESCRIPTION
-                ================================================= */}
-                <div>
-                  <span className={styles.metaLabel}>DESCRIPTION: </span>
-                  <span className={styles.description}>{app.description}</span>
-                </div>
-
-                {/* =================================================
-                    UPCOMING INTERVIEW
-                ================================================= */}
-
-                {upcomingInterview && (
-                  <div className={styles.interviewRow}>
-                    <strong className={styles.interviewTitle}>
-                      Upcoming Interview
-                    </strong>
-
-                    <span className={styles.interviewDateTime}>
-                      {interview.interviewDate} · {interview.interviewTime}
-                    </span>
-
-                    {interview.interviewInstructions && (
-                      <span className={styles.interviewInstructions}>
-                        {interview.interviewInstructions}
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                {/* =================================================
-                    OFFER LETTER
-                ================================================= */}
-
-                {app.status === "selected" && app.offerLetter?.url && (
-                  <button
-                    type="button"
-                    className={styles.offerLetter}
-                    onClick={() =>
-                      window.open(
-                        app.offerLetter.url,
-                        "_blank",
-                        "noopener,noreferrer",
-                      )
-                    }
-                  >
-                    View Offer Letter
-                  </button>
-                )}
-
-                {/* =================================================
-                    JOB REMOVED / CLOSED
-                ================================================= */}
-
-                {!app.jobExists && (
-                  <span className={styles.removedBadge}>
-                    Job no longer available
-                  </span>
-                )}
-
-                {app.jobOpeningStatus === "closed" && (
-                  <span className={styles.closedBadge}>Recruitment Closed</span>
-                )}
-              </article>
+                app={app}
+                highlightedRef={isHighlighted ? highlightedRef : null}
+                isHighlighted={isHighlighted}
+              />
             );
           })}
         </div>
