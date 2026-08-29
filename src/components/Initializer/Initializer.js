@@ -21,7 +21,11 @@ import {
 const Initializer = async (dispatch) => {
   const token = localStorage.getItem("token");
 
-  if (!token) return;
+  if (!token) {
+    dispatch(authActions.InitializationComplete());
+
+    return { success: false };
+  }
 
   try {
     const userId = await fetchUserId(token);
@@ -29,7 +33,11 @@ const Initializer = async (dispatch) => {
     const profile = await dbApi.get(`users/${userId}/profile`);
 
     if (!profile) {
-      throw new Error("User profile not found.");
+      localStorage.removeItem("token");
+
+      dispatch(authActions.accountDeleted());
+
+      return { accountDeleted: true };
     }
 
     dispatch(
@@ -68,10 +76,14 @@ const Initializer = async (dispatch) => {
         ]);
         break;
     }
+
+    return { success: true };
   } catch (err) {
     console.error("Initializer Error:", err);
     localStorage.removeItem("token");
     dispatch(authActions.logout());
+
+    return { success: false };
   }
 };
 

@@ -3,7 +3,11 @@ import { useSelector } from "react-redux";
 import Login from "../features/auth/Login/Login";
 
 const HomeRedirect = () => {
-  const role = useSelector((state) => state.auth.role);
+  const { role, accountDeleted } = useSelector((state) => state.auth);
+
+  if (accountDeleted) {
+    return <Login accountDeleted />;
+  }
 
   if (role === "recruiter") {
     return <Navigate to="/recruiter" replace />;

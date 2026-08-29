@@ -200,8 +200,6 @@ const ManageUsers = () => {
             filteredUsers.map((user) => (
               <div key={user.id} className={styles.userRow}>
                 <div className={styles.userCell}>
-                  <span className={styles.email}>{user.email}</span>
-
                   <button
                     type="button"
                     className={styles.deleteButton}
@@ -211,6 +209,7 @@ const ManageUsers = () => {
                   >
                     <FaTrash />
                   </button>
+                  <span className={styles.email}>{user.email}</span>
                 </div>
 
                 <div className={styles.role}>{user.role}</div>

@@ -1,19 +1,23 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../../services/authApi";
 import Initializer from "../../../components/Initializer/Initializer";
 
 import classes from "./Login.module.css";
 
-const Login = () => {
-  const navigate = useNavigate();
+const Login = ({ accountDeleted = false }) => {
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const [error, setError] = useState(
+    accountDeleted
+      ? "Your account is no longer available. Please contact the administrator if you believe this was done in error."
+      : null,
+  );
 
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -26,7 +30,14 @@ const Login = () => {
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.idToken);
-      Initializer(dispatch, navigate);
+
+      const result = await Initializer(dispatch);
+
+      if (result?.accountDeleted) {
+        setError(
+          "Your account is no longer available. Please contact the administrator if you believe this was done in error.",
+        );
+      }
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Please check credentials.");
