@@ -1,6 +1,6 @@
 /* ==========================================================
    PAGE
-   ========================================================== */
+========================================================== */
 
 .wrapper {
   width: 100%;
@@ -14,7 +14,7 @@
 
 /* ==========================================================
    PAGE HEADER
-   ========================================================== */
+========================================================== */
 
 .header {
   width: 100%;
@@ -31,13 +31,24 @@
 }
 
 /* ==========================================================
+   HEADER ACTIONS
+========================================================== */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+
+  gap: var(--space-3);
+}
+
+/* ==========================================================
    ADD FORM
-   ========================================================== */
+========================================================== */
 
 .addSection {
   width: 100%;
   max-width: 600px;
-  background-color: var(--color-primary-light);
+
   box-sizing: border-box;
 
   display: grid;
@@ -52,6 +63,8 @@
   gap: var(--space-2);
 
   padding: var(--space-3);
+
+  background-color: var(--color-primary-light);
 }
 
 .addSection input {
@@ -70,7 +83,7 @@
 
 /* ==========================================================
    LIMIT MESSAGE
-   ========================================================== */
+========================================================== */
 
 .limitMessage {
   width: 100%;
@@ -90,30 +103,36 @@
 
 /* ==========================================================
    EMPTY STATE
-   ========================================================== */
+========================================================== */
 
 .emptyMessage {
   margin: 0;
+
+  color: var(--text-muted);
 }
 
 /* ==========================================================
    RESUME LIST
 
-   ONE GLOBAL CARD containing all resumes.
-   ========================================================== */
+   One card containing all resumes.
+========================================================== */
 
 .resumeList {
   width: 100%;
   max-width: 600px;
-  background-color: var(--color-primary-light);
+
   padding: 0;
 
   overflow: hidden;
+
+  box-sizing: border-box;
+
+  background-color: var(--color-primary-light);
 }
 
 /* ==========================================================
    RESUME ROW
-   ========================================================== */
+========================================================== */
 
 .resumeRow {
   min-width: 0;
@@ -133,9 +152,7 @@
 
 /* ==========================================================
    LAST ROW
-
-   Remove the separator from the final resume.
-   ========================================================== */
+========================================================== */
 
 .lastRow {
   border-bottom: 0;
@@ -143,7 +160,7 @@
 
 /* ==========================================================
    RESUME INFORMATION
-   ========================================================== */
+========================================================== */
 
 .resumeInfo {
   min-width: 0;
@@ -158,68 +175,87 @@
 
   gap: var(--space-4);
 
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
   color: inherit;
 
   text-decoration: none;
+
+  text-align: left;
+
+  cursor: pointer;
 }
 
 /* ==========================================================
    RESUME TITLE
-   ========================================================== */
+========================================================== */
 
 .resumeTitle {
   min-width: 0;
 
   overflow: hidden;
+
   text-overflow: ellipsis;
+
   white-space: nowrap;
 
   color: var(--color-primary);
 
   font-size: var(--font-size-sm);
+
   font-weight: var(--font-weight-semibold);
 
   line-height: 1.35;
-
-  text-align: left;
-  cursor: pointer;
 }
 
 /* ==========================================================
    RESUME DATE
-   ========================================================== */
+========================================================== */
 
 .resumeDate {
   min-width: 0;
 
   color: var(--text-muted);
 
+  font-size: var(--font-size-sm);
+
   line-height: 1.35;
 }
 
 /* ==========================================================
+   RESUME HOVER
+========================================================== */
+
+.resumeInfo:hover .resumeTitle {
+  color: var(--color-primary-dark);
+
+  text-decoration: underline;
+}
+
+/* ==========================================================
    DELETE BUTTON
-   ========================================================== */
+========================================================== */
 
 .deleteButton {
-  appearance: none;
-  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 24px;
-  height: 24px;
+  flex-shrink: 0;
 
   padding: 0;
   margin: 0;
 
-  border: none !important;
-  outline: none;
+  border: 0 !important;
 
   background: transparent !important;
-  box-shadow: none !important;
 
   color: var(--text-muted);
 
@@ -237,42 +273,29 @@
   fill: currentColor;
 }
 
-/* Only the icon changes color */
 .deleteButton:hover {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-
   color: var(--color-danger);
 }
 
-/* Keep background transparent while clicking */
 .deleteButton:active {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-
   color: var(--color-danger);
 }
 
-/* Keyboard accessibility */
 .deleteButton:focus {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
   outline: none;
 }
 
 .deleteButton:focus-visible {
-  background: transparent !important;
   outline: 2px solid var(--color-primary);
+
   outline-offset: 3px;
+
   border-radius: var(--radius-sm);
 }
 
 /* ==========================================================
    TABLET / SMALL DESKTOP
-   ========================================================== */
+========================================================== */
 
 @media (max-width: 700px) {
   .addSection {
@@ -302,7 +325,7 @@
 
 /* ==========================================================
    MOBILE
-   ========================================================== */
+========================================================== */
 
 @media (max-width: 480px) {
   .header {

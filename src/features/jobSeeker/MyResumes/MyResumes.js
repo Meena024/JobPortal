@@ -6,6 +6,8 @@ import { addResume, removeResume } from "../../../store/jobSeekerActions";
 
 import classes from "./MyResumes.module.css";
 
+const MAX_RESUMES = 5;
+
 const MyResumes = () => {
   const dispatch = useDispatch();
 
@@ -16,22 +18,23 @@ const MyResumes = () => {
   const userId = useSelector((state) => state.auth.userId);
   const resumes = useSelector((state) => state.jobs?.resumes || []);
 
-  const MAX_RESUMES = 5;
-
   const addResumeHandler = async () => {
     if (!resumeTitle.trim() || !resumeUrl.trim()) {
-      alert("Resume title and URL required");
+      window.alert("Resume title and URL are required.");
       return;
     }
 
     if (resumes.length >= MAX_RESUMES) {
+      window.alert(
+        "You can have a maximum of 5 resumes. Please remove an existing resume before adding another.",
+      );
       return;
     }
 
     try {
       const resumeData = {
-        title: resumeTitle,
-        resumeUrl,
+        title: resumeTitle.trim(),
+        resumeUrl: resumeUrl.trim(),
         createdAt: new Date().toISOString(),
       };
 
@@ -41,7 +44,7 @@ const MyResumes = () => {
       setResumeUrl("");
       setShowAddForm(false);
     } catch (err) {
-      console.error(err);
+      console.error("Unable to add resume:", err);
     }
   };
 
@@ -49,7 +52,7 @@ const MyResumes = () => {
     try {
       await dispatch(removeResume(userId, id));
     } catch (err) {
-      console.error(err);
+      console.error("Unable to delete resume:", err);
     }
   };
 
@@ -65,20 +68,29 @@ const MyResumes = () => {
     <div className={classes.wrapper}>
       {/* PAGE HEADER */}
 
-      <div className={classes.header}>
+      <header className={classes.header}>
         <h1 className="page-title">My Resumes</h1>
 
-        <button
-          type="button"
-          className="btn btn--primary btn--small"
-          onClick={() => setShowAddForm((prev) => !prev)}
-          disabled={limitReached}
-        >
-          {showAddForm ? "− Cancel" : "+ Add Resume"}
-        </button>
-      </div>
+        <div className={classes.headerActions}>
+          <button
+            type="button"
+            className="btn btn--primary btn--small"
+            onClick={() => setShowAddForm((prev) => !prev)}
+            disabled={limitReached}
+            title={
+              limitReached
+                ? "Remove a resume before adding another"
+                : "Add a new resume"
+            }
+          >
+            {showAddForm ? "− Cancel" : "+ Add Resume"}
+          </button>
+        </div>
+      </header>
 
-      {/* ADD FORM */}
+      {/* =================================================
+          ADD FORM
+      ================================================= */}
 
       {showAddForm && !limitReached && (
         <div className={`${classes.addSection} card card-body-sm`}>
@@ -108,55 +120,71 @@ const MyResumes = () => {
         </div>
       )}
 
-      {/* LIMIT MESSAGE */}
+      {/* =================================================
+          LIMIT MESSAGE
+      ================================================= */}
 
       {limitReached && (
-        <p className={`${classes.limitMessage} text-small`}>
-          Maximum 5 resumes reached. Delete a resume to add another.
+        <p className={classes.limitMessage}>
+          You have reached the maximum of {MAX_RESUMES} resumes. Remove an
+          existing resume to add another.
         </p>
       )}
 
-      {/* EMPTY */}
+      {/* =================================================
+          EMPTY STATE
+      ================================================= */}
 
       {resumes.length === 0 && (
-        <p className={`${classes.emptyMessage} text-muted`}>
-          No resumes added yet
+        <p className={classes.emptyMessage}>
+          No resumes added yet. Add a resume to apply for jobs.
         </p>
       )}
 
-      {/* ALL RESUMES — SINGLE CARD */}
+      {/* =================================================
+          RESUME LIST
+      ================================================= */}
 
-      {resumes.map((resume, index) => (
-        <div
-          key={resume.id}
-          className={`${classes.resumeRow} ${
-            index === resumes.length - 1 ? classes.lastRow : ""
-          }`}
-        >
-          <button
-            type="button"
-            className={classes.resumeInfo}
-            onClick={() =>
-              window.open(resume.resumeUrl, "_blank", "noopener,noreferrer")
-            }
-          >
-            <span className={classes.resumeTitle}>{resume.title}</span>
+      {resumes.length > 0 && (
+        <section className={`${classes.resumeList} card`}>
+          {resumes.map((resume, index) => (
+            <div
+              key={resume.id}
+              className={`${classes.resumeRow} ${
+                index === resumes.length - 1 ? classes.lastRow : ""
+              }`}
+            >
+              {/* RESUME INFORMATION */}
 
-            <span className={`${classes.resumeDate} text-small`}>
-              Added on {new Date(resume.createdAt).toLocaleDateString()}
-            </span>
-          </button>
+              <button
+                type="button"
+                className={classes.resumeInfo}
+                onClick={() =>
+                  window.open(resume.resumeUrl, "_blank", "noopener,noreferrer")
+                }
+              >
+                <span className={classes.resumeTitle}>{resume.title}</span>
 
-          <button
-            type="button"
-            className={classes.deleteButton}
-            onClick={() => deleteResumeHandler(resume.id)}
-            aria-label={`Delete ${resume.title}`}
-          >
-            <MdOutlineDelete />
-          </button>
-        </div>
-      ))}
+                <span className={classes.resumeDate}>
+                  Added on {new Date(resume.createdAt).toLocaleDateString()}
+                </span>
+              </button>
+
+              {/* DELETE */}
+
+              <button
+                type="button"
+                className={classes.deleteButton}
+                onClick={() => deleteResumeHandler(resume.id)}
+                aria-label={`Delete ${resume.title}`}
+                title={`Delete ${resume.title}`}
+              >
+                <MdOutlineDelete />
+              </button>
+            </div>
+          ))}
+        </section>
+      )}
     </div>
   );
 };
